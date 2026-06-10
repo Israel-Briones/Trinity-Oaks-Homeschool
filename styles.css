@@ -48,7 +48,7 @@ nav {
 }
 .nav-links { display: flex; gap: 2rem; align-items: center; }
 .nav-links a {
-  font-size: 0.85rem; font-weight: 500;
+  font-size: 1rem; font-weight: 500;
   color: var(--muted); text-decoration: none;
   transition: color .2s; letter-spacing: 0.03em;
 }
@@ -69,7 +69,7 @@ nav {
   min-height: 92vh;
   display: flex; align-items: center;
   position: relative; overflow: hidden;
-  padding: 6rem 2rem;
+  padding: 2rem 2rem;
 }
 .hero-bg {
   position: absolute; inset: 0;
