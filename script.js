@@ -141,3 +141,30 @@ months.forEach((m, i) => {
   `;
   cards.appendChild(card);
 });
+
+// Billing toggle
+const prices = {
+  individual: { mensual: '$890<span>/mes</span>', anual: '$7,990<span>/año</span>' },
+  familiar:   { mensual: '$1,490<span>/mes</span>', anual: '$13,390<span>/año</span>' },
+  plus:       { mensual: '$2,500<span>/mes</span>', anual: '$22,500<span>/año</span>' }
+};
+const periods = {
+  individual: { mensual: '1 hijo · Acceso completo · Cancela cuando quieras', anual: '1 hijo · Equivale a $665/mes · Ahorras 25%' },
+  familiar:   { mensual: 'Hasta 3 hijos · Todos los niveles', anual: 'Hasta 3 hijos · Equivale a $1,115/mes · Ahorras 25%' },
+  plus:       { mensual: 'Hasta 5 hijos · Todos los niveles', anual: 'Hasta 5 hijos · Equivale a $1,875/mes · Ahorras 25%' }
+};
+let isAnual = false;
+function toggleBilling() {
+  isAnual = !isAnual;
+  const toggle = document.getElementById('billingToggle');
+  const mode = isAnual ? 'anual' : 'mensual';
+  toggle.classList.toggle('on', isAnual);
+  document.getElementById('label-mensual').classList.toggle('active', !isAnual);
+  document.getElementById('label-anual').classList.toggle('active', isAnual);
+  document.getElementById('price-individual').innerHTML = prices.individual[mode];
+  document.getElementById('price-familiar').innerHTML = prices.familiar[mode];
+  document.getElementById('price-plus').innerHTML = prices.plus[mode];
+  document.getElementById('period-individual').textContent = periods.individual[mode];
+  document.getElementById('period-familiar').textContent = periods.familiar[mode];
+  document.getElementById('period-plus').textContent = periods.plus[mode];
+}

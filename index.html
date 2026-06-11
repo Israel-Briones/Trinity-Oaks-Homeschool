@@ -229,36 +229,65 @@
   <div class="container">
     <div class="sec-label">Planes</div>
     <h2 class="sec-title">Elige tu acceso</h2>
-    <p class="sec-sub">Sin contratos. Cancela cuando quieras.</p>
+    <p class="sec-sub">Sin contratos. Cancela cuando quieras. Todos los niveles incluidos.</p>
+
+    <div class="plans-toggle">
+      <span class="active" id="label-mensual">Mensual</span>
+      <button class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+        <div class="toggle-knob"></div>
+      </button>
+      <span id="label-anual">Anual <strong style="color:var(--copper)">— 25% off</strong></span>
+    </div>
+
     <div class="plans-grid">
+
       <div class="plan-card">
-        <div class="plan-name">Mensual</div>
-        <div class="plan-price">$890<span>/mes</span></div>
-        <div class="plan-period">Acceso completo · Cancela en cualquier momento</div>
+        <div class="plan-name">Individual</div>
+        <div class="plan-levels">Kínder · Primaria · Secundaria · Preparatoria</div>
+        <div class="plan-price" id="price-individual">$890<span>/mes</span></div>
+        <div class="plan-period" id="period-individual">1 hijo · Acceso completo · Cancela cuando quieras</div>
         <ul class="plan-features">
-          <li>Curriculum completo 10 meses</li>
+          <li>Curriculum completo todos los niveles</li>
           <li>Guías semanales descargables</li>
           <li>Videos de cada lección</li>
           <li>Diario de naturaleza digital</li>
           <li>Soporte por comunidad</li>
         </ul>
-        <button class="plan-btn ghost">Comenzar mensual</button>
+        <button class="plan-btn ghost">Comenzar →</button>
       </div>
+
       <div class="plan-card featured">
         <div class="plan-badge">Más popular</div>
-        <div class="plan-name">Anual</div>
-        <div class="plan-price">$7,990<span>/año</span></div>
-        <div class="plan-period">Equivale a $665/mes · Ahorras 25%</div>
+        <div class="plan-name">Familiar</div>
+        <div class="plan-levels">Kínder · Primaria · Secundaria · Preparatoria</div>
+        <div class="plan-price" id="price-familiar">$1,490<span>/mes</span></div>
+        <div class="plan-period" id="period-familiar">Hasta 3 hijos · Todos los niveles</div>
         <ul class="plan-features">
-          <li>Todo lo del plan mensual</li>
-          <li>Acceso anticipado a nuevos niveles</li>
+          <li>Todo lo del plan Individual</li>
+          <li>Hasta 3 hijos simultáneos</li>
           <li>Sesiones grupales mensuales en vivo</li>
           <li>Rúbricas de evaluación completas</li>
           <li>Soporte prioritario</li>
           <li>Comunidad privada de familias</li>
         </ul>
-        <button class="plan-btn primary">Comenzar anual →</button>
+        <button class="plan-btn primary">Comenzar →</button>
       </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Familiar Plus</div>
+        <div class="plan-levels">Kínder · Primaria · Secundaria · Preparatoria</div>
+        <div class="plan-price" id="price-plus">$2,500<span>/mes</span></div>
+        <div class="plan-period" id="period-plus">Hasta 5 hijos · Todos los niveles</div>
+        <ul class="plan-features">
+          <li>Todo lo del plan Familiar</li>
+          <li>Hasta 5 hijos simultáneos</li>
+          <li>Acceso anticipado a nuevos niveles</li>
+          <li>Asesoría mensual personalizada</li>
+          <li>Soporte VIP</li>
+        </ul>
+        <button class="plan-btn ghost">Comenzar →</button>
+      </div>
+
     </div>
   </div>
 </section>
