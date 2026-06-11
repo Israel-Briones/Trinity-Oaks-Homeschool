@@ -174,7 +174,7 @@ function toggleBilling() {
 }
 
 async function startCheckout(plan, btn) {
-  const billing = isAnual ? 'anual' : 'mensual';
+  const billing = isAnual ? 'annual' : 'monthly';
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Cargando...';
