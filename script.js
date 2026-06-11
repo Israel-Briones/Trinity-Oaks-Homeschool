@@ -221,6 +221,10 @@ async function startCheckout(plan, btn) {
   const email = await askEmailModal();
   if (!email) return;
 
+  localStorage.setItem('to_email', email);
+  localStorage.setItem('to_plan', plan);
+  localStorage.setItem('to_billing', billing);
+
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Cargando...';
