@@ -57,9 +57,17 @@ nav {
   font-size: 0.75rem; font-weight: 600;
   color: var(--copper); text-decoration: none;
   letter-spacing: 0.05em;
-  transition: color .2s;
+  border: 1px solid var(--copper);
+  border-radius: 4px;
+  padding: 0.35rem 0.9rem;
+  margin-top: 10%;
+  transition: background .2s, color .2s;
+  white-space: nowrap;
 }
-.nav-asesor:hover { color: var(--copper2); }
+.nav-asesor:hover {
+  background: var(--copper);
+  color: var(--bg);
+}
 .nav-links a {
   font-size: 1.1rem; font-weight: 600;
   color: var(--muted); text-decoration: none;
