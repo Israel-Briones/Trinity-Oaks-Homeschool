@@ -182,7 +182,7 @@ async function startCheckout(plan, btn) {
   try {
     const res = await fetch('https://trinity-oaks-api-production.up.railway.app/create-checkout', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': 'to-api-2025-secure' },
       body: JSON.stringify({ plan, billing })
     });
     if (!res.ok) throw new Error('Error del servidor');
