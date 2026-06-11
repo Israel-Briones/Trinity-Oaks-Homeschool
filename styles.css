@@ -12,6 +12,7 @@
   --border:    rgba(184,115,51,0.2);
   --border2:   rgba(184,115,51,0.08);
   --white:     #FFFFFF;
+  --oak-green: #3D4A2A;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -55,15 +56,16 @@ nav {
 }
 .nav-links a:hover { color: var(--copper); }
 .nav-btn {
-  background: var(--copper); color: var(--bg);
+  background: var(--oak-green); color: var(--cream);
   border: none; border-radius: 4px;
   padding: 0.5rem 1.25rem;
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem; font-weight: 600;
-  cursor: pointer; transition: background .2s;
+  cursor: pointer;
   letter-spacing: 0.03em;
+  text-decoration: none;
 }
-.nav-btn:hover { background: var(--copper2); }
+.nav-btn:hover { background: var(--oak-green); }
 
 /* HERO */
 .hero {
