@@ -265,20 +265,22 @@ section { padding: 5rem 2rem; }
   border-radius: 4px; padding: 2rem;
   background: var(--bg3);
   position: relative;
+  overflow: visible;
 }
 .plan-card.featured {
   border-color: var(--copper);
   background: var(--bg2);
 }
 .plan-badge {
-  position: absolute; top: -14px; left: 50%;
+  position: absolute; top: -18px; left: 50%;
   transform: translateX(-50%);
-  background: var(--copper); color: #fff;
-  font-size: 0.82rem; font-weight: 800;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 0.3rem 1.1rem; border-radius: 100px;
+  background: #B87333; color: #ffffff;
+  font-size: 1rem; font-weight: 900;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.45rem 1.5rem; border-radius: 100px;
   white-space: nowrap;
-  box-shadow: 0 2px 12px rgba(184,115,51,0.5);
+  box-shadow: 0 4px 20px rgba(184,115,51,0.7);
+  border: 2px solid #fff;
 }
 .plan-name {
   font-family: 'Fraunces', serif;
