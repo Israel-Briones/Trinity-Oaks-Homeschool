@@ -32,7 +32,7 @@ nav {
   border-bottom: 1px solid var(--border);
   padding: 0 2rem;
   display: flex; align-items: center; justify-content: space-between;
-  height: 170px;
+  height: 230px;
 }
 .nav-logo {
   font-family: 'Fraunces', serif;
@@ -40,7 +40,7 @@ nav {
   color: var(--copper);
   display: flex; align-items: center; gap: 10px;
   letter-spacing: 0.02em;
-  margin-left: 20%;
+  margin-left: 10%;
 }
 .nav-logo span {
   color: var(--cream); font-weight: 400;
