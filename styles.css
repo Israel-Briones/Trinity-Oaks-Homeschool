@@ -55,18 +55,19 @@ nav {
 .nav-links { display: flex; gap: 2rem; align-items: center; }
 .nav-asesor {
   font-size: 0.75rem; font-weight: 600;
-  color: var(--copper); text-decoration: none;
+  color: var(--bg); text-decoration: none;
   letter-spacing: 0.05em;
   border: 1px solid var(--copper);
   border-radius: 4px;
   padding: 0.35rem 0.9rem;
   margin-top: 10%;
+  background: var(--copper);
   transition: background .2s, color .2s;
   white-space: nowrap;
 }
 .nav-asesor:hover {
-  background: var(--copper);
-  color: var(--bg);
+  background: var(--copper2);
+  border-color: var(--copper2);
 }
 .nav-links a {
   font-size: 1.1rem; font-weight: 600;
