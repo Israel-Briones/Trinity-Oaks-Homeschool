@@ -582,21 +582,45 @@ section { padding: 5rem 2rem; }
 footer {
   background: var(--bg2);
   border-top: 1px solid var(--border2);
-  padding: 2rem; text-align: center;
+  padding: 3rem 2rem 1.5rem;
 }
-.footer-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 1.1rem; font-weight: 600;
-  color: var(--copper); margin-bottom: 0.5rem;
+.footer-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border2);
 }
-footer p {
-  font-size: 0.78rem; color: var(--muted);
+.footer-col-title {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--copper); margin-bottom: 1rem;
+}
+.footer-tagline {
+  font-size: 0.82rem; color: var(--muted);
+  line-height: 1.7; margin-top: 1rem;
+  max-width: 280px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links a, .footer-links span {
+  font-size: 0.85rem; color: var(--muted);
+  text-decoration: none; transition: color .2s;
+}
+.footer-links a:hover { color: var(--copper); }
+.footer-bottom {
+  max-width: 1100px; margin: 1.5rem auto 0;
+  text-align: center;
+}
+.footer-bottom p {
+  font-size: 0.75rem; color: var(--muted);
   letter-spacing: 0.04em;
 }
 
 @media(max-width:640px){
   nav{padding:0 1rem}
   .nav-links{display:none}
+  .footer-grid{grid-template-columns:1fr;gap:2rem}
   .hero-content{padding-left:1rem}
   .stats{padding:2rem 1rem}
   section{padding:3rem 1rem}
