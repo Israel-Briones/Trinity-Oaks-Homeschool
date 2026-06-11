@@ -40,6 +40,7 @@ nav {
   color: var(--copper);
   display: flex; align-items: center; gap: 10px;
   letter-spacing: 0.02em;
+  margin-left: 20%;
 }
 .nav-logo span {
   color: var(--cream); font-weight: 400;
