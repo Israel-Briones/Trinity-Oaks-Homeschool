@@ -418,6 +418,65 @@ section { padding: 5rem 2rem; }
   margin-top: 2px;
 }
 
+/* GRADOS */
+.grados-section { background: var(--bg); }
+.grados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+.grado-card {
+  border: 1px solid var(--border);
+  border-radius: 4px; padding: 2rem;
+  background: var(--bg2);
+  position: relative;
+  transition: border-color .2s;
+}
+.grado-card:hover { border-color: var(--copper); }
+.grado-card.featured {
+  border-color: var(--copper);
+  background: var(--bg3);
+}
+.grado-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+.grado-nivel {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem; font-weight: 600;
+  color: var(--cream); margin-bottom: 0.25rem;
+}
+.grado-edad {
+  font-size: 0.78rem; color: var(--copper);
+  font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem; padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border2);
+}
+.grado-materias { list-style: none; margin-bottom: 1.75rem; }
+.grado-materias li {
+  font-size: 0.85rem; color: var(--muted);
+  padding: 0.35rem 0;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--border2);
+}
+.grado-materias li:last-child { border-bottom: none; }
+.grado-materias li::before {
+  content: '✓'; color: var(--copper);
+  font-size: 0.75rem; flex-shrink: 0;
+}
+.grado-btn {
+  width: 100%; padding: 0.85rem;
+  border-radius: 4px; font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+  letter-spacing: 0.02em;
+  background: transparent; color: var(--cream);
+  border: 1px solid var(--border);
+}
+.grado-btn:hover { border-color: var(--copper); color: var(--copper); }
+.grado-card.featured .grado-btn {
+  background: var(--copper); color: var(--bg); border: none;
+}
+.grado-card.featured .grado-btn:hover { background: var(--copper2); }
+
 /* CTA FINAL */
 .cta-section {
   background: var(--bg);
@@ -452,4 +511,77 @@ footer p {
   .stats{padding:2rem 1rem}
   section{padding:3rem 1rem}
   .month-card{padding:1.5rem}
+}
+
+/* GRADOS */
+.grados-section { padding: 5rem 1.5rem; background: var(--bg); }
+.grados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.grado-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.grado-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--copper);
+}
+.grado-card.featured { border-color: var(--copper); }
+.grado-icon { font-size: 2rem; }
+.grado-nivel {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  color: var(--text);
+}
+.grado-edad {
+  font-size: 0.85rem;
+  color: var(--copper);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.grado-materias {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+.grado-materias li {
+  font-size: 0.88rem;
+  color: var(--muted);
+  padding-left: 1rem;
+  position: relative;
+}
+.grado-materias li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--copper);
+  font-size: 0.75rem;
+}
+.grado-btn {
+  margin-top: 1rem;
+  padding: 0.65rem 1rem;
+  background: transparent;
+  border: 1px solid var(--copper);
+  color: var(--copper);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.grado-btn:hover {
+  background: var(--copper);
+  color: #000;
 }
