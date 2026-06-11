@@ -298,7 +298,7 @@
           <li>Diario de naturaleza digital</li>
           <li>Soporte por comunidad</li>
         </ul>
-        <button class="plan-btn ghost">Comenzar →</button>
+        <button class="plan-btn ghost" data-plan="individual" onclick="startCheckout('individual', this)">Comenzar mensual →</button>
       </div>
 
       <div class="plan-card featured">
@@ -315,7 +315,7 @@
           <li>Soporte prioritario</li>
           <li>Comunidad privada de familias</li>
         </ul>
-        <button class="plan-btn primary">Comenzar →</button>
+        <button class="plan-btn primary" data-plan="familiar" onclick="startCheckout('familiar', this)">Comenzar mensual →</button>
       </div>
 
       <div class="plan-card">
@@ -330,7 +330,7 @@
           <li>Asesoría mensual personalizada</li>
           <li>Soporte VIP</li>
         </ul>
-        <button class="plan-btn ghost">Comenzar →</button>
+        <button class="plan-btn ghost" data-plan="plus" onclick="startCheckout('plus', this)">Comenzar mensual →</button>
       </div>
 
     </div>

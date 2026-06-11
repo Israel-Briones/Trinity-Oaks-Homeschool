@@ -167,4 +167,32 @@ function toggleBilling() {
   document.getElementById('period-individual').textContent = periods.individual[mode];
   document.getElementById('period-familiar').textContent = periods.familiar[mode];
   document.getElementById('period-plus').textContent = periods.plus[mode];
+  const label = isAnual ? 'Comenzar anual →' : 'Comenzar mensual →';
+  document.querySelectorAll('.plan-btn[data-plan]').forEach(btn => {
+    if (!btn.disabled) btn.textContent = label;
+  });
+}
+
+async function startCheckout(plan, btn) {
+  const billing = isAnual ? 'anual' : 'mensual';
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Cargando...';
+
+  try {
+    const res = await fetch('https://trinity-oaks-api-production.up.railway.app/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, billing })
+    });
+    if (!res.ok) throw new Error('Error del servidor');
+    const data = await res.json();
+    if (!data.url) throw new Error('URL no recibida');
+    window.location.href = data.url;
+  } catch (err) {
+    console.error(err);
+    btn.disabled = false;
+    btn.textContent = originalText;
+    alert('Hubo un problema al iniciar el pago. Por favor intenta de nuevo.');
+  }
 }
