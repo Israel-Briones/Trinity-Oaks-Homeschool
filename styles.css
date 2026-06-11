@@ -228,6 +228,33 @@ section { padding: 5rem 2rem; }
 
 /* PLANS */
 .plans-section { background: var(--bg2); }
+.plans-toggle {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.plans-toggle span {
+  font-size: 0.85rem; color: var(--muted); font-weight: 500;
+}
+.plans-toggle span.active { color: var(--copper); font-weight: 600; }
+.toggle-switch {
+  position: relative; width: 44px; height: 24px;
+  background: var(--border); border-radius: 100px;
+  cursor: pointer; transition: background .2s;
+  border: none;
+}
+.toggle-switch.on { background: var(--copper); }
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: var(--cream); border-radius: 50%;
+  transition: transform .2s;
+}
+.toggle-switch.on .toggle-knob { transform: translateX(20px); }
+.plan-levels {
+  font-size: 0.72rem; color: var(--copper);
+  font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 0.75rem;
+}
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
