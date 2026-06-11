@@ -271,13 +271,14 @@ section { padding: 5rem 2rem; }
   background: var(--bg2);
 }
 .plan-badge {
-  position: absolute; top: -12px; left: 50%;
+  position: absolute; top: -14px; left: 50%;
   transform: translateX(-50%);
-  background: var(--copper); color: var(--bg);
-  font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 0.2rem 0.85rem; border-radius: 100px;
+  background: var(--copper); color: #fff;
+  font-size: 0.82rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.3rem 1.1rem; border-radius: 100px;
   white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(184,115,51,0.5);
 }
 .plan-name {
   font-family: 'Fraunces', serif;
