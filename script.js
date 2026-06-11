@@ -175,6 +175,10 @@ function toggleBilling() {
 
 async function startCheckout(plan, btn) {
   const billing = isAnual ? 'annual' : 'monthly';
+
+  const email = prompt('Por favor ingresa tu correo electrónico:');
+  if (!email) return;
+
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Cargando...';
@@ -183,7 +187,7 @@ async function startCheckout(plan, btn) {
     const res = await fetch('https://trinity-oaks-api-production.up.railway.app/create-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': 'to-api-2025-secure' },
-      body: JSON.stringify({ plan, billing })
+      body: JSON.stringify({ plan, billing, email })
     });
     if (!res.ok) throw new Error('Error del servidor');
     const data = await res.json();
