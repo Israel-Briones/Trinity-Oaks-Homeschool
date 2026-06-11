@@ -173,10 +173,52 @@ function toggleBilling() {
   });
 }
 
+function askEmailModal() {
+  return new Promise((resolve) => {
+    const modal  = document.getElementById('email-modal');
+    const input  = document.getElementById('em-input');
+    const submit = document.getElementById('em-submit');
+    const cancel = document.getElementById('em-cancel');
+
+    input.value = '';
+    modal.hidden = false;
+    input.focus();
+
+    function cleanup() {
+      modal.hidden = true;
+      submit.removeEventListener('click', onSubmit);
+      cancel.removeEventListener('click', onCancel);
+      input.removeEventListener('keydown', onKey);
+    }
+
+    function onSubmit() {
+      const email = input.value.trim();
+      if (!email) { input.focus(); return; }
+      cleanup();
+      resolve(email);
+    }
+
+    function onCancel(e) {
+      e.preventDefault();
+      cleanup();
+      resolve(null);
+    }
+
+    function onKey(e) {
+      if (e.key === 'Enter') onSubmit();
+      if (e.key === 'Escape') onCancel(e);
+    }
+
+    submit.addEventListener('click', onSubmit);
+    cancel.addEventListener('click', onCancel);
+    input.addEventListener('keydown', onKey);
+  });
+}
+
 async function startCheckout(plan, btn) {
   const billing = isAnual ? 'annual' : 'monthly';
 
-  const email = prompt('Por favor ingresa tu correo electrónico:');
+  const email = await askEmailModal();
   if (!email) return;
 
   const originalText = btn.textContent;

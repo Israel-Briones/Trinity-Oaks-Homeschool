@@ -416,6 +416,100 @@
   </div>
 </footer>
 
+<!-- EMAIL MODAL -->
+<div id="email-modal" class="em-overlay" aria-modal="true" role="dialog" aria-labelledby="em-title" hidden>
+  <div class="em-card">
+    <img src="Logo 2.png" height="70" alt="Trinity Oaks" class="em-logo">
+    <h2 id="em-title" class="em-title">Ingresa tu correo</h2>
+    <p class="em-subtitle">Para enviarte los detalles de tu suscripción.</p>
+    <input id="em-input" class="em-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+    <button id="em-submit" class="em-btn">Continuar</button>
+    <a id="em-cancel" class="em-cancel" href="#">Cancelar</a>
+  </div>
+</div>
+
+<style>
+  @keyframes emFadeIn  { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes emSlideUp { from { opacity: 0; transform: translateY(24px) scale(.97) } to { opacity: 1; transform: translateY(0) scale(1) } }
+
+  .em-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.75);
+    display: flex; align-items: center; justify-content: center;
+    animation: emFadeIn .2s ease;
+  }
+  .em-overlay[hidden] { display: none; }
+
+  .em-card {
+    background: #0D0D0D;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    width: min(420px, 90vw);
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    animation: emSlideUp .25s cubic-bezier(.22,.68,0,1.2);
+  }
+
+  .em-logo { margin-bottom: .25rem; }
+
+  .em-title {
+    font-family: 'Fraunces', serif;
+    color: #F0EAE0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+  }
+
+  .em-subtitle {
+    font-family: 'Inter', sans-serif;
+    color: #9a8f86;
+    font-size: .9rem;
+    margin: 0;
+    text-align: center;
+  }
+
+  .em-input {
+    font-family: 'Inter', sans-serif;
+    width: 100%; box-sizing: border-box;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #F0EAE0;
+    font-size: 1rem;
+    padding: .75rem 1rem;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .em-input:focus { border-color: #B87333; }
+  .em-input::placeholder { color: #555; }
+
+  .em-btn {
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    background: #B87333;
+    color: #0D0D0D;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: .85rem;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+  }
+  .em-btn:hover  { background: #cf8a4a; }
+  .em-btn:active { transform: scale(.98); }
+
+  .em-cancel {
+    font-family: 'Inter', sans-serif;
+    color: #666;
+    font-size: .85rem;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .em-cancel:hover { color: #F0EAE0; }
+</style>
+
 <script src="script.js"></script>
 </body>
 </html>
