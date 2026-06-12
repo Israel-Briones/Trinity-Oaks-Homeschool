@@ -23,7 +23,7 @@
     </div>
     <a href="https://wa.me/525584874261" class="nav-asesor" target="_blank">Hablar con un asesor</a>
   </div>
-  <a href="#" class="nav-btn">Iniciar sesión</a>
+  <a href="#" class="nav-btn" id="btn-login">Iniciar sesión</a>
 </nav>
 
 <!-- HERO -->
@@ -508,7 +508,36 @@
     transition: color .2s;
   }
   .em-cancel:hover { color: #F0EAE0; }
+
+  .lm-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none;
+    color: #555; font-size: 1.5rem; line-height: 1;
+    cursor: pointer; transition: color .2s; padding: 0.1rem 0.3rem;
+  }
+  .lm-close:hover { color: #F0EAE0; }
+
+  .lm-error {
+    font-family: 'Inter', sans-serif;
+    color: #e07070; font-size: .85rem;
+    text-align: center; margin: 0; width: 100%;
+  }
 </style>
+
+<!-- LOGIN MODAL -->
+<div id="login-modal" class="em-overlay" aria-modal="true" role="dialog" aria-labelledby="lm-title" hidden>
+  <div class="em-card" style="position:relative;">
+    <button id="lm-close" class="lm-close" aria-label="Cerrar">&times;</button>
+    <img src="Logo 2.png" height="70" alt="Trinity Oaks" class="em-logo">
+    <h2 id="lm-title" class="em-title">Iniciar sesión</h2>
+    <p class="em-subtitle">Accede a tu panel de familia.</p>
+    <input id="lm-email"    class="em-input" type="email"    placeholder="tucorreo@ejemplo.com" autocomplete="email">
+    <input id="lm-password" class="em-input" type="password" placeholder="Contraseña"           autocomplete="current-password">
+    <p id="lm-error" class="lm-error" hidden></p>
+    <button id="lm-submit" class="em-btn">Iniciar sesión</button>
+    <a href="#planes" class="em-cancel" id="lm-ver-planes">¿Aún no tienes cuenta? Ver planes</a>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>

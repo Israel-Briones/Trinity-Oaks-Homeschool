@@ -246,3 +246,83 @@ async function startCheckout(plan, btn) {
     alert('Hubo un problema al iniciar el pago. Por favor intenta de nuevo.');
   }
 }
+
+// ── Login modal ───────────────────────────────────────────────────────────────
+(function () {
+  const modal   = document.getElementById('login-modal');
+  const emailEl = document.getElementById('lm-email');
+  const passEl  = document.getElementById('lm-password');
+  const errorEl = document.getElementById('lm-error');
+  const submitBtn = document.getElementById('lm-submit');
+
+  document.getElementById('btn-login').addEventListener('click', e => {
+    e.preventDefault();
+    openLogin();
+  });
+
+  function openLogin() {
+    emailEl.value = '';
+    passEl.value  = '';
+    errorEl.hidden = true;
+    modal.hidden = false;
+    emailEl.focus();
+  }
+
+  function closeLogin() { modal.hidden = true; }
+
+  document.getElementById('lm-close').addEventListener('click', closeLogin);
+  modal.addEventListener('click', e => { if (e.target === modal) closeLogin(); });
+  document.getElementById('lm-ver-planes').addEventListener('click', closeLogin);
+
+  passEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitLogin(); });
+  submitBtn.addEventListener('click', submitLogin);
+
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function submitLogin() {
+    const email    = emailEl.value.trim();
+    const password = passEl.value;
+
+    if (!email || !password) {
+      showError('Por favor completa todos los campos.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando...';
+    errorEl.hidden = true;
+
+    try {
+      const password_hash = await sha256(password);
+      const res = await fetch('https://trinity-oaks-api-production.up.railway.app/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': 'to-api-2025-secure' },
+        body: JSON.stringify({ email, password_hash })
+      });
+
+      if (res.status === 401 || res.status === 403) throw new Error('credenciales');
+      if (!res.ok) throw new Error('servidor');
+
+      const data = await res.json();
+      localStorage.setItem('to_email',   data.email   || email);
+      localStorage.setItem('to_nombre',  data.nombre  || '');
+      localStorage.setItem('to_plan',    data.plan    || '');
+      localStorage.setItem('to_billing', data.billing || '');
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Iniciar sesión';
+      showError(err.message === 'credenciales'
+        ? 'Correo o contraseña incorrectos.'
+        : 'Hubo un error. Por favor intenta de nuevo.');
+    }
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+})();
