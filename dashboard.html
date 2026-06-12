@@ -461,16 +461,39 @@
     if (e.target === e.currentTarget) e.currentTarget.hidden = true;
   });
 
-  document.getElementById('ah-submit').addEventListener('click', () => {
-    const nombre = document.getElementById('ah-nombre').value.trim();
-    const nivel  = document.getElementById('ah-nivel').value;
-    const mes    = document.getElementById('ah-mes').value;
+  document.getElementById('ah-submit').addEventListener('click', async () => {
+    const nombre  = document.getElementById('ah-nombre').value.trim();
+    const nivel   = document.getElementById('ah-nivel').value;
+    const mes     = document.getElementById('ah-mes').value;
     if (!nombre || !nivel) { document.getElementById(nombre ? 'ah-nivel' : 'ah-nombre').focus(); return; }
-    const hijos = loadHijos();
-    hijos.push({ nombre, nivel, mes });
-    saveHijos(hijos);
-    document.getElementById('add-hijo-modal').hidden = true;
-    renderHijos();
+
+    const submitBtn = document.getElementById('ah-submit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Guardando…';
+
+    try {
+      const res  = await fetch(`${API}/add-hijo`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ email, nombre, nivel })
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error || 'Error al agregar hijo.'); return; }
+
+      const hijo = data.hijo;
+      const hijos = loadHijos();
+      hijos.push({ id: hijo.id, nombre: hijo.nombre, nivel: hijo.nivel, mes: mes });
+      saveHijos(hijos);
+    } catch {
+      // fallback: save without id so it at least shows
+      const hijos = loadHijos();
+      hijos.push({ nombre, nivel, mes });
+      saveHijos(hijos);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Agregar';
+      document.getElementById('add-hijo-modal').hidden = true;
+      renderHijos();
+    }
   });
 
   // ── Plan ─────────────────────────────────────────────────
@@ -541,9 +564,38 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Init ─────────────────────────────────────────────────
+  // ── Init: sync hijos from backend so id is always present ──
+  async function syncDashboard() {
+    try {
+      const res  = await fetch(`${API}/get-dashboard`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data.hijos) && data.hijos.length) {
+        // Merge: backend is source of truth for id/nivel/mes_activo; preserve local mes selection
+        const local = loadHijos();
+        const localByName = Object.fromEntries(local.map(h => [h.nombre, h]));
+        const synced = data.hijos.map(h => ({
+          id:     h.id,
+          nombre: h.nombre,
+          nivel:  h.nivel,
+          mes:    localByName[h.nombre]?.mes || `Mes ${h.mes_activo} — Agosto`
+        }));
+        saveHijos(synced);
+        renderHijos();
+      }
+      // Sync plan/billing from backend
+      if (data.usuario?.plan)    localStorage.setItem('to_plan',    data.usuario.plan);
+      if (data.usuario?.billing) localStorage.setItem('to_billing', data.usuario.billing);
+      renderPlan();
+    } catch { /* silent — local cache still shows */ }
+  }
+
   renderHijos();
   renderPlan();
+  syncDashboard();
 </script>
 </body>
 </html>
