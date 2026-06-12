@@ -334,16 +334,10 @@
       <div class="ah-field-label">Nivel escolar</div>
       <select id="ah-nivel" class="ah-select">
         <option value="">Seleccionar nivel</option>
-        <option>Kínder</option>
-        <option>1° Primaria</option>
-        <option>2° Primaria</option>
-        <option>3° Primaria</option>
-        <option>4° Primaria</option>
-        <option>5° Primaria</option>
-        <option>6° Primaria</option>
-        <option>1° Secundaria</option>
-        <option>2° Secundaria</option>
-        <option>3° Secundaria</option>
+        <option value="kinder">Kínder</option>
+        <option value="primaria">Primaria</option>
+        <option value="secundaria">Secundaria</option>
+        <option value="preparatoria">Preparatoria</option>
       </select>
     </div>
     <div>
@@ -417,7 +411,7 @@
         </div>
         <div class="hijo-row">
           <span class="hijo-row-label">Nivel</span>
-          <span class="hijo-row-val">${escHtml(h.nivel)}</span>
+          <span class="hijo-row-val">${escHtml(h.nivel_display || h.nivel)}</span>
         </div>
         <div class="hijo-row">
           <span class="hijo-row-label">Mes activo</span>
@@ -438,7 +432,7 @@
     grid.querySelectorAll('.hijo-ver-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const h = loadHijos()[+btn.dataset.idx];
-        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel)}&mes=${h.mes}`;
+        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel_display || h.nivel)}&mes=${h.mes}`;
       });
     });
   }
@@ -480,8 +474,15 @@
       if (!res.ok) { alert(data.error || 'Error al agregar hijo.'); return; }
 
       const hijo = data.hijo;
+      const nivelSel = document.getElementById('ah-nivel');
       const hijos = loadHijos();
-      hijos.push({ id: hijo.id, nombre: hijo.nombre, nivel: hijo.nivel, mes: mes });
+      hijos.push({
+        id: hijo.id,
+        nombre: hijo.nombre,
+        nivel: hijo.nivel,
+        nivel_display: nivelSel.options[nivelSel.selectedIndex].text,
+        mes
+      });
       saveHijos(hijos);
     } catch {
       // fallback: save without id so it at least shows
@@ -577,11 +578,13 @@
         // Merge: backend is source of truth for id/nivel/mes_activo; preserve local mes selection
         const local = loadHijos();
         const localByName = Object.fromEntries(local.map(h => [h.nombre, h]));
+        const NIVEL_DISPLAY = { kinder: 'Kínder', primaria: 'Primaria', secundaria: 'Secundaria', preparatoria: 'Preparatoria' };
         const synced = data.hijos.map(h => ({
-          id:     h.id,
-          nombre: h.nombre,
-          nivel:  h.nivel,
-          mes:    localByName[h.nombre]?.mes || `Mes ${h.mes_activo} — Agosto`
+          id:            h.id,
+          nombre:        h.nombre,
+          nivel:         h.nivel,
+          nivel_display: NIVEL_DISPLAY[h.nivel] || h.nivel,
+          mes:           localByName[h.nombre]?.mes || `Mes ${h.mes_activo} — Agosto`
         }));
         saveHijos(synced);
         renderHijos();
@@ -592,6 +595,10 @@
       renderPlan();
     } catch { /* silent — local cache still shows */ }
   }
+
+  // Clear stale hijos that have no id (legacy data without DB id)
+  const _stale = loadHijos();
+  if (_stale.some(h => !h.id)) saveHijos([]);
 
   renderHijos();
   renderPlan();
