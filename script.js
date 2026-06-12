@@ -326,3 +326,75 @@ async function startCheckout(plan, btn) {
     errorEl.hidden = false;
   }
 })();
+
+// ── Forgot password modal ─────────────────────────────────────────────────────
+(function () {
+  const modal     = document.getElementById('fp-modal');
+  const emailEl   = document.getElementById('fp-email');
+  const errorEl   = document.getElementById('fp-error');
+  const successEl = document.getElementById('fp-success');
+  const submitBtn = document.getElementById('fp-submit');
+
+  document.getElementById('lm-forgot').addEventListener('click', e => {
+    e.preventDefault();
+    emailEl.value = document.getElementById('lm-email').value.trim();
+    document.getElementById('login-modal').hidden = true;
+    openFp();
+  });
+
+  function openFp() {
+    errorEl.hidden   = true;
+    successEl.hidden = true;
+    submitBtn.hidden = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Enviar instrucciones';
+    modal.hidden = false;
+    emailEl.focus();
+  }
+
+  function closeFp() { modal.hidden = true; }
+
+  document.getElementById('fp-close').addEventListener('click', closeFp);
+  modal.addEventListener('click', e => { if (e.target === modal) closeFp(); });
+
+  document.getElementById('fp-back').addEventListener('click', e => {
+    e.preventDefault();
+    closeFp();
+    document.getElementById('login-modal').hidden = false;
+  });
+
+  emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitFp(); });
+  submitBtn.addEventListener('click', submitFp);
+
+  async function submitFp() {
+    const email = emailEl.value.trim();
+    errorEl.hidden   = true;
+    successEl.hidden = true;
+
+    if (!email) {
+      errorEl.textContent = 'Por favor ingresa tu correo.';
+      errorEl.hidden = false;
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    try {
+      const res = await fetch('https://trinity-oaks-api-production.up.railway.app/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': 'to-api-2025-secure' },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error('servidor');
+      successEl.textContent = 'Te enviamos un correo con instrucciones.';
+      successEl.hidden = false;
+      submitBtn.hidden = true;
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar instrucciones';
+      errorEl.textContent = 'Hubo un error. Por favor intenta de nuevo.';
+      errorEl.hidden = false;
+    }
+  }
+})();

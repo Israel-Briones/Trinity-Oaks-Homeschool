@@ -522,7 +522,36 @@
     color: #e07070; font-size: .85rem;
     text-align: center; margin: 0; width: 100%;
   }
+
+  .fp-link {
+    font-family: 'Inter', sans-serif;
+    color: #555; font-size: .78rem;
+    text-decoration: none; align-self: flex-end;
+    transition: color .2s;
+  }
+  .fp-link:hover { color: #B87333; }
+
+  .fp-success {
+    font-family: 'Inter', sans-serif;
+    color: #7aab4a; font-size: .85rem;
+    text-align: center; margin: 0; width: 100%;
+  }
 </style>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div id="fp-modal" class="em-overlay" aria-modal="true" role="dialog" aria-labelledby="fp-title" hidden>
+  <div class="em-card" style="position:relative;">
+    <button id="fp-close" class="lm-close" aria-label="Cerrar">&times;</button>
+    <img src="Logo 2.png" height="70" alt="Trinity Oaks" class="em-logo">
+    <h2 id="fp-title" class="em-title">Recuperar contraseña</h2>
+    <p class="em-subtitle">Te enviaremos un enlace para restablecer tu contraseña.</p>
+    <input id="fp-email" class="em-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+    <p id="fp-error"   class="lm-error"   hidden></p>
+    <p id="fp-success" class="fp-success" hidden></p>
+    <button id="fp-submit" class="em-btn">Enviar instrucciones</button>
+    <a href="#" class="em-cancel" id="fp-back">← Volver al inicio de sesión</a>
+  </div>
+</div>
 
 <!-- LOGIN MODAL -->
 <div id="login-modal" class="em-overlay" aria-modal="true" role="dialog" aria-labelledby="lm-title" hidden>
@@ -533,6 +562,7 @@
     <p class="em-subtitle">Accede a tu panel de familia.</p>
     <input id="lm-email"    class="em-input" type="email"    placeholder="tucorreo@ejemplo.com" autocomplete="email">
     <input id="lm-password" class="em-input" type="password" placeholder="Contraseña"           autocomplete="current-password">
+    <a href="#" class="fp-link" id="lm-forgot">¿Olvidaste tu contraseña?</a>
     <p id="lm-error" class="lm-error" hidden></p>
     <button id="lm-submit" class="em-btn">Iniciar sesión</button>
     <a href="#planes" class="em-cancel" id="lm-ver-planes">¿Aún no tienes cuenta? Ver planes</a>
