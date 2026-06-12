@@ -191,11 +191,18 @@
       const hijoId  = params.get('hijo_id') || '';
       const nombre  = params.get('nombre')  || 'Hijo';
       const nivel   = params.get('nivel')   || '';
-      const mes     = params.get('mes')     || '';
+      const mesRaw  = params.get('mes')     || '';
+
+      // Extract the numeric part for API calls ("Mes 1 — Agosto" → "1")
+      const mesNum  = (mesRaw.match(/\d+/) || [''])[0];
+      // Display badge as "MES 1" without duplicating the word
+      const mesLabel = mesNum ? `MES ${mesNum}` : '';
 
       document.getElementById('mat-nombre').textContent = nombre;
       document.getElementById('mat-nivel').textContent  = nivel;
-      document.getElementById('mat-mes').textContent    = mes ? `Mes ${mes}` : '';
+      document.getElementById('mat-mes').textContent    = mesLabel;
+
+      const mes = mesNum;
 
       const loading = document.getElementById('mat-loading');
       const grid    = document.getElementById('mat-grid');
