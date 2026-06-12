@@ -340,10 +340,10 @@
         <option value="preparatoria">Preparatoria</option>
       </select>
     </div>
-    <div id="ah-grado-wrap" style="display:none;">
-      <div class="ah-field-label">Grado</div>
-      <select id="ah-grado" class="ah-select">
-        <option value="">Seleccionar grado</option>
+    <div id="ah-sub-wrap" style="display:none;">
+      <div class="ah-field-label" id="ah-sub-label">Grado</div>
+      <select id="ah-sub" class="ah-select">
+        <option value="">Seleccionar</option>
       </select>
     </div>
     <div>
@@ -438,7 +438,7 @@
     grid.querySelectorAll('.hijo-ver-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const h = loadHijos()[+btn.dataset.idx];
-        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel_display || h.nivel)}&mes=${h.mes}`;
+        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel)}&grado=${encodeURIComponent(h.grado||'')}&semestre=${encodeURIComponent(h.semestre||'')}&nivel_display=${encodeURIComponent(h.nivel_display||h.nivel)}&mes=${encodeURIComponent(h.mes)}`;
       });
     });
   }
@@ -446,27 +446,30 @@
   // ── Add hijo modal ────────────────────────────────────────
   document.getElementById('btn-agregar-hijo').addEventListener('click', openAddHijo);
 
-  const GRADOS = {
-    kinder:       ['1°', '2°', '3°'],
-    primaria:     ['1°', '2°', '3°', '4°', '5°', '6°'],
-    secundaria:   ['1°', '2°', '3°'],
-    preparatoria: ['1°', '2°', '3°']
+  const NIVEL_CONFIG = {
+    kinder:       { label: 'Grado',    opts: ['1°','2°','3°'],               field: 'grado' },
+    primaria:     { label: 'Año',      opts: ['1°','2°','3°','4°','5°','6°'], field: 'grado' },
+    secundaria:   { label: 'Semestre', opts: ['1°','2°','3°','4°','5°','6°'], field: 'semestre' },
+    preparatoria: { label: 'Semestre', opts: ['1°','2°','3°','4°','5°','6°'], field: 'semestre' }
   };
 
   document.getElementById('ah-nivel').addEventListener('change', function () {
-    const wrap   = document.getElementById('ah-grado-wrap');
-    const select = document.getElementById('ah-grado');
-    const opts   = GRADOS[this.value] || [];
-    select.innerHTML = '<option value="">Seleccionar grado</option>' +
-      opts.map(g => `<option value="${g}">${g}</option>`).join('');
-    wrap.style.display = opts.length ? '' : 'none';
+    const wrap   = document.getElementById('ah-sub-wrap');
+    const select = document.getElementById('ah-sub');
+    const lbl    = document.getElementById('ah-sub-label');
+    const cfg    = NIVEL_CONFIG[this.value];
+    if (!cfg) { wrap.style.display = 'none'; return; }
+    lbl.textContent = cfg.label;
+    select.innerHTML = `<option value="">Seleccionar ${cfg.label.toLowerCase()}</option>` +
+      cfg.opts.map(o => `<option value="${o}">${o}</option>`).join('');
+    wrap.style.display = '';
   });
 
   function openAddHijo() {
     document.getElementById('ah-nombre').value = '';
     document.getElementById('ah-nivel').value  = '';
-    document.getElementById('ah-grado').innerHTML = '<option value="">Seleccionar grado</option>';
-    document.getElementById('ah-grado-wrap').style.display = 'none';
+    document.getElementById('ah-sub').innerHTML = '<option value="">Seleccionar</option>';
+    document.getElementById('ah-sub-wrap').style.display = 'none';
     document.getElementById('ah-mes').selectedIndex = 0;
     document.getElementById('add-hijo-modal').hidden = false;
     document.getElementById('ah-nombre').focus();
@@ -480,12 +483,12 @@
   });
 
   document.getElementById('ah-submit').addEventListener('click', async () => {
-    const nombre = document.getElementById('ah-nombre').value.trim();
-    const nivel  = document.getElementById('ah-nivel').value;
-    const grado  = document.getElementById('ah-grado').value;
-    const mes    = document.getElementById('ah-mes').value;
-    if (!nombre || !nivel || !grado) {
-      document.getElementById(!nombre ? 'ah-nombre' : !nivel ? 'ah-nivel' : 'ah-grado').focus();
+    const nombre   = document.getElementById('ah-nombre').value.trim();
+    const nivel    = document.getElementById('ah-nivel').value;
+    const subVal   = document.getElementById('ah-sub').value;
+    const mes      = document.getElementById('ah-mes').value;
+    if (!nombre || !nivel || !subVal) {
+      document.getElementById(!nombre ? 'ah-nombre' : !nivel ? 'ah-nivel' : 'ah-sub').focus();
       return;
     }
 
@@ -493,24 +496,32 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Guardando…';
 
-    const nivelSel = document.getElementById('ah-nivel');
-    const nivel_display = `${grado} ${nivelSel.options[nivelSel.selectedIndex].text}`;
+    const cfg         = NIVEL_CONFIG[nivel];
+    const isGrado     = cfg?.field === 'grado';
+    const grado       = isGrado    ? subVal : null;
+    const semestre    = !isGrado   ? subVal : null;
+    const nivelLabel  = document.getElementById('ah-nivel').options[document.getElementById('ah-nivel').selectedIndex].text;
+    const nivel_display = semestre
+      ? `Semestre ${semestre.replace('°','')} — ${nivelLabel}`
+      : `${subVal} ${nivelLabel}`;
 
     try {
       const res  = await fetch(`${API}/add-hijo`, {
         method: 'POST', headers: HEADERS,
-        body: JSON.stringify({ email, nombre, nivel, grado })
+        body: JSON.stringify({ email, nombre, nivel, grado, semestre })
       });
       const data = await res.json();
       if (!res.ok) { alert(data.error || 'Error al agregar hijo.'); return; }
 
-      const hijo = data.hijo;
+      const hijo  = data.hijo;
       const hijos = loadHijos();
-      hijos.push({ id: hijo.id, nombre: hijo.nombre, nivel: hijo.nivel, grado: hijo.grado || grado, nivel_display, mes });
+      hijos.push({ id: hijo.id, nombre: hijo.nombre, nivel: hijo.nivel,
+                   grado: hijo.grado || grado || '', semestre: hijo.semestre || semestre || '',
+                   nivel_display, mes });
       saveHijos(hijos);
     } catch {
       const hijos = loadHijos();
-      hijos.push({ nombre, nivel, grado, nivel_display, mes });
+      hijos.push({ nombre, nivel, grado: grado || '', semestre: semestre || '', nivel_display, mes });
       saveHijos(hijos);
     } finally {
       submitBtn.disabled = false;
@@ -603,13 +614,16 @@
         const localByName = Object.fromEntries(local.map(h => [h.nombre, h]));
         const NIVEL_LABEL = { kinder: 'Kínder', primaria: 'Primaria', secundaria: 'Secundaria', preparatoria: 'Preparatoria' };
         const synced = data.hijos.map(h => {
-          const label = NIVEL_LABEL[h.nivel] || h.nivel;
-          const nivel_display = h.grado ? `${h.grado} ${label}` : label;
+          const label   = NIVEL_LABEL[h.nivel] || h.nivel;
+          const nivel_display = h.semestre
+            ? `Semestre ${h.semestre.replace('°','')} — ${label}`
+            : h.grado ? `${h.grado} ${label}` : label;
           return {
             id:            h.id,
             nombre:        h.nombre,
             nivel:         h.nivel,
-            grado:         h.grado || '',
+            grado:         h.grado    || '',
+            semestre:      h.semestre || '',
             nivel_display,
             mes:           localByName[h.nombre]?.mes || `Mes ${h.mes_activo} — Agosto`
           };

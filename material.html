@@ -484,18 +484,21 @@
     }
 
     /* ── URL params ── */
-    const params  = new URLSearchParams(window.location.search);
+    const params   = new URLSearchParams(window.location.search);
     window._hijoId = parseInt(params.get('hijo_id'), 10) || 0;
     window._email  = localStorage.getItem('to_email') || '';
-    const nombre   = params.get('nombre') || 'Hijo';
-    const nivel    = params.get('nivel')  || '';
-    const mesRaw   = params.get('mes')    || '';
-    const mesNum   = (mesRaw.match(/\d+/) || [''])[0];
+    const nombre        = params.get('nombre')        || 'Hijo';
+    const nivel         = params.get('nivel')         || '';
+    const grado         = params.get('grado')         || '';
+    const semestre      = params.get('semestre')      || '';
+    const nivel_display = params.get('nivel_display') || nivel;
+    const mesRaw        = params.get('mes')           || '';
+    const mesNum        = (mesRaw.match(/\d+/) || [''])[0];
 
-    console.log('params:', { hijo_id: window._hijoId, nombre, nivel, mes: mesNum });
+    console.log('params:', { hijo_id: window._hijoId, nombre, nivel, grado, semestre, mes: mesNum });
 
     document.getElementById('mat-nombre').textContent = nombre;
-    document.getElementById('mat-nivel').textContent  = nivel;
+    document.getElementById('mat-nivel').textContent  = nivel_display;
     document.getElementById('mat-mes').textContent    = mesNum ? `MES ${mesNum}` : '';
 
     window._mes = mesNum;
