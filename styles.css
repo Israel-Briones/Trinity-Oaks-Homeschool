@@ -34,7 +34,7 @@ nav {
   border-bottom: 1px solid var(--border);
   padding: 0 2rem;
   display: flex; align-items: center; justify-content: space-between;
-  height: 230px;
+  height: 173px;
 }
 .nav-logo {
   font-family: 'Fraunces', serif;
