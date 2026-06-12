@@ -414,7 +414,7 @@
     grid.querySelectorAll('.hijo-ver-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const h = loadHijos()[+btn.dataset.idx];
-        alert(`Material de ${h.nombre} — ${h.nivel} (${h.mes})\n\nPróximamente disponible.`);
+        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel)}&mes=${h.mes}`;
       });
     });
   }

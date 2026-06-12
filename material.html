@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Material — Trinity Oaks Homeschool</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .mat-header {
+      max-width: 900px;
+      margin: 2.5rem auto 0;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .mat-back {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .mat-back:hover { color: var(--copper); }
+    .mat-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--cream);
+      flex: 1;
+    }
+    .mat-badge {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+    }
+    .mat-badge-nivel {
+      background: rgba(184,115,51,0.15);
+      color: var(--copper);
+      border: 1px solid rgba(184,115,51,0.3);
+    }
+    .mat-badge-mes {
+      background: var(--bg2);
+      color: var(--muted);
+      border: 1px solid var(--border2);
+    }
+
+    /* grid */
+    .mat-grid {
+      max-width: 900px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* card */
+    .mat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 1.4rem 1.4rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .mat-card:hover {
+      border-color: rgba(184,115,51,0.3);
+      transform: translateY(-2px);
+    }
+    .mat-card-tipo {
+      align-self: flex-start;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    .tipo-pdf      { background: rgba(220,80,80,0.15);  color: #e07070; }
+    .tipo-video    { background: rgba(80,140,220,0.15); color: #70aaee; }
+    .tipo-actividad{ background: rgba(80,200,130,0.15); color: #70cc99; }
+    .tipo-otro     { background: rgba(120,120,120,0.15);color: var(--muted); }
+
+    .mat-card-titulo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.35;
+    }
+    .mat-card-desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .mat-card-btn {
+      margin-top: 0.4rem;
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--copper);
+      padding: 0.5rem 1.1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      text-align: center;
+      letter-spacing: 0.03em;
+      transition: background 0.2s;
+    }
+    .mat-card-btn:hover { background: #c8823d; }
+
+    /* loading */
+    .mat-loading {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border2);
+      border-top-color: var(--copper);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* empty */
+    .mat-empty {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    .mat-empty-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+  </style>
+</head>
+<body>
+
+  <div class="mat-header" id="mat-header">
+    <a class="mat-back" href="dashboard.html">← Regresar</a>
+    <span class="mat-title" id="mat-nombre">—</span>
+    <span class="mat-badge mat-badge-nivel" id="mat-nivel"></span>
+    <span class="mat-badge mat-badge-mes"  id="mat-mes"></span>
+  </div>
+
+  <div class="mat-loading" id="mat-loading">
+    <div class="spinner"></div>
+    <span>Cargando material…</span>
+  </div>
+
+  <div class="mat-grid"  id="mat-grid"  hidden></div>
+  <div class="mat-empty" id="mat-empty" hidden>
+    <div class="mat-empty-icon">📚</div>
+    <p id="mat-empty-msg"></p>
+  </div>
+
+  <script>
+    (() => {
+      if (!localStorage.getItem('to_email')) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const params  = new URLSearchParams(window.location.search);
+      const hijoId  = params.get('hijo_id') || '';
+      const nombre  = params.get('nombre')  || 'Hijo';
+      const nivel   = params.get('nivel')   || '';
+      const mes     = params.get('mes')     || '';
+
+      document.getElementById('mat-nombre').textContent = nombre;
+      document.getElementById('mat-nivel').textContent  = nivel;
+      document.getElementById('mat-mes').textContent    = mes ? `Mes ${mes}` : '';
+
+      const loading = document.getElementById('mat-loading');
+      const grid    = document.getElementById('mat-grid');
+      const empty   = document.getElementById('mat-empty');
+      const emptyMsg= document.getElementById('mat-empty-msg');
+
+      const tipoClass = t => {
+        const k = (t || '').toLowerCase();
+        if (k === 'pdf')       return 'tipo-pdf';
+        if (k === 'video')     return 'tipo-video';
+        if (k === 'actividad') return 'tipo-actividad';
+        return 'tipo-otro';
+      };
+
+      fetch('https://trinity-oaks-api-production.up.railway.app/get-content', {
+        method: 'POST',
+        headers: {
+          'x-api-key': 'to-api-2025-secure',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ hijo_id: hijoId, mes })
+      })
+        .then(r => r.json())
+        .then(data => {
+          loading.hidden = true;
+          const items = Array.isArray(data) ? data : (data.content || data.items || []);
+          if (!items.length) {
+            emptyMsg.textContent =
+              `El contenido del${mes ? ' Mes ' + mes : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
+            empty.hidden = false;
+            return;
+          }
+          items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'mat-card';
+            card.innerHTML = `
+              <span class="mat-card-tipo ${tipoClass(item.tipo)}">${item.tipo || 'Recurso'}</span>
+              <div class="mat-card-titulo">${item.titulo || 'Sin título'}</div>
+              ${item.descripcion ? `<div class="mat-card-desc">${item.descripcion}</div>` : ''}
+              ${item.url ? `<a class="mat-card-btn" href="${item.url}" target="_blank" rel="noopener">Descargar</a>` : ''}
+            `;
+            grid.appendChild(card);
+          });
+          grid.hidden = false;
+        })
+        .catch(() => {
+          loading.hidden = true;
+          emptyMsg.textContent =
+            `El contenido del${mes ? ' Mes ' + mes : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
+          empty.hidden = false;
+        });
+    })();
+  </script>
+</body>
+</html>
