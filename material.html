@@ -485,12 +485,14 @@
 
     /* ── URL params ── */
     const params  = new URLSearchParams(window.location.search);
-    window._hijoId = params.get('hijo_id') || '';
+    window._hijoId = parseInt(params.get('hijo_id'), 10) || 0;
     window._email  = localStorage.getItem('to_email') || '';
     const nombre   = params.get('nombre') || 'Hijo';
     const nivel    = params.get('nivel')  || '';
     const mesRaw   = params.get('mes')    || '';
     const mesNum   = (mesRaw.match(/\d+/) || [''])[0];
+
+    console.log('params:', { hijo_id: window._hijoId, nombre, nivel, mes: mesNum });
 
     document.getElementById('mat-nombre').textContent = nombre;
     document.getElementById('mat-nivel').textContent  = nivel;
