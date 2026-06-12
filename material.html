@@ -6,6 +6,7 @@
   <title>Material — Trinity Oaks Homeschool</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* ── Header ── */
     .mat-header {
       max-width: 900px;
       margin: 2.5rem auto 0;
@@ -16,7 +17,6 @@
       flex-wrap: wrap;
     }
     .mat-back {
-      font-family: 'Inter', sans-serif;
       font-size: 0.85rem;
       color: var(--muted);
       text-decoration: none;
@@ -35,7 +35,6 @@
     }
     .mat-badge {
       display: inline-block;
-      font-family: 'Inter', sans-serif;
       font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.07em;
@@ -43,28 +42,18 @@
       padding: 0.25rem 0.75rem;
       border-radius: 999px;
     }
-    .mat-badge-nivel {
-      background: rgba(184,115,51,0.15);
-      color: var(--copper);
-      border: 1px solid rgba(184,115,51,0.3);
-    }
-    .mat-badge-mes {
-      background: var(--bg2);
-      color: var(--muted);
-      border: 1px solid var(--border2);
-    }
+    .mat-badge-nivel { background: rgba(184,115,51,0.15); color: var(--copper); border: 1px solid rgba(184,115,51,0.3); }
+    .mat-badge-mes   { background: var(--bg2); color: var(--muted); border: 1px solid var(--border2); }
 
-    /* grid */
+    /* ── Content grid ── */
     .mat-grid {
       max-width: 900px;
-      margin: 2rem auto 4rem;
+      margin: 2rem auto 1rem;
       padding: 0 1.5rem;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 1.25rem;
     }
-
-    /* card */
     .mat-card {
       background: var(--bg2);
       border: 1px solid var(--border2);
@@ -75,10 +64,7 @@
       gap: 0.7rem;
       transition: border-color 0.2s, transform 0.2s;
     }
-    .mat-card:hover {
-      border-color: rgba(184,115,51,0.3);
-      transform: translateY(-2px);
-    }
+    .mat-card:hover { border-color: rgba(184,115,51,0.3); transform: translateY(-2px); }
     .mat-card-tipo {
       align-self: flex-start;
       font-size: 0.68rem;
@@ -88,28 +74,15 @@
       padding: 0.2rem 0.6rem;
       border-radius: 4px;
     }
-    .tipo-pdf      { background: rgba(220,80,80,0.15);  color: #e07070; }
-    .tipo-video    { background: rgba(80,140,220,0.15); color: #70aaee; }
-    .tipo-actividad{ background: rgba(80,200,130,0.15); color: #70cc99; }
-    .tipo-otro     { background: rgba(120,120,120,0.15);color: var(--muted); }
-
-    .mat-card-titulo {
-      font-family: 'Fraunces', serif;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--cream);
-      line-height: 1.35;
-    }
-    .mat-card-desc {
-      font-size: 0.83rem;
-      color: var(--muted);
-      line-height: 1.55;
-      flex: 1;
-    }
+    .tipo-pdf       { background: rgba(220,80,80,0.15);   color: #e07070; }
+    .tipo-video     { background: rgba(80,140,220,0.15);  color: #70aaee; }
+    .tipo-actividad { background: rgba(80,200,130,0.15);  color: #70cc99; }
+    .tipo-otro      { background: rgba(120,120,120,0.15); color: var(--muted); }
+    .mat-card-titulo { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600; color: var(--cream); line-height: 1.35; }
+    .mat-card-desc   { font-size: 0.83rem; color: var(--muted); line-height: 1.55; flex: 1; }
     .mat-card-btn {
       margin-top: 0.4rem;
       display: inline-block;
-      font-family: 'Inter', sans-serif;
       font-size: 0.82rem;
       font-weight: 600;
       color: var(--bg);
@@ -118,12 +91,11 @@
       border-radius: 6px;
       text-decoration: none;
       text-align: center;
-      letter-spacing: 0.03em;
       transition: background 0.2s;
     }
     .mat-card-btn:hover { background: #c8823d; }
 
-    /* loading */
+    /* ── Loading / empty ── */
     .mat-loading {
       max-width: 900px;
       margin: 4rem auto;
@@ -143,8 +115,6 @@
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* empty */
     .mat-empty {
       max-width: 900px;
       margin: 4rem auto;
@@ -158,103 +128,682 @@
       line-height: 1.7;
     }
     .mat-empty-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+
+    /* ── AI Modules shared ── */
+    .ai-modules {
+      max-width: 900px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .ai-section {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .ai-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.4rem;
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-align: left;
+    }
+    .ai-toggle:hover { background: rgba(255,255,255,0.03); }
+    .ai-toggle-arrow { font-size: 0.75rem; color: var(--muted); transition: transform 0.2s; }
+    .ai-section.open .ai-toggle-arrow { transform: rotate(180deg); }
+    .ai-body {
+      display: none;
+      padding: 0 1.4rem 1.4rem;
+      border-top: 1px solid var(--border2);
+    }
+    .ai-section.open .ai-body { display: block; }
+
+    /* shared form elements */
+    .ai-textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      resize: vertical;
+      min-height: 80px;
+      margin-top: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ai-textarea:focus { border-color: rgba(184,115,51,0.5); }
+    .ai-btn {
+      margin-top: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--copper);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.3rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .ai-btn:hover { background: #c8823d; }
+    .ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .ai-btn .btn-spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: var(--bg);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .ai-btn.loading .btn-spinner { display: block; }
+    .ai-result {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* ── Module 1: Chat ── */
+    .chat-history {
+      margin-top: 1rem;
+      max-height: 360px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-right: 0.25rem;
+    }
+    .chat-bubble {
+      max-width: 78%;
+      padding: 0.65rem 1rem;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--copper);
+      color: var(--bg);
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.assistant {
+      align-self: flex-start;
+      background: var(--bg);
+      color: var(--cream);
+      border: 1px solid var(--border2);
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble.typing { color: var(--muted); font-style: italic; }
+    .chat-input-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.85rem;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.6rem 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-input:focus { border-color: rgba(184,115,51,0.5); }
+
+    /* ── Module 2: Actividades ── */
+    .act-card {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+    }
+    .act-card-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+    .act-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-top: 0.6rem;
+      margin-bottom: 0.2rem;
+    }
+    .act-value {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .act-duracion {
+      margin-top: 0.75rem;
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(184,115,51,0.12);
+      color: var(--copper);
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    /* ── Module 3: Examen ── */
+    .exam-question {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+    .exam-q-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--copper);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.35rem;
+    }
+    .exam-q-text {
+      font-size: 0.92rem;
+      color: var(--cream);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .exam-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .exam-opt-btn {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      color: var(--cream);
+      font-size: 0.84rem;
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .exam-opt-btn:hover:not(:disabled) { border-color: var(--copper); color: var(--copper); }
+    .exam-opt-btn.selected { border-color: var(--copper); background: rgba(184,115,51,0.15); color: var(--copper); }
+    .exam-opt-btn.correct  { border-color: #4caf50; background: rgba(76,175,80,0.15); color: #7dbb80; }
+    .exam-opt-btn.wrong    { border-color: #e05555; background: rgba(220,80,80,0.12); color: #e07070; }
+    .exam-short-input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.5rem 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .exam-short-input:focus { border-color: rgba(184,115,51,0.5); }
+    .exam-feedback {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+    .exam-feedback.ok  { color: #7dbb80; }
+    .exam-feedback.bad { color: #e07070; }
+    .exam-see-results {
+      margin-top: 1rem;
+    }
+
+    /* ── Module 4: Reporte ── */
+    .reporte-card {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      font-size: 0.88rem;
+      color: var(--cream);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
 
-  <div class="mat-header" id="mat-header">
+  <!-- Header -->
+  <div class="mat-header">
     <a class="mat-back" href="dashboard.html">← Regresar</a>
     <span class="mat-title" id="mat-nombre">—</span>
     <span class="mat-badge mat-badge-nivel" id="mat-nivel"></span>
-    <span class="mat-badge mat-badge-mes"  id="mat-mes"></span>
+    <span class="mat-badge mat-badge-mes"   id="mat-mes"></span>
   </div>
 
+  <!-- Content loading / grid / empty -->
   <div class="mat-loading" id="mat-loading">
     <div class="spinner"></div>
     <span>Cargando material…</span>
   </div>
-
   <div class="mat-grid"  id="mat-grid"  hidden></div>
   <div class="mat-empty" id="mat-empty" hidden>
     <div class="mat-empty-icon">📚</div>
     <p id="mat-empty-msg"></p>
   </div>
 
+  <!-- AI Modules -->
+  <div class="ai-modules" id="ai-modules" hidden>
+
+    <!-- Module 1: Asistente IA -->
+    <div class="ai-section" id="sec-chat">
+      <button class="ai-toggle" onclick="toggleSection('sec-chat')">
+        🤖 Asistente IA
+        <span class="ai-toggle-arrow">▼</span>
+      </button>
+      <div class="ai-body">
+        <div class="chat-history" id="chat-history"></div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" type="text" placeholder="Escribe tu pregunta…" />
+          <button class="ai-btn" id="chat-send-btn" onclick="chatSend()">
+            <span class="btn-spinner"></span>
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 2: Actividades -->
+    <div class="ai-section" id="sec-act">
+      <button class="ai-toggle" onclick="toggleSection('sec-act')">
+        🎯 Actividades del Mes
+        <span class="ai-toggle-arrow">▼</span>
+      </button>
+      <div class="ai-body">
+        <textarea class="ai-textarea" id="act-desc" placeholder="Describe brevemente a tu hijo (intereses, ritmo de aprendizaje…)"></textarea>
+        <button class="ai-btn" id="act-btn" onclick="generarActividades()">
+          <span class="btn-spinner"></span>
+          Generar actividades
+        </button>
+        <div class="ai-result" id="act-result"></div>
+      </div>
+    </div>
+
+    <!-- Module 3: Examen -->
+    <div class="ai-section" id="sec-exam">
+      <button class="ai-toggle" onclick="toggleSection('sec-exam')">
+        📝 Examen del Mes
+        <span class="ai-toggle-arrow">▼</span>
+      </button>
+      <div class="ai-body">
+        <button class="ai-btn" id="exam-btn" onclick="generarExamen()" style="margin-top:1rem;">
+          <span class="btn-spinner"></span>
+          Generar examen
+        </button>
+        <div class="ai-result" id="exam-result"></div>
+      </div>
+    </div>
+
+    <!-- Module 4: Reporte -->
+    <div class="ai-section" id="sec-rep">
+      <button class="ai-toggle" onclick="toggleSection('sec-rep')">
+        📊 Reporte Mensual
+        <span class="ai-toggle-arrow">▼</span>
+      </button>
+      <div class="ai-body">
+        <textarea class="ai-textarea" id="rep-notas" placeholder="Notas del mes (actividades realizadas, observaciones…)"></textarea>
+        <button class="ai-btn" id="rep-btn" onclick="generarReporte()">
+          <span class="btn-spinner"></span>
+          Generar reporte
+        </button>
+        <div class="ai-result" id="rep-result"></div>
+      </div>
+    </div>
+
+  </div><!-- /ai-modules -->
+
   <script>
-    (() => {
-      if (!localStorage.getItem('to_email')) {
-        window.location.href = 'index.html';
+  (() => {
+    if (!localStorage.getItem('to_email')) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    /* ── URL params ── */
+    const params  = new URLSearchParams(window.location.search);
+    window._hijoId = params.get('hijo_id') || '';
+    window._email  = localStorage.getItem('to_email') || '';
+    const nombre   = params.get('nombre') || 'Hijo';
+    const nivel    = params.get('nivel')  || '';
+    const mesRaw   = params.get('mes')    || '';
+    const mesNum   = (mesRaw.match(/\d+/) || [''])[0];
+
+    document.getElementById('mat-nombre').textContent = nombre;
+    document.getElementById('mat-nivel').textContent  = nivel;
+    document.getElementById('mat-mes').textContent    = mesNum ? `MES ${mesNum}` : '';
+
+    window._mes = mesNum;
+
+    /* ── Load content ── */
+    const API   = 'https://trinity-oaks-api-production.up.railway.app';
+    const HDR   = { 'x-api-key': 'to-api-2025-secure', 'Content-Type': 'application/json' };
+
+    const loading  = document.getElementById('mat-loading');
+    const grid     = document.getElementById('mat-grid');
+    const empty    = document.getElementById('mat-empty');
+    const emptyMsg = document.getElementById('mat-empty-msg');
+    const aiMods   = document.getElementById('ai-modules');
+
+    const tipoClass = t => {
+      const k = (t || '').toLowerCase();
+      if (k === 'pdf')       return 'tipo-pdf';
+      if (k === 'video')     return 'tipo-video';
+      if (k === 'actividad') return 'tipo-actividad';
+      return 'tipo-otro';
+    };
+
+    fetch(`${API}/get-content`, {
+      method: 'POST', headers: HDR,
+      body: JSON.stringify({ hijo_id: window._hijoId, mes: mesNum })
+    })
+    .then(r => r.json())
+    .then(data => {
+      loading.hidden = true;
+      aiMods.hidden  = false;
+      const items = Array.isArray(data) ? data : (data.content || data.items || []);
+      if (!items.length) {
+        emptyMsg.textContent =
+          `El contenido del${mesNum ? ' Mes ' + mesNum : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
+        empty.hidden = false;
+        return;
+      }
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'mat-card';
+        card.innerHTML = `
+          <span class="mat-card-tipo ${tipoClass(item.tipo)}">${item.tipo || 'Recurso'}</span>
+          <div class="mat-card-titulo">${item.titulo || 'Sin título'}</div>
+          ${item.descripcion ? `<div class="mat-card-desc">${item.descripcion}</div>` : ''}
+          ${item.url ? `<a class="mat-card-btn" href="${item.url}" target="_blank" rel="noopener">Descargar</a>` : ''}
+        `;
+        grid.appendChild(card);
+      });
+      grid.hidden = false;
+    })
+    .catch(() => {
+      loading.hidden = true;
+      aiMods.hidden  = false;
+      emptyMsg.textContent =
+        `El contenido del${mesNum ? ' Mes ' + mesNum : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
+      empty.hidden = false;
+    });
+
+    /* ── Helpers ── */
+    window._API = API;
+    window._HDR = HDR;
+  })();
+
+  /* ── Collapsible toggle ── */
+  function toggleSection(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function setLoading(btnId, on) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  /* ════════════════════════════════════════
+     Module 1 — Chat
+  ════════════════════════════════════════ */
+  window._chatHistory = [];
+
+  function chatAddBubble(role, text) {
+    const hist = document.getElementById('chat-history');
+    const div  = document.createElement('div');
+    div.className = `chat-bubble ${role}`;
+    div.textContent = text;
+    hist.appendChild(div);
+    hist.scrollTop = hist.scrollHeight;
+    return div;
+  }
+
+  async function chatSend() {
+    const input = document.getElementById('chat-input');
+    const msg   = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+
+    chatAddBubble('user', msg);
+    window._chatHistory.push({ role: 'user', content: msg });
+
+    const typing = chatAddBubble('assistant typing', '…');
+    setLoading('chat-send-btn', true);
+
+    try {
+      const res  = await fetch(`${window._API}/ai-assistant`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({
+          email: window._email, hijo_id: window._hijoId,
+          mensaje: msg, history: window._chatHistory
+        })
+      });
+      const data = await res.json();
+      const reply = data.respuesta || data.message || data.reply || JSON.stringify(data);
+      typing.className = 'chat-bubble assistant';
+      typing.textContent = reply;
+      window._chatHistory.push({ role: 'assistant', content: reply });
+    } catch {
+      typing.className = 'chat-bubble assistant';
+      typing.textContent = 'Ocurrió un error. Intenta de nuevo.';
+    } finally {
+      setLoading('chat-send-btn', false);
+    }
+  }
+
+  document.getElementById('chat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatSend(); }
+  });
+
+  /* ════════════════════════════════════════
+     Module 2 — Actividades
+  ════════════════════════════════════════ */
+  async function generarActividades() {
+    const desc = document.getElementById('act-desc').value.trim();
+    if (!desc) { document.getElementById('act-desc').focus(); return; }
+    setLoading('act-btn', true);
+    const result = document.getElementById('act-result');
+    result.innerHTML = '';
+
+    try {
+      const res  = await fetch(`${window._API}/ai-actividades`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, descripcion_hijo: desc })
+      });
+      const data = await res.json();
+      const actividades = data.actividades || data.activities || data || [];
+      const list = Array.isArray(actividades) ? actividades : [];
+
+      if (!list.length) {
+        result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">No se pudieron generar actividades. Intenta de nuevo.</p>`;
+        return;
+      }
+      list.forEach(act => {
+        const card = document.createElement('div');
+        card.className = 'act-card';
+        card.innerHTML = `
+          <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
+          ${act.objetivo  ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`   : ''}
+          ${act.materiales? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>`: ''}
+          ${act.pasos     ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`          : ''}
+          ${act.duracion  ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                  : ''}
+        `;
+        result.appendChild(card);
+      });
+    } catch {
+      result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">Error al generar actividades. Intenta de nuevo.</p>`;
+    } finally {
+      setLoading('act-btn', false);
+    }
+  }
+
+  /* ════════════════════════════════════════
+     Module 3 — Examen
+  ════════════════════════════════════════ */
+  window._examData = [];
+  window._examAnswers = {};
+
+  async function generarExamen() {
+    setLoading('exam-btn', true);
+    const result = document.getElementById('exam-result');
+    result.innerHTML = '';
+    window._examData    = [];
+    window._examAnswers = {};
+
+    try {
+      const res  = await fetch(`${window._API}/ai-examen`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId })
+      });
+      const data = await res.json();
+      const preguntas = data.preguntas || data.questions || data || [];
+      window._examData = Array.isArray(preguntas) ? preguntas : [];
+
+      if (!window._examData.length) {
+        result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">No se pudo generar el examen. Intenta de nuevo.</p>`;
         return;
       }
 
-      const params  = new URLSearchParams(window.location.search);
-      const hijoId  = params.get('hijo_id') || '';
-      const nombre  = params.get('nombre')  || 'Hijo';
-      const nivel   = params.get('nivel')   || '';
-      const mesRaw  = params.get('mes')     || '';
+      renderExamen(result);
+    } catch {
+      result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">Error al generar el examen. Intenta de nuevo.</p>`;
+    } finally {
+      setLoading('exam-btn', false);
+    }
+  }
 
-      // Extract the numeric part for API calls ("Mes 1 — Agosto" → "1")
-      const mesNum  = (mesRaw.match(/\d+/) || [''])[0];
-      // Display badge as "MES 1" without duplicating the word
-      const mesLabel = mesNum ? `MES ${mesNum}` : '';
+  function renderExamen(container) {
+    container.innerHTML = '';
+    window._examData.forEach((q, i) => {
+      const tipo = (q.tipo || q.type || 'multiple').toLowerCase();
+      const div  = document.createElement('div');
+      div.className = 'exam-question';
+      div.id = `eq-${i}`;
 
-      document.getElementById('mat-nombre').textContent = nombre;
-      document.getElementById('mat-nivel').textContent  = nivel;
-      document.getElementById('mat-mes').textContent    = mesLabel;
+      let optionsHtml = '';
+      if (tipo === 'verdadero_falso' || tipo === 'true_false') {
+        optionsHtml = `
+          <div class="exam-options">
+            <button class="exam-opt-btn" onclick="examSelect(${i},'Verdadero',this)">Verdadero</button>
+            <button class="exam-opt-btn" onclick="examSelect(${i},'Falso',this)">Falso</button>
+          </div>`;
+      } else if (tipo === 'respuesta_corta' || tipo === 'short_answer') {
+        optionsHtml = `<input class="exam-short-input" id="eqs-${i}" type="text" placeholder="Tu respuesta…" oninput="examShortInput(${i},this.value)" />`;
+      } else {
+        const opts = q.opciones || q.options || [];
+        optionsHtml = `<div class="exam-options">` +
+          opts.map(o => `<button class="exam-opt-btn" onclick="examSelect(${i},'${esc(o)}',this)">${esc(o)}</button>`).join('') +
+          `</div>`;
+      }
 
-      const mes = mesNum;
+      div.innerHTML = `
+        <div class="exam-q-num">Pregunta ${i + 1}</div>
+        <div class="exam-q-text">${esc(q.pregunta || q.question || '')}</div>
+        ${optionsHtml}
+        <div class="exam-feedback" id="ef-${i}"></div>
+      `;
+      container.appendChild(div);
+    });
 
-      const loading = document.getElementById('mat-loading');
-      const grid    = document.getElementById('mat-grid');
-      const empty   = document.getElementById('mat-empty');
-      const emptyMsg= document.getElementById('mat-empty-msg');
+    const btn = document.createElement('button');
+    btn.className = 'ai-btn exam-see-results';
+    btn.id = 'exam-results-btn';
+    btn.innerHTML = '<span class="btn-spinner"></span>Ver resultados';
+    btn.onclick = mostrarResultados;
+    container.appendChild(btn);
+  }
 
-      const tipoClass = t => {
-        const k = (t || '').toLowerCase();
-        if (k === 'pdf')       return 'tipo-pdf';
-        if (k === 'video')     return 'tipo-video';
-        if (k === 'actividad') return 'tipo-actividad';
-        return 'tipo-otro';
-      };
+  function examSelect(idx, value, el) {
+    const q = document.getElementById(`eq-${idx}`);
+    q.querySelectorAll('.exam-opt-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    window._examAnswers[idx] = value;
+  }
 
-      fetch('https://trinity-oaks-api-production.up.railway.app/get-content', {
-        method: 'POST',
-        headers: {
-          'x-api-key': 'to-api-2025-secure',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ hijo_id: hijoId, mes })
-      })
-        .then(r => r.json())
-        .then(data => {
-          loading.hidden = true;
-          const items = Array.isArray(data) ? data : (data.content || data.items || []);
-          if (!items.length) {
-            emptyMsg.textContent =
-              `El contenido del${mes ? ' Mes ' + mes : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
-            empty.hidden = false;
-            return;
-          }
-          items.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'mat-card';
-            card.innerHTML = `
-              <span class="mat-card-tipo ${tipoClass(item.tipo)}">${item.tipo || 'Recurso'}</span>
-              <div class="mat-card-titulo">${item.titulo || 'Sin título'}</div>
-              ${item.descripcion ? `<div class="mat-card-desc">${item.descripcion}</div>` : ''}
-              ${item.url ? `<a class="mat-card-btn" href="${item.url}" target="_blank" rel="noopener">Descargar</a>` : ''}
-            `;
-            grid.appendChild(card);
-          });
-          grid.hidden = false;
-        })
-        .catch(() => {
-          loading.hidden = true;
-          emptyMsg.textContent =
-            `El contenido del${mes ? ' Mes ' + mes : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
-          empty.hidden = false;
-        });
-    })();
+  function examShortInput(idx, value) {
+    window._examAnswers[idx] = value;
+  }
+
+  function mostrarResultados() {
+    window._examData.forEach((q, i) => {
+      const correct = q.respuesta_correcta || q.correct_answer || q.answer || '';
+      const userAns = (window._examAnswers[i] || '').trim();
+      const fb      = document.getElementById(`ef-${i}`);
+      const isOk    = userAns.toLowerCase() === String(correct).toLowerCase();
+
+      fb.className = `exam-feedback ${isOk ? 'ok' : 'bad'}`;
+      fb.textContent = isOk
+        ? '✓ Correcto'
+        : `✗ Incorrecto — Respuesta: ${correct}`;
+
+      const q_el = document.getElementById(`eq-${i}`);
+      q_el.querySelectorAll('.exam-opt-btn').forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === String(correct)) btn.classList.add('correct');
+        else if (btn.classList.contains('selected') && !isOk) btn.classList.add('wrong');
+      });
+      const si = document.getElementById(`eqs-${i}`);
+      if (si) si.disabled = true;
+    });
+    document.getElementById('exam-results-btn').hidden = true;
+  }
+
+  /* ════════════════════════════════════════
+     Module 4 — Reporte
+  ════════════════════════════════════════ */
+  async function generarReporte() {
+    const notas = document.getElementById('rep-notas').value.trim();
+    if (!notas) { document.getElementById('rep-notas').focus(); return; }
+    setLoading('rep-btn', true);
+    const result = document.getElementById('rep-result');
+    result.innerHTML = '';
+
+    try {
+      const res  = await fetch(`${window._API}/ai-progreso`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, notas })
+      });
+      const data = await res.json();
+      const texto = data.reporte || data.report || data.texto || data.content || JSON.stringify(data, null, 2);
+      const card = document.createElement('div');
+      card.className = 'reporte-card';
+      card.textContent = texto;
+      result.appendChild(card);
+    } catch {
+      result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">Error al generar el reporte. Intenta de nuevo.</p>`;
+    } finally {
+      setLoading('rep-btn', false);
+    }
+  }
   </script>
 </body>
 </html>
