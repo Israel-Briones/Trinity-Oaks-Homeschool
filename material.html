@@ -169,6 +169,10 @@
       border-top: 1px solid var(--border2);
     }
     .ai-section.open .ai-body { display: block; }
+    .mod-lock-msg {
+      text-align: center; padding: 2rem 1rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+    }
 
     /* shared form elements */
     .ai-textarea {
@@ -606,6 +610,39 @@
       return 'tipo-otro';
     };
 
+    function applyModuleLocks(desbloqueado_en) {
+      const LOCKED_SECTIONS = ['sec-act', 'sec-exam', 'sec-rep'];
+      const unlocked = desbloqueado_en
+        ? Math.floor((Date.now() - new Date(desbloqueado_en)) / (1000*60*60*24)) >= 25
+        : false;
+
+      LOCKED_SECTIONS.forEach(id => {
+        const sec  = document.getElementById(id);
+        if (!sec) return;
+        const body = sec.querySelector('.ai-body');
+        if (!body) return;
+        if (unlocked) {
+          body.querySelector('.mod-lock-msg')?.remove();
+          return;
+        }
+        // Already locked
+        if (body.querySelector('.mod-lock-msg')) return;
+        const available = desbloqueado_en
+          ? new Date(new Date(desbloqueado_en).getTime() + 25*24*60*60*1000)
+              .toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })
+          : '—';
+        // Hide all existing children
+        [...body.children].forEach(c => c.style.display = 'none');
+        const msg = document.createElement('div');
+        msg.className = 'mod-lock-msg';
+        msg.innerHTML = `
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🔒</div>
+          <div style="font-size:0.9rem;color:var(--copper);font-weight:600;">Disponible el ${available}</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Completa 25 días de estudio para desbloquear</div>`;
+        body.appendChild(msg);
+      });
+    }
+
     fetch(`${API}/get-content`, {
       method: 'POST', headers: HDR,
       body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(mesNum, 10) || 1 })
@@ -614,7 +651,11 @@
     .then(data => {
       loading.hidden = true;
       aiMods.hidden  = false;
-      const items = Array.isArray(data) ? data : (data.content || data.items || []);
+
+      if (data.desbloqueado_en) window._desbloqueado_en = data.desbloqueado_en;
+      applyModuleLocks(data.desbloqueado_en || null);
+
+      const items = Array.isArray(data) ? data : (data.contenido || data.content || data.items || []);
       if (!items.length) {
         emptyMsg.textContent =
           `El contenido del${mesNum ? ' Mes ' + mesNum : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
@@ -637,6 +678,7 @@
     .catch(() => {
       loading.hidden = true;
       aiMods.hidden  = false;
+      applyModuleLocks(null);
       emptyMsg.textContent =
         `El contenido del${mesNum ? ' Mes ' + mesNum : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
       empty.hidden = false;
