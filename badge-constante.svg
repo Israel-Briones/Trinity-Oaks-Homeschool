@@ -1,0 +1,58 @@
+<svg width="200" height="220" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c"/>
+      <stop offset="50%" style="stop-color:#c0392b"/>
+      <stop offset="100%" style="stop-color:#7b241c"/>
+    </linearGradient>
+    <linearGradient id="hexShine" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="fireGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff4500"/>
+      <stop offset="40%" style="stop-color:#ff8c00"/>
+      <stop offset="100%" style="stop-color:#ffd700"/>
+    </linearGradient>
+    <linearGradient id="innerFire" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b00"/>
+      <stop offset="100%" style="stop-color:#fff176"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#7b241c" flood-opacity="0.7"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="hexClip">
+      <polygon points="100,8 182,52 182,148 100,192 18,148 18,52"/>
+    </clipPath>
+  </defs>
+
+  <polygon points="100,12 184,56 184,152 100,196 16,152 16,56" fill="#7b241c" opacity="0.5" transform="translate(2,4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#hexGrad)" filter="url(#shadow)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="none" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#hexShine)" clip-path="url(#hexClip)"/>
+  <polygon points="100,18 172,58 172,142 100,182 28,142 28,58" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- Fire illustration -->
+  <g transform="translate(100,100)" filter="url(#glow)">
+    <!-- Outer flame -->
+    <path d="M0,42 Q-30,30 -28,5 Q-25,-15 -12,-30 Q-8,-10 -5,-5 Q2,-25 8,-45 Q22,-20 25,0 Q30,20 20,35 Q28,25 26,10 Q32,25 28,42 Z" fill="url(#fireGrad)"/>
+    <!-- Inner flame -->
+    <path d="M0,38 Q-18,28 -16,10 Q-12,-5 -5,-15 Q-2,-5 0,0 Q5,-15 10,-28 Q18,-8 18,8 Q20,22 12,34 Q18,22 16,10 Q22,22 18,38 Z" fill="url(#innerFire)" opacity="0.9"/>
+    <!-- Core white flame -->
+    <path d="M0,30 Q-8,20 -6,8 Q-2,0 0,-8 Q4,0 6,8 Q8,20 0,30 Z" fill="#fff9c4" opacity="0.8"/>
+  </g>
+
+  <!-- Ember sparks -->
+  <circle cx="62" cy="78" r="3" fill="#ffd700" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="142" cy="68" r="2.5" fill="#ff8c00" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="58" cy="118" r="2" fill="#ffd700" opacity="0.7"/>
+  <circle cx="148" cy="112" r="3" fill="#ff6b00" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="75" cy="58" r="1.5" fill="#ffd700" opacity="0.6"/>
+  <circle cx="132" cy="130" r="2" fill="#ff8c00" opacity="0.7"/>
+
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="bold" fill="#c8873a" letter-spacing="1">CONSTANTE</text>
+</svg>
