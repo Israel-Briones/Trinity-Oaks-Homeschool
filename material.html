@@ -496,10 +496,20 @@
     <!-- Module 2: Actividades -->
     <div class="ai-section" id="sec-act">
       <button class="ai-toggle" onclick="toggleSection('sec-act')">
-        🌟 Explora y Aprende
+        🎯 Generador de Actividades
         <span class="ai-toggle-arrow">▼</span>
       </button>
       <div class="ai-body">
+        <!-- Progress bar -->
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+            <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--copper);">Actividades del mes</span>
+            <span id="act-progress-label" style="font-size:0.72rem;font-weight:600;color:var(--copper);">0 / 4</span>
+          </div>
+          <div style="height:8px;border-radius:999px;background:var(--border);overflow:hidden;">
+            <div id="act-progress-fill" style="height:100%;border-radius:999px;background:linear-gradient(90deg,#b87333,#d9954a);width:0%;transition:width .6s cubic-bezier(.4,0,.2,1);"></div>
+          </div>
+        </div>
         <textarea class="ai-textarea" id="act-desc" placeholder="Describe brevemente a tu hijo (intereses, ritmo de aprendizaje…)"></textarea>
         <button class="ai-btn" id="act-btn" onclick="generarActividades()">
           <span class="btn-spinner"></span>
@@ -567,6 +577,16 @@
     document.getElementById('mat-mes').textContent    = `MES ${mesNum}`;
 
     window._mes = mesNum;
+
+    // Initialize progress bar from localStorage immediately
+    (function() {
+      const lsKey  = `completadas_${window._hijoId}_${mesNum}`;
+      const count  = JSON.parse(localStorage.getItem(lsKey) || '[]').length;
+      const fill   = document.getElementById('act-progress-fill');
+      const label  = document.getElementById('act-progress-label');
+      if (fill)  fill.style.width  = `${Math.min(count / 4, 1) * 100}%`;
+      if (label) label.textContent = `${count} / 4`;
+    })();
 
     /* ── Load content ── */
     const API   = 'https://trinity-oaks-api-production.up.railway.app';
@@ -731,65 +751,69 @@
       const lsKey = `completadas_${window._hijoId}_${window._mes}`;
       const completadasSet = new Set(JSON.parse(localStorage.getItem(lsKey) || '[]'));
 
+      // Update progress bar
+      const totalComp = completadasSet.size;
+      const fillEl    = document.getElementById('act-progress-fill');
+      const labelEl   = document.getElementById('act-progress-label');
+      if (fillEl)  fillEl.style.width  = `${Math.min(totalComp / 4, 1) * 100}%`;
+      if (labelEl) labelEl.textContent = `${totalComp} / 4`;
+
       list.forEach((act, idx) => {
         const semana   = idx + 1;
         const unlocked = semana <= semanaActual;
-        const card     = document.createElement('div');
-        const ckKey    = `${semana}_${idx}`;
-        const done     = completadasSet.has(ckKey);
-        card.className = `act-card${unlocked ? (done ? ' completada' : '') : ' locked'}`;
+        if (!unlocked) return; // hide locked weeks entirely
 
-        if (unlocked) {
-          card.innerHTML = `
-            <span class="act-semana-badge">Semana ${semana}${done ? '<span class="act-completada-badge">Completada ✓</span>' : ''}</span>
-            <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
-            ${act.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`    : ''}
-            ${act.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>` : ''}
-            ${act.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`           : ''}
-            ${act.duracion   ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                   : ''}
-            <label class="act-check-row">
-              <input type="checkbox" data-semana="${semana}" data-idx="${idx}" ${done ? 'checked' : ''}>
-              <span class="act-check-label">✓ Marcar como completada</span>
-            </label>
-          `;
+        const card  = document.createElement('div');
+        const ckKey = `${semana}_${idx}`;
+        const done  = completadasSet.has(ckKey);
+        card.className = `act-card${done ? ' completada' : ''}`;
 
-          card.querySelector('input[type="checkbox"]').addEventListener('change', async function() {
-            const checked = this.checked;
-            if (checked) completadasSet.add(ckKey); else completadasSet.delete(ckKey);
-            localStorage.setItem(lsKey, JSON.stringify([...completadasSet]));
+        card.innerHTML = `
+          <span class="act-semana-badge">Semana ${semana}${done ? '<span class="act-completada-badge">Completada ✓</span>' : ''}</span>
+          <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
+          ${act.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`    : ''}
+          ${act.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>` : ''}
+          ${act.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`           : ''}
+          ${act.duracion   ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                   : ''}
+          <label class="act-check-row">
+            <input type="checkbox" data-semana="${semana}" data-idx="${idx}" ${done ? 'checked' : ''}>
+            <span class="act-check-label">✓ Marcar como completada</span>
+          </label>
+        `;
 
-            card.className = `act-card${checked ? ' completada' : ''}`;
-            const badge = card.querySelector('.act-semana-badge');
-            const existing = badge.querySelector('.act-completada-badge');
-            if (checked && !existing) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Completada ✓</span>');
-            if (!checked && existing) existing.remove();
+        card.querySelector('input[type="checkbox"]').addEventListener('change', async function() {
+          const checked = this.checked;
+          if (checked) completadasSet.add(ckKey); else completadasSet.delete(ckKey);
+          localStorage.setItem(lsKey, JSON.stringify([...completadasSet]));
 
-            try {
-              await fetch(`${window._API}/marcar-actividad`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
-                body: JSON.stringify({
-                  email: localStorage.getItem('to_email'),
-                  hijo_id: window._hijoId,
-                  mes: window._mes,
-                  semana,
-                  actividad_index: idx,
-                  completada: checked
-                })
-              });
-              if (checked) checkBadges();
-            } catch {}
-          });
-        } else {
-          const diasRestantes = desbloqueado_en
-            ? Math.ceil(((semana - 1) * 7 * 24 * 60 * 60 * 1000 - (Date.now() - desbloqueado_en)) / (24 * 60 * 60 * 1000))
-            : (semana - semanaActual) * 7;
-          card.innerHTML = `
-            <span class="act-semana-badge locked">Semana ${semana}</span>
-            <div class="act-card-title" style="color:var(--muted)">${esc(act.titulo || act.title || 'Actividad')}</div>
-            <div class="act-locked-msg">🔒 Disponible en ${diasRestantes} día${diasRestantes !== 1 ? 's' : ''}</div>
-          `;
-        }
+          // Update progress bar live
+          const newCount = completadasSet.size;
+          if (fillEl)  fillEl.style.width  = `${Math.min(newCount / 4, 1) * 100}%`;
+          if (labelEl) labelEl.textContent = `${newCount} / 4`;
+
+          card.className = `act-card${checked ? ' completada' : ''}`;
+          const badge    = card.querySelector('.act-semana-badge');
+          const existing = badge.querySelector('.act-completada-badge');
+          if (checked && !existing) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Completada ✓</span>');
+          if (!checked && existing) existing.remove();
+
+          try {
+            await fetch(`${window._API}/marcar-actividad`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
+              body: JSON.stringify({
+                email: localStorage.getItem('to_email'),
+                hijo_id: window._hijoId,
+                mes: window._mes,
+                semana,
+                actividad_index: idx,
+                completada: checked
+              })
+            });
+            if (checked) checkBadges();
+          } catch {}
+        });
+
         result.appendChild(card);
       });
     } catch {

@@ -1267,6 +1267,11 @@
       });
     }
 
+    // Reload progress when user returns from material.html
+    window.addEventListener('focus', () => {
+      loadHijos().forEach((h, i) => { if (h.id) loadProgreso(h, i); });
+    }, { once: false });
+
     // Dashed add card
     const addCard = document.createElement('button');
     addCard.className = 'hijo-card-add';
