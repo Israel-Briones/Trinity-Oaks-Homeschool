@@ -339,6 +339,44 @@
       border-radius: 999px;
     }
 
+    .act-check-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border2);
+      cursor: pointer;
+      user-select: none;
+    }
+    .act-check-row input[type="checkbox"] {
+      accent-color: var(--copper);
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+    }
+    .act-check-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .act-card.completada {
+      opacity: 0.7;
+      border-color: rgba(80,200,130,0.3);
+    }
+    .act-completada-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: rgba(80,200,130,0.15);
+      color: #70cc99;
+      border: 1px solid rgba(80,200,130,0.3);
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
     /* ── Module 3: Examen ── */
     .exam-question {
       background: var(--bg);
@@ -690,21 +728,57 @@
         ? Math.min(Math.floor((Date.now() - desbloqueado_en) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
         : 4;
 
+      const lsKey = `completadas_${window._hijoId}_${window._mes}`;
+      const completadasSet = new Set(JSON.parse(localStorage.getItem(lsKey) || '[]'));
+
       list.forEach((act, idx) => {
         const semana   = idx + 1;
         const unlocked = semana <= semanaActual;
         const card     = document.createElement('div');
-        card.className = `act-card${unlocked ? '' : ' locked'}`;
+        const ckKey    = `${semana}_${idx}`;
+        const done     = completadasSet.has(ckKey);
+        card.className = `act-card${unlocked ? (done ? ' completada' : '') : ' locked'}`;
 
         if (unlocked) {
           card.innerHTML = `
-            <span class="act-semana-badge">Semana ${semana}</span>
+            <span class="act-semana-badge">Semana ${semana}${done ? '<span class="act-completada-badge">Completada ✓</span>' : ''}</span>
             <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
             ${act.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`    : ''}
             ${act.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>` : ''}
             ${act.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`           : ''}
             ${act.duracion   ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                   : ''}
+            <label class="act-check-row">
+              <input type="checkbox" data-semana="${semana}" data-idx="${idx}" ${done ? 'checked' : ''}>
+              <span class="act-check-label">✓ Marcar como completada</span>
+            </label>
           `;
+
+          card.querySelector('input[type="checkbox"]').addEventListener('change', async function() {
+            const checked = this.checked;
+            if (checked) completadasSet.add(ckKey); else completadasSet.delete(ckKey);
+            localStorage.setItem(lsKey, JSON.stringify([...completadasSet]));
+
+            card.className = `act-card${checked ? ' completada' : ''}`;
+            const badge = card.querySelector('.act-semana-badge');
+            const existing = badge.querySelector('.act-completada-badge');
+            if (checked && !existing) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Completada ✓</span>');
+            if (!checked && existing) existing.remove();
+
+            try {
+              await fetch(`${window._API}/marcar-actividad`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
+                body: JSON.stringify({
+                  email: localStorage.getItem('to_email'),
+                  hijo_id: window._hijoId,
+                  mes: window._mes,
+                  semana,
+                  actividad_index: idx,
+                  completada: checked
+                })
+              });
+            } catch {}
+          });
         } else {
           const diasRestantes = desbloqueado_en
             ? Math.ceil(((semana - 1) * 7 * 24 * 60 * 60 * 1000 - (Date.now() - desbloqueado_en)) / (24 * 60 * 60 * 1000))
