@@ -127,8 +127,12 @@
     .progreso-bar-wrap {
       display: flex; align-items: center; gap: 0.55rem;
     }
+    .progreso-section-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--copper);
+    }
     .progreso-bar-track {
-      flex: 1; height: 5px; border-radius: 999px;
+      flex: 1; height: 8px; border-radius: 999px;
       background: var(--border2); overflow: hidden;
     }
     .progreso-bar-fill {
@@ -136,19 +140,19 @@
       background: var(--copper); transition: width .4s;
     }
     .progreso-bar-label {
-      font-size: 0.72rem; color: var(--muted); white-space: nowrap;
+      font-size: 0.85rem; color: var(--cream); white-space: nowrap;
     }
     .progreso-badges {
-      display: flex; flex-wrap: wrap; gap: 0.35rem;
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
     }
     .progreso-badge {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;
       background: rgba(184,115,51,.1); color: var(--copper);
-      border: 1px solid rgba(184,115,51,.25); border-radius: 4px;
-      padding: 0.15rem 0.5rem;
+      border: 1px solid rgba(184,115,51,.45); border-radius: 4px;
+      padding: 0.25rem 0.7rem;
     }
     .progreso-nota {
-      font-size: 0.75rem; color: var(--muted);
+      font-size: 0.82rem; color: rgba(240,234,224,.7);
       font-style: italic; line-height: 1.4;
     }
 
@@ -467,6 +471,7 @@
       const nota        = d.ultima_nota ? d.ultima_nota.slice(0, 60) + (d.ultima_nota.length > 60 ? '…' : '') : null;
 
       el.innerHTML = `
+        <div class="progreso-section-label">Progreso del mes</div>
         <div class="progreso-bar-wrap">
           <div class="progreso-bar-track"><div class="progreso-bar-fill" style="width:${pct}%"></div></div>
           <span class="progreso-bar-label">${completadas}/${total} actividades</span>
