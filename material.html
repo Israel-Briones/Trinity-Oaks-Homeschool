@@ -647,8 +647,11 @@
       });
       clearTimeout(tid);
       const data = await res.json();
-      const actividades = data.actividades || data.activities || data || [];
-      const list = Array.isArray(actividades) ? actividades : [];
+      // backend may return {actividades: [...]} or {actividades: {actividades: [...]}}
+      const raw  = data.actividades ?? data.activities ?? data;
+      const list = Array.isArray(raw) ? raw
+                 : Array.isArray(raw?.actividades) ? raw.actividades
+                 : [];
 
       if (!list.length) {
         result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">No se pudieron generar actividades. Intenta de nuevo.</p>`;
