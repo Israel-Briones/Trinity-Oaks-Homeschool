@@ -353,6 +353,34 @@ section { padding: 5rem 2rem; }
 }
 .plan-btn.ghost:hover { border-color: var(--copper); color: var(--copper); }
 
+/* AI MODULES */
+.ai-mods-section { background: var(--bg2); padding: 5rem 0; }
+.ai-mods-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.ai-mod-card {
+  background: var(--bg);
+  border-top: 3px solid var(--copper);
+  border-radius: 12px;
+  padding: 2rem 1.75rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.ai-mod-card:hover {
+  box-shadow: 0 0 0 2px var(--copper), 0 8px 24px rgba(184,115,51,0.15);
+  transform: translateY(-2px);
+}
+.ai-mod-card img { display: block; margin-bottom: 1.1rem; }
+.ai-mod-card h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  color: var(--copper);
+  margin: 0 0 0.6rem;
+}
+.ai-mod-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
 /* CURRICULUM */
 .curriculum-section { background: var(--bg); }
 .months-nav {
@@ -628,6 +656,7 @@ footer {
 
 /* ── Tablet: ≤ 768px ── */
 @media(max-width:768px){
+  .ai-mods-grid { grid-template-columns: 1fr; }
   nav { padding: 0 1.25rem; height: auto; min-height: 70px; }
   .nav-logo { margin-left: 0; }
   .nav-logo img { height: 60px; }
