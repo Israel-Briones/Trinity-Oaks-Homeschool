@@ -468,26 +468,26 @@
       white-space: nowrap; text-decoration: none;
     }
     .nav-right {
-      display: flex; align-items: center; gap: 20px;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
     }
     .nav-user-label {
       font-family: 'Fraunces', serif;
       font-size: 1rem; font-weight: 600; color: var(--copper);
-      white-space: nowrap;
+      white-space: nowrap; line-height: 1;
     }
     .nav-settings-btn {
-      font-size: 0.78rem; font-weight: 600; color: var(--copper);
+      font-size: 0.75rem; font-weight: 600; color: var(--copper);
       background: transparent; border: 1.5px solid var(--copper);
-      border-radius: 6px; padding: 0.3rem 0.8rem;
+      border-radius: 6px; padding: 2px 12px;
       cursor: pointer; transition: background .2s, color .2s;
-      letter-spacing: 0.04em; white-space: nowrap;
+      letter-spacing: 0.04em; white-space: nowrap; line-height: 1.6;
     }
     .nav-settings-btn:hover { background: var(--copper); color: #1a1208; }
     .nav-logout-link {
-      font-size: 0.78rem; color: var(--muted);
-      text-decoration: none; transition: color .2s; white-space: nowrap;
+      font-size: 0.75rem; color: var(--muted); opacity: 0.6;
+      text-decoration: none; transition: opacity .2s; white-space: nowrap; line-height: 1;
     }
-    .nav-logout-link:hover { color: var(--cream); }
+    .nav-logout-link:hover { opacity: 1; }
 
     /* ── Settings Modal ── */
     .settings-overlay {
