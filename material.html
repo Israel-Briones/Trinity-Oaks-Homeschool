@@ -522,7 +522,7 @@
 
     fetch(`${API}/get-content`, {
       method: 'POST', headers: HDR,
-      body: JSON.stringify({ hijo_id: window._hijoId, mes: parseInt(mesNum, 10) || 1 })
+      body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(mesNum, 10) || 1 })
     })
     .then(r => r.json())
     .then(data => {
