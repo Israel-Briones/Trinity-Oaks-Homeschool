@@ -279,6 +279,34 @@
       border-radius: 10px;
       padding: 1.1rem 1.2rem;
     }
+    .act-card.locked {
+      opacity: 0.55;
+      border-style: dashed;
+    }
+    .act-semana-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      margin-bottom: 0.6rem;
+      background: rgba(184,115,51,0.12);
+      color: var(--copper);
+    }
+    .act-semana-badge.locked {
+      background: rgba(120,120,120,0.12);
+      color: var(--muted);
+    }
+    .act-locked-msg {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
     .act-card-title {
       font-family: 'Fraunces', serif;
       font-size: 1rem;
@@ -647,7 +675,6 @@
       });
       clearTimeout(tid);
       const data = await res.json();
-      // backend may return {actividades: [...]} or {actividades: {actividades: [...]}}
       const raw  = data.actividades ?? data.activities ?? data;
       const list = Array.isArray(raw) ? raw
                  : Array.isArray(raw?.actividades) ? raw.actividades
@@ -657,16 +684,37 @@
         result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">No se pudieron generar actividades. Intenta de nuevo.</p>`;
         return;
       }
-      list.forEach(act => {
-        const card = document.createElement('div');
-        card.className = 'act-card';
-        card.innerHTML = `
-          <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
-          ${act.objetivo  ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`   : ''}
-          ${act.materiales? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>`: ''}
-          ${act.pasos     ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`          : ''}
-          ${act.duracion  ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                  : ''}
-        `;
+
+      const desbloqueado_en = data.desbloqueado_en ? new Date(data.desbloqueado_en) : null;
+      const semanaActual = desbloqueado_en
+        ? Math.min(Math.floor((Date.now() - desbloqueado_en) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
+        : 4;
+
+      list.forEach((act, idx) => {
+        const semana   = idx + 1;
+        const unlocked = semana <= semanaActual;
+        const card     = document.createElement('div');
+        card.className = `act-card${unlocked ? '' : ' locked'}`;
+
+        if (unlocked) {
+          card.innerHTML = `
+            <span class="act-semana-badge">Semana ${semana}</span>
+            <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
+            ${act.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`    : ''}
+            ${act.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>` : ''}
+            ${act.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`           : ''}
+            ${act.duracion   ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                   : ''}
+          `;
+        } else {
+          const diasRestantes = desbloqueado_en
+            ? Math.ceil(((semana - 1) * 7 * 24 * 60 * 60 * 1000 - (Date.now() - desbloqueado_en)) / (24 * 60 * 60 * 1000))
+            : (semana - semanaActual) * 7;
+          card.innerHTML = `
+            <span class="act-semana-badge locked">Semana ${semana}</span>
+            <div class="act-card-title" style="color:var(--muted)">${esc(act.titulo || act.title || 'Actividad')}</div>
+            <div class="act-locked-msg">🔒 Disponible en ${diasRestantes} día${diasRestantes !== 1 ? 's' : ''}</div>
+          `;
+        }
         result.appendChild(card);
       });
     } catch {
