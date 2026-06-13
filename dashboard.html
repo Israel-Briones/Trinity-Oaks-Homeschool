@@ -482,12 +482,18 @@
     /* Mobile avatar toggle */
     .nav-avatar-toggle {
       display: none;
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, #c8873a, #8b5a1a);
-      align-items: center; justify-content: center;
-      font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700;
-      color: #fff; cursor: pointer; border: none;
-      flex-shrink: 0; position: relative; z-index: 1001;
+      width: 36px; height: 36px; border-radius: 6px;
+      background: transparent; border: 1.5px solid var(--border2);
+      align-items: center; justify-content: center; flex-direction: column;
+      gap: 5px; cursor: pointer; flex-shrink: 0;
+      position: relative; z-index: 1001; padding: 0;
+      transition: border-color .2s;
+    }
+    .nav-avatar-toggle:hover { border-color: var(--copper); }
+    .nav-avatar-toggle span {
+      display: block; width: 18px; height: 2px;
+      background: var(--cream); border-radius: 2px;
+      pointer-events: none;
     }
     .nav-profile-dropdown {
       display: none; position: absolute; top: calc(100% + 8px); right: 1rem;
@@ -766,7 +772,9 @@
   </div>
 
   <!-- Mobile avatar toggle -->
-  <button class="nav-avatar-toggle" id="nav-avatar-toggle"></button>
+  <button class="nav-avatar-toggle" id="nav-avatar-toggle" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-profile-dropdown" id="nav-profile-dropdown">
     <div class="nav-dropdown-name" id="nav-dropdown-name"></div>
     <button class="nav-dropdown-btn" id="nav-settings-btn-m">⚙ Configuración</button>
@@ -949,7 +957,7 @@
     document.getElementById('nav-user-name').textContent    = name;
     document.getElementById('dash-name').textContent        = name;
     document.getElementById('nav-avatar').textContent       = initial;
-    document.getElementById('nav-avatar-toggle').textContent = initial;
+    // nav-avatar-toggle uses SVG lines, no textContent needed
     const dn = document.getElementById('nav-dropdown-name');
     if (dn) dn.textContent = name;
   }
