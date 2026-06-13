@@ -523,7 +523,7 @@
 
     fetch(`${API}/get-content`, {
       method: 'POST', headers: HDR,
-      body: JSON.stringify({ hijo_id: window._hijoId, mes: mesNum })
+      body: JSON.stringify({ hijo_id: window._hijoId, mes: parseInt(mesNum, 10) || 1 })
     })
     .then(r => r.json())
     .then(data => {
@@ -640,10 +640,13 @@
     result.innerHTML = '';
 
     try {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), 60000);
       const res  = await fetch(`${window._API}/ai-actividades`, {
-        method: 'POST', headers: window._HDR,
-        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, descripcion_hijo: desc })
+        method: 'POST', headers: window._HDR, signal: ctrl.signal,
+        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(window._mes, 10) || 1, descripcion_hijo: desc })
       });
+      clearTimeout(tid);
       const data = await res.json();
       const actividades = data.actividades || data.activities || data || [];
       const list = Array.isArray(actividades) ? actividades : [];
@@ -685,10 +688,13 @@
     window._examAnswers = {};
 
     try {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), 60000);
       const res  = await fetch(`${window._API}/ai-examen`, {
-        method: 'POST', headers: window._HDR,
-        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId })
+        method: 'POST', headers: window._HDR, signal: ctrl.signal,
+        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(window._mes, 10) || 1 })
       });
+      clearTimeout(tid);
       const data = await res.json();
       const preguntas = data.preguntas || data.questions || data || [];
       window._examData = Array.isArray(preguntas) ? preguntas : [];
@@ -793,10 +799,13 @@
     result.innerHTML = '';
 
     try {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), 60000);
       const res  = await fetch(`${window._API}/ai-progreso`, {
-        method: 'POST', headers: window._HDR,
-        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, notas })
+        method: 'POST', headers: window._HDR, signal: ctrl.signal,
+        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(window._mes, 10) || 1, notas })
       });
+      clearTimeout(tid);
       const data = await res.json();
       const texto = data.reporte || data.report || data.texto || data.content || JSON.stringify(data, null, 2);
       const card = document.createElement('div');
