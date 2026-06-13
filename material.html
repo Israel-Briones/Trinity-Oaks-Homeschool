@@ -746,7 +746,9 @@
       });
       clearTimeout(tid);
       const data = await res.json();
-      const preguntas = data.preguntas || data.questions || data || [];
+      // backend returns { examen: { preguntas: [...] } } or { examen: [...] }
+      const raw = data.examen ?? data;
+      const preguntas = raw?.preguntas || raw?.questions || (Array.isArray(raw) ? raw : []);
       window._examData = Array.isArray(preguntas) ? preguntas : [];
 
       if (!window._examData.length) {
