@@ -121,60 +121,82 @@
     /* ── Seguimiento section ── */
     .seg-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-      gap: 1.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 2rem;
     }
     .seg-block {
       background: var(--bg2);
       border: 1px solid var(--border2);
-      border-top: 3px solid var(--copper);
-      border-radius: 10px;
-      padding: 1.75rem 2rem 1.5rem;
-      display: flex; flex-direction: column; gap: 0;
+      border-radius: 14px;
+      padding: 2rem 2.25rem;
+      display: flex; gap: 2rem; align-items: flex-start;
     }
-    .seg-nombre {
-      font-family: 'Fraunces', serif;
-      font-weight: 600; font-size: 1.35rem; color: var(--cream);
-      margin-bottom: 0.2rem;
+    /* left: donut */
+    .seg-donut-wrap {
+      flex-shrink: 0; display: flex; flex-direction: column;
+      align-items: center; gap: 0.5rem;
     }
-    .seg-mes-tag {
-      font-size: 0.75rem; color: var(--muted); margin-bottom: 1.5rem;
-      letter-spacing: 0.04em;
+    .seg-donut {
+      position: relative; width: 96px; height: 96px;
     }
+    .seg-donut svg { transform: rotate(-90deg); }
+    .seg-donut-track { fill: none; stroke: var(--border); stroke-width: 8; }
+    .seg-donut-fill  {
+      fill: none; stroke: var(--copper); stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset .7s cubic-bezier(.4,0,.2,1);
+    }
+    .seg-donut-pct {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-size: 1.4rem;
+      font-weight: 700; color: var(--copper); line-height: 1;
+    }
+    .seg-donut-pct small {
+      font-size: 0.65rem; font-weight: 400;
+      color: var(--muted); margin-top: 2px; letter-spacing: 0.05em;
+    }
+    .seg-donut-nombre {
+      font-family: 'Fraunces', serif; font-size: 1.05rem;
+      font-weight: 600; color: var(--cream); text-align: center;
+      line-height: 1.2;
+    }
+    .seg-donut-sub {
+      font-size: 0.72rem; color: var(--muted); text-align: center;
+    }
+    /* right: bars */
+    .seg-bars { flex: 1; display: flex; flex-direction: column; gap: 1.1rem; }
     .seg-bar-row {
-      display: flex; align-items: center; gap: 1rem;
-      margin-bottom: 1rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
     }
-    .seg-bar-left {
-      display: flex; align-items: center; gap: 0.5rem;
-      min-width: 195px; flex-shrink: 0;
-    }
-    .seg-bar-icon {
-      font-size: 1.1rem; line-height: 1; flex-shrink: 0;
+    .seg-bar-header {
+      display: flex; justify-content: space-between; align-items: baseline;
     }
     .seg-bar-label {
-      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;
-      text-transform: uppercase; color: var(--cream);
-    }
-    .seg-bar-track {
-      flex: 1; height: 10px; border-radius: 6px;
-      background: var(--border); overflow: hidden;
-    }
-    .seg-bar-fill {
-      height: 100%; border-radius: 6px;
-      background: linear-gradient(90deg, var(--copper), #d9954a);
-      transition: width .6s cubic-bezier(.4,0,.2,1);
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 0.35rem;
     }
     .seg-bar-value {
       font-family: 'Fraunces', serif;
       font-size: 1rem; font-weight: 600; color: var(--copper);
-      min-width: 3.5rem; text-align: right; flex-shrink: 0;
+    }
+    .seg-bar-value span { font-size: 0.7rem; opacity: 0.5; }
+    .seg-bar-track {
+      width: 100%; height: 8px; border-radius: 999px;
+      background: var(--border); overflow: hidden;
+    }
+    .seg-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, #b87333, #d9954a);
+      transition: width .7s cubic-bezier(.4,0,.2,1);
     }
     .seg-nota {
-      font-size: 0.82rem; color: var(--muted);
-      font-style: italic; line-height: 1.55;
+      font-size: 0.8rem; color: var(--muted);
+      font-style: italic; line-height: 1.5;
       border-top: 1px solid var(--border2);
-      padding-top: 1rem; margin-top: 0.5rem;
+      padding-top: 0.75rem; margin-top: 0.2rem;
     }
 
     /* dashed add card */
@@ -505,23 +527,39 @@
       const examenes    = (d.examenes || []).length;
       const nota        = d.ultima_nota ? d.ultima_nota.slice(0, 80) + (d.ultima_nota.length > 80 ? '…' : '') : null;
 
+      // donut SVG: r=40, circumference=251.2
+      const r = 40, circ = 2 * Math.PI * r;
+      const offset = circ - (pct / 100) * circ;
+
       const bar = (icon, label, val, max) => `
         <div class="seg-bar-row">
-          <div class="seg-bar-left">
-            <span class="seg-bar-icon">${icon}</span>
-            <span class="seg-bar-label">${label}</span>
+          <div class="seg-bar-header">
+            <span class="seg-bar-label">${icon} ${label}</span>
+            <span class="seg-bar-value">${val}<span>/${max}</span></span>
           </div>
           <div class="seg-bar-track"><div class="seg-bar-fill" style="width:${Math.round((val/max)*100)}%"></div></div>
-          <div class="seg-bar-value">${val}<span style="font-size:.75rem;opacity:.5">/${max}</span></div>
         </div>`;
 
       el.innerHTML = `
-        <div class="seg-nombre">${escHtml(h.nombre)}</div>
-        <div class="seg-mes-tag">${escHtml(h.mes)} · ${escHtml(h.nivel_display || h.nivel || '')}</div>
-        ${bar('📚', 'Actividades del mes', completadas, 4)}
-        ${bar('📅', 'Meses desbloqueados', meses, 10)}
-        ${bar('📝', 'Exámenes generados', examenes, 10)}
-        ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
+        <div class="seg-donut-wrap">
+          <div class="seg-donut">
+            <svg width="96" height="96" viewBox="0 0 96 96">
+              <circle class="seg-donut-track" cx="48" cy="48" r="${r}"/>
+              <circle class="seg-donut-fill" cx="48" cy="48" r="${r}"
+                stroke-dasharray="${circ.toFixed(1)}"
+                stroke-dashoffset="${offset.toFixed(1)}"/>
+            </svg>
+            <div class="seg-donut-pct">${pct}%<small>avance</small></div>
+          </div>
+          <div class="seg-donut-nombre">${escHtml(h.nombre)}</div>
+          <div class="seg-donut-sub">${escHtml(h.mes)}</div>
+        </div>
+        <div class="seg-bars">
+          ${bar('📚', 'Actividades del mes', completadas, 4)}
+          ${bar('📅', 'Meses desbloqueados', meses, 10)}
+          ${bar('📝', 'Exámenes generados', examenes, 10)}
+          ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
+        </div>
       `;
     } catch {}
   }
