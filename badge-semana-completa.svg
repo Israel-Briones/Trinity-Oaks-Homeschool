@@ -1,0 +1,51 @@
+<svg width="200" height="220" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f39c12"/>
+      <stop offset="50%" style="stop-color:#e67e22"/>
+      <stop offset="100%" style="stop-color:#a04000"/>
+    </linearGradient>
+    <linearGradient id="hexShine" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.25"/>
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#a04000" flood-opacity="0.6"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="hexClip">
+      <polygon points="100,8 182,52 182,148 100,192 18,148 18,52"/>
+    </clipPath>
+  </defs>
+
+  <polygon points="100,12 184,56 184,152 100,196 16,152 16,56" fill="#a04000" opacity="0.4" transform="translate(2,4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#hexGrad)" filter="url(#shadow)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="none" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#hexShine)" clip-path="url(#hexClip)"/>
+  <polygon points="100,18 172,58 172,142 100,182 28,142 28,58" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Big star with depth -->
+  <g transform="translate(100,100)" filter="url(#glow)">
+    <!-- Shadow star -->
+    <polygon points="0,-46 11,-15 44,-14 19,6 28,37 0,19 -28,37 -19,6 -44,-14 -11,-15" fill="#7d4000" opacity="0.5" transform="translate(3,5)"/>
+    <!-- Main star -->
+    <polygon points="0,-46 11,-15 44,-14 19,6 28,37 0,19 -28,37 -19,6 -44,-14 -11,-15" fill="#ffd700"/>
+    <!-- Highlight -->
+    <polygon points="0,-46 11,-15 44,-14 19,6 28,37 0,19 -28,37 -19,6 -44,-14 -11,-15" fill="url(#hexShine)"/>
+    <!-- Inner star -->
+    <polygon points="0,-24 6,-8 22,-8 10,2 14,18 0,10 -14,18 -10,2 -22,-8 -6,-8" fill="#ffe566" opacity="0.8"/>
+    <!-- Center shine -->
+    <circle cx="-8" cy="-12" r="4" fill="#fff" opacity="0.3"/>
+  </g>
+
+  <!-- Small orbiting stars -->
+  <circle cx="52" cy="72" r="4" fill="#ffd700" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="150" cy="78" r="3" fill="#ffd700" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="55" cy="128" r="2.5" fill="#ffd700" opacity="0.7"/>
+  <circle cx="148" cy="122" r="3.5" fill="#ffd700" opacity="0.8" filter="url(#glow)"/>
+
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="bold" fill="#c8873a" letter-spacing="1">SEMANA COMPLETA</text>
+</svg>
