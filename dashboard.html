@@ -118,6 +118,40 @@
     }
     .hijo-ver-btn:hover { border-color: var(--copper); color: var(--copper); }
 
+    /* progress section */
+    .hijo-progress {
+      display: flex; flex-direction: column; gap: 0.45rem;
+      padding: 0.75rem 0 0.1rem;
+      border-top: 1px solid var(--border2);
+    }
+    .progreso-bar-wrap {
+      display: flex; align-items: center; gap: 0.55rem;
+    }
+    .progreso-bar-track {
+      flex: 1; height: 5px; border-radius: 999px;
+      background: var(--border2); overflow: hidden;
+    }
+    .progreso-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: var(--copper); transition: width .4s;
+    }
+    .progreso-bar-label {
+      font-size: 0.72rem; color: var(--muted); white-space: nowrap;
+    }
+    .progreso-badges {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+    }
+    .progreso-badge {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em;
+      background: rgba(184,115,51,.1); color: var(--copper);
+      border: 1px solid rgba(184,115,51,.25); border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+    }
+    .progreso-nota {
+      font-size: 0.75rem; color: var(--muted);
+      font-style: italic; line-height: 1.4;
+    }
+
     /* dashed add card */
     .hijo-card-add {
       border: 1px dashed rgba(184,115,51,.3); border-radius: 8px;
@@ -409,6 +443,43 @@
   }
   function saveHijos(hijos) { localStorage.setItem('to_hijos', JSON.stringify(hijos)); }
 
+  const API_BASE = 'https://trinity-oaks-api-production.up.railway.app';
+  const API_KEY  = 'to-api-2025-secure';
+
+  async function loadProgreso(h, idx) {
+    const el = document.getElementById(`progreso-${idx}`);
+    if (!el) return;
+    try {
+      const res  = await fetch(`${API_BASE}/progreso-hijo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        body: JSON.stringify({ email: localStorage.getItem('to_email'), hijo_id: h.id })
+      });
+      if (!res.ok) return;
+      const d = await res.json();
+
+      const mesNum      = parseInt((h.mes || '').match(/\d+/)?.[0]) || 1;
+      const actMes      = (d.actividades_por_mes || []).find(a => a.mes === mesNum);
+      const completadas = actMes ? actMes.completadas : 0;
+      const total       = 4;
+      const pct         = Math.round((completadas / total) * 100);
+      const examenes    = (d.examenes || []).length;
+      const nota        = d.ultima_nota ? d.ultima_nota.slice(0, 60) + (d.ultima_nota.length > 60 ? '…' : '') : null;
+
+      el.innerHTML = `
+        <div class="progreso-bar-wrap">
+          <div class="progreso-bar-track"><div class="progreso-bar-fill" style="width:${pct}%"></div></div>
+          <span class="progreso-bar-label">${completadas}/${total} actividades</span>
+        </div>
+        <div class="progreso-badges">
+          <span class="progreso-badge">${d.meses_desbloqueados || 0} mes${(d.meses_desbloqueados || 0) !== 1 ? 'es' : ''} desbloqueado${(d.meses_desbloqueados || 0) !== 1 ? 's' : ''}</span>
+          ${examenes > 0 ? `<span class="progreso-badge">${examenes} examen${examenes !== 1 ? 'es' : ''} generado${examenes !== 1 ? 's' : ''}</span>` : ''}
+        </div>
+        ${nota ? `<div class="progreso-nota">"${nota}"</div>` : ''}
+      `;
+    } catch {}
+  }
+
   function renderHijos() {
     const hijos = loadHijos();
     const grid  = document.getElementById('hijos-grid');
@@ -434,6 +505,7 @@
             <button class="mes-arrow" data-idx="${i}" data-dir="1">▶</button>
           </div>
         </div>
+        <div class="hijo-progress" id="progreso-${i}"></div>
         <button class="hijo-ver-btn" data-idx="${i}">Ver material →</button>
       `;
       grid.appendChild(card);
@@ -441,6 +513,9 @@
 
     // init arrow states
     hijos.forEach((h, i) => updateArrows(i));
+
+    // load progress for each hijo with a backend id
+    hijos.forEach((h, i) => { if (h.id) loadProgreso(h, i); });
 
     // Dashed add card
     const addCard = document.createElement('button');
