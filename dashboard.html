@@ -454,44 +454,40 @@
     .ah-btn-ghost:hover { color: var(--cream); border-color: var(--cream); }
 
     /* ── Nav tweaks for dashboard ── */
-    .nav-title {
-      position: absolute;
-      left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center;
-      gap: 0.1rem;
-      pointer-events: none;
+    nav {
+      position: sticky; top: 0; z-index: 900;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
     }
-    .nav-title-main {
-      font-family: 'Cinzel', serif;
-      font-size: 2.1rem; font-weight: 700;
-      color: var(--cream);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      line-height: 1;
+    .nav-brand {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--copper); letter-spacing: 0.02em;
+      white-space: nowrap; text-decoration: none;
     }
-    .nav-title-sub {
-      font-family: 'Cinzel', serif;
-      font-size: 0.72rem; font-weight: 700;
-      color: var(--cream);
-      letter-spacing: 0.45em;
-      text-transform: uppercase;
+    .nav-right {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .nav-user-label {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem; font-weight: 600; color: var(--copper);
       white-space: nowrap;
     }
-    .nav-user-label { font-size: 0.82rem; color: var(--cream); font-weight: 500; }
-    .nav-logout-link {
-      font-size: 0.78rem; color: var(--muted);
-      text-decoration: none; transition: color .2s;
-    }
-    .nav-logout-link:hover { color: var(--copper); }
     .nav-settings-btn {
       font-size: 0.78rem; font-weight: 600; color: var(--copper);
       background: transparent; border: 1.5px solid var(--copper);
-      border-radius: 6px; padding: 0.3rem 0.75rem;
+      border-radius: 6px; padding: 0.3rem 0.8rem;
       cursor: pointer; transition: background .2s, color .2s;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.04em; white-space: nowrap;
     }
     .nav-settings-btn:hover { background: var(--copper); color: #1a1208; }
+    .nav-logout-link {
+      font-size: 0.78rem; color: var(--muted);
+      text-decoration: none; transition: color .2s; white-space: nowrap;
+    }
+    .nav-logout-link:hover { color: var(--cream); }
 
     /* ── Settings Modal ── */
     .settings-overlay {
@@ -608,16 +604,11 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <img src="Logo 2.png" height="120" alt="Trinity Oaks">
-  </div>
-  <span class="nav-title-main" style="position:absolute;left:50%;transform:translateX(-50%);font-size:3rem;pointer-events:none;">Dashboard</span>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.45rem;margin-right:2rem;">
+  <span class="nav-brand">Trinity Oaks Homeschool</span>
+  <div class="nav-right">
     <span class="nav-user-label" id="nav-user-name"></span>
-    <div style="display:flex;align-items:center;gap:0.75rem;">
-      <a href="#" class="nav-logout-link" id="nav-logout">Cerrar sesión</a>
-      <button class="nav-settings-btn" id="nav-settings-btn">⚙️ Settings</button>
-    </div>
+    <button class="nav-settings-btn" id="nav-settings-btn">⚙️ Settings</button>
+    <a href="#" class="nav-logout-link" id="nav-logout">Cerrar sesión</a>
   </div>
 </nav>
 
@@ -782,10 +773,15 @@
     const local = e.split('@')[0].replace(/[._-]/g, ' ');
     return local.replace(/\b\w/g, c => c.toUpperCase());
   }
-  const displayName = nameFromEmail(email || '');
-  document.getElementById('dash-name').textContent     = displayName;
-  document.getElementById('dash-email').textContent    = email;
-  document.getElementById('nav-user-name').textContent = displayName;
+  function getDisplayName() {
+    return localStorage.getItem('to_nombre') || nameFromEmail(email || '');
+  }
+  function updateNavName() {
+    document.getElementById('nav-user-name').textContent = getDisplayName();
+  }
+  document.getElementById('dash-name').textContent  = getDisplayName();
+  document.getElementById('dash-email').textContent = email;
+  updateNavName();
 
   // ── Logout ────────────────────────────────────────────────
   document.getElementById('nav-logout').addEventListener('click', e => {
@@ -835,9 +831,10 @@
 
   // Save profile (localStorage only for now)
   document.getElementById('settings-save-btn').addEventListener('click', () => {
-    localStorage.setItem('to_nombre',    document.getElementById('s-nombre').value.trim());
-    localStorage.setItem('to_sexo',      document.getElementById('s-sexo').value);
-    localStorage.setItem('to_telefono',  document.getElementById('s-telefono').value.trim());
+    localStorage.setItem('to_nombre',   document.getElementById('s-nombre').value.trim());
+    localStorage.setItem('to_sexo',     document.getElementById('s-sexo').value);
+    localStorage.setItem('to_telefono', document.getElementById('s-telefono').value.trim());
+    updateNavName();
     const toast = document.getElementById('settings-toast');
     toast.style.display = 'block';
     setTimeout(() => { toast.style.display = 'none'; }, 3000);
