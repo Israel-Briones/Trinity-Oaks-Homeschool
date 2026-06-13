@@ -742,7 +742,7 @@
 <div class="dash-hero">
   <div class="dash-hero-inner">
     <div class="dash-eyebrow">Panel de familia</div>
-    <h1 class="dash-title">Bienvenida, <em id="dash-name"></em></h1>
+    <h1 class="dash-title"><span id="dash-bienvenido">Bienvenido</span>, <em id="dash-name"></em></h1>
     <p class="dash-email" id="dash-email"></p>
   </div>
 </div>
@@ -860,10 +860,15 @@
     document.getElementById('nav-user-name').textContent = getDisplayName();
   }
   const displayName = getDisplayName();
+  function updateBienvenido() {
+    const sexo = localStorage.getItem('to_sexo') || '';
+    document.getElementById('dash-bienvenido').textContent = sexo === 'Femenino' ? 'Bienvenida' : 'Bienvenido';
+  }
   document.getElementById('dash-name').textContent     = displayName;
   document.getElementById('dash-email').textContent    = email;
   document.getElementById('nav-user-name').textContent = displayName;
   document.getElementById('nav-avatar').textContent    = displayName.charAt(0).toUpperCase();
+  updateBienvenido();
 
   // ── Logout ────────────────────────────────────────────────
   document.getElementById('nav-logout').addEventListener('click', e => {
@@ -914,6 +919,7 @@
     localStorage.setItem('to_sexo',     document.getElementById('s-sexo').value);
     localStorage.setItem('to_telefono', document.getElementById('s-telefono').value.trim());
     updateNavName();
+    updateBienvenido();
     const n = getDisplayName();
     document.getElementById('nav-avatar').textContent = n.charAt(0).toUpperCase();
     const toast = document.getElementById('settings-toast');
