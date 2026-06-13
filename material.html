@@ -530,6 +530,16 @@
         <span class="ai-toggle-arrow">▼</span>
       </button>
       <div class="ai-body">
+        <!-- Exam progress bar -->
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+            <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--copper);">Calificación</span>
+            <span id="exam-progress-label" style="font-size:0.72rem;font-weight:600;color:var(--copper);">— / —</span>
+          </div>
+          <div style="height:8px;border-radius:999px;background:var(--border);overflow:hidden;">
+            <div id="exam-progress-fill" style="height:100%;border-radius:999px;background:linear-gradient(90deg,#b87333,#d9954a);width:0%;transition:width .6s cubic-bezier(.4,0,.2,1);"></div>
+          </div>
+        </div>
         <button class="ai-btn" id="exam-btn" onclick="generarExamen()" style="margin-top:1rem;">
           <span class="btn-spinner"></span>
           Generar examen
@@ -985,6 +995,18 @@
       if (si) si.disabled = true;
     });
     document.getElementById('exam-results-btn').hidden = true;
+
+    // Update exam progress bar with score
+    const total   = window._examData.length;
+    const correct = window._examData.filter((q, i) => {
+      const ans = (window._examAnswers[i] || '').trim().toLowerCase();
+      return ans === String(q.respuesta_correcta || q.correct_answer || q.answer || '').toLowerCase();
+    }).length;
+    const fill  = document.getElementById('exam-progress-fill');
+    const label = document.getElementById('exam-progress-label');
+    if (fill)  fill.style.width  = `${total ? (correct / total) * 100 : 0}%`;
+    if (label) label.textContent = `${correct} / ${total} correctas`;
+
     checkBadges();
   }
 
