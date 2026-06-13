@@ -918,6 +918,25 @@
       return;
     }
 
+    const subStart = localStorage.getItem('to_sub_start');
+    const subEnd   = localStorage.getItem('to_sub_end');
+
+    const fmtDate = iso => iso
+      ? new Date(iso).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })
+      : null;
+
+    const daysLeft = subEnd
+      ? Math.max(0, Math.ceil((new Date(subEnd) - Date.now()) / (1000 * 60 * 60 * 24)))
+      : null;
+
+    const startStr   = fmtDate(subStart);
+    const endStr     = fmtDate(subEnd);
+    const daysLabel  = daysLeft !== null
+      ? daysLeft === 0 ? 'Vence hoy'
+      : daysLeft === 1 ? 'Vence mañana'
+      : `${daysLeft} días restantes`
+      : null;
+
     container.innerHTML = `
       <div class="plan-info-card">
         <div>
@@ -933,6 +952,21 @@
             <span class="plan-info-key">Estado</span>
             <span class="plan-active-badge">Activo</span>
           </div>
+          ${startStr ? `
+          <div class="plan-info-row">
+            <span class="plan-info-key">Inicio</span>
+            <span class="plan-info-val">${startStr}</span>
+          </div>` : ''}
+          ${endStr ? `
+          <div class="plan-info-row">
+            <span class="plan-info-key">Próxima renovación</span>
+            <span class="plan-info-val">${endStr}</span>
+          </div>` : ''}
+          ${daysLabel ? `
+          <div class="plan-info-row">
+            <span class="plan-info-key">Tiempo restante</span>
+            <span class="plan-info-val" style="color:${daysLeft <= 5 ? '#e07040' : 'var(--copper)'};">${daysLabel}</span>
+          </div>` : ''}
           <div class="plan-info-row">
             <span class="plan-info-key">Correo</span>
             <span class="plan-info-val">${escHtml(email)}</span>
@@ -1004,6 +1038,8 @@
       // Sync plan/billing from backend
       if (data.usuario?.plan)    localStorage.setItem('to_plan',    data.usuario.plan);
       if (data.usuario?.billing) localStorage.setItem('to_billing', data.usuario.billing);
+      if (data.usuario?.subscription_start)      localStorage.setItem('to_sub_start', data.usuario.subscription_start);
+      if (data.usuario?.subscription_period_end) localStorage.setItem('to_sub_end',   data.usuario.subscription_period_end);
       renderPlan();
     } catch { /* silent — local cache still shows */ }
   }
