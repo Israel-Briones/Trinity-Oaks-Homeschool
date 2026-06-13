@@ -144,12 +144,24 @@
       border-radius: 14px;
       overflow: hidden;
     }
+    .ai-section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 0.75rem 1.4rem;
+    }
+    .ai-section-icon {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
     .ai-toggle {
-      width: 100%;
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 1.4rem;
+      padding: 0.75rem 0;
       background: none;
       border: none;
       color: var(--cream);
@@ -160,7 +172,7 @@
       transition: background 0.15s;
       text-align: left;
     }
-    .ai-toggle:hover { background: rgba(255,255,255,0.03); }
+    .ai-toggle:hover { opacity: 0.8; }
     .ai-toggle-arrow { font-size: 0.75rem; color: var(--muted); transition: transform 0.2s; }
     .ai-section.open .ai-toggle-arrow { transform: rotate(180deg); }
     .ai-body {
@@ -481,10 +493,13 @@
 
     <!-- Module 1: Asistente IA -->
     <div class="ai-section" id="sec-chat">
-      <button class="ai-toggle" onclick="toggleSection('sec-chat')">
-        <img src="assets/icons/robot.png" style="width:64px;height:64px;object-fit:contain;flex-shrink:0;margin-right:12px;"> Asistente IA
-        <span class="ai-toggle-arrow">▼</span>
-      </button>
+      <div class="ai-section-header">
+        <img src="assets/icons/robot.png" class="ai-section-icon">
+        <button class="ai-toggle" onclick="toggleSection('sec-chat')">
+          Asistente IA
+          <span class="ai-toggle-arrow">▼</span>
+        </button>
+      </div>
       <div class="ai-body">
         <div class="chat-history" id="chat-history"></div>
         <div class="chat-input-row">
@@ -499,10 +514,13 @@
 
     <!-- Module 2: Actividades -->
     <div class="ai-section" id="sec-act">
-      <button class="ai-toggle" onclick="toggleSection('sec-act')">
-        <img src="assets/icons/estrella.png" style="width:64px;height:64px;object-fit:contain;flex-shrink:0;margin-right:12px;"> Generador de Actividades
-        <span class="ai-toggle-arrow">▼</span>
-      </button>
+      <div class="ai-section-header">
+        <img src="assets/icons/estrella.png" class="ai-section-icon">
+        <button class="ai-toggle" onclick="toggleSection('sec-act')">
+          Generador de Actividades
+          <span class="ai-toggle-arrow">▼</span>
+        </button>
+      </div>
       <div class="ai-body">
         <!-- Progress bar -->
         <div style="margin-bottom:1rem;">
@@ -525,10 +543,13 @@
 
     <!-- Module 3: Examen -->
     <div class="ai-section" id="sec-exam">
-      <button class="ai-toggle" onclick="toggleSection('sec-exam')">
-        <img src="assets/icons/examen.png" style="width:64px;height:64px;object-fit:contain;flex-shrink:0;margin-right:12px;"> Examen del Mes
-        <span class="ai-toggle-arrow">▼</span>
-      </button>
+      <div class="ai-section-header">
+        <img src="assets/icons/examen.png" class="ai-section-icon">
+        <button class="ai-toggle" onclick="toggleSection('sec-exam')">
+          Examen del Mes
+          <span class="ai-toggle-arrow">▼</span>
+        </button>
+      </div>
       <div class="ai-body">
         <!-- Exam progress bar -->
         <div style="margin-bottom:1rem;">
@@ -550,10 +571,13 @@
 
     <!-- Module 4: Reporte -->
     <div class="ai-section" id="sec-rep">
-      <button class="ai-toggle" onclick="toggleSection('sec-rep')">
-        <img src="assets/icons/grafica.png" style="width:64px;height:64px;object-fit:contain;flex-shrink:0;margin-right:12px;"> Reporte Mensual
-        <span class="ai-toggle-arrow">▼</span>
-      </button>
+      <div class="ai-section-header">
+        <img src="assets/icons/grafica.png" class="ai-section-icon">
+        <button class="ai-toggle" onclick="toggleSection('sec-rep')">
+          Reporte Mensual
+          <span class="ai-toggle-arrow">▼</span>
+        </button>
+      </div>
       <div class="ai-body">
         <textarea class="ai-textarea" id="rep-notas" placeholder="Notas del mes (actividades realizadas, observaciones…)"></textarea>
         <button class="ai-btn" id="rep-btn" onclick="generarReporte()">
