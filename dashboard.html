@@ -99,6 +99,15 @@
       color: var(--copper); border-radius: 4px;
       padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600;
     }
+    .mes-switcher {
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .mes-arrow {
+      background: none; border: none; cursor: pointer;
+      color: var(--copper); font-size: 0.85rem; padding: 0 0.2rem;
+      line-height: 1; transition: opacity .15s;
+    }
+    .mes-arrow:disabled { opacity: 0.25; cursor: default; }
     .hijo-ver-btn {
       margin-top: 0.4rem; width: 100%; padding: 0.7rem;
       border: 1px solid var(--border); border-radius: 6px;
@@ -418,13 +427,20 @@
           <span class="hijo-row-val">${escHtml(h.nivel_display || h.nivel)}</span>
         </div>
         <div class="hijo-row">
-          <span class="hijo-row-label">Mes activo</span>
-          <span class="hijo-mes-badge">${escHtml(h.mes)}</span>
+          <span class="hijo-row-label">Mes</span>
+          <div class="mes-switcher">
+            <button class="mes-arrow" data-idx="${i}" data-dir="-1">◀</button>
+            <span class="hijo-mes-badge" id="mes-label-${i}">${escHtml(h.mes)}</span>
+            <button class="mes-arrow" data-idx="${i}" data-dir="1">▶</button>
+          </div>
         </div>
         <button class="hijo-ver-btn" data-idx="${i}">Ver material →</button>
       `;
       grid.appendChild(card);
     });
+
+    // init arrow states
+    hijos.forEach((h, i) => updateArrows(i));
 
     // Dashed add card
     const addCard = document.createElement('button');
@@ -433,11 +449,43 @@
     addCard.addEventListener('click', openAddHijo);
     grid.appendChild(addCard);
 
+    grid.querySelectorAll('.mes-arrow').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx  = +btn.dataset.idx;
+        const dir  = +btn.dataset.dir;
+        const h    = loadHijos()[idx];
+        const meses = h.meses_desbloqueados || [1];
+        const numActual = parseInt((h.mes || '').match(/\d+/)?.[0]) || meses[0];
+        const pos  = meses.indexOf(numActual);
+        const next = meses[pos + dir];
+        if (next == null) return;
+        h.mes = `Mes ${next}`;
+        const hijos2 = loadHijos();
+        hijos2[idx] = h;
+        saveHijos(hijos2);
+        document.getElementById(`mes-label-${idx}`).textContent = h.mes;
+        updateArrows(idx);
+      });
+    });
+
     grid.querySelectorAll('.hijo-ver-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const h = loadHijos()[+btn.dataset.idx];
         window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel)}&grado=${encodeURIComponent(h.grado||'')}&semestre=${encodeURIComponent(h.semestre||'')}&nivel_display=${encodeURIComponent(h.nivel_display||h.nivel)}&mes=${encodeURIComponent(h.mes)}`;
       });
+    });
+  }
+
+  function updateArrows(idx) {
+    const h     = loadHijos()[idx];
+    const meses = h.meses_desbloqueados || [1];
+    const num   = parseInt((h.mes || '').match(/\d+/)?.[0]) || meses[0];
+    const pos   = meses.indexOf(num);
+    const card  = document.getElementById(`mes-label-${idx}`)?.closest('.hijo-card');
+    if (!card) return;
+    card.querySelectorAll('.mes-arrow').forEach(btn => {
+      const dir = +btn.dataset.dir;
+      btn.disabled = dir === -1 ? pos <= 0 : pos >= meses.length - 1;
     });
   }
 
@@ -623,6 +671,7 @@
             grado:         h.grado    || '',
             semestre:      h.semestre || '',
             nivel_display,
+            meses_desbloqueados: h.meses_desbloqueados || [h.mes_activo],
             mes:           (() => { const m = localByName[h.nombre]?.mes || ''; return /^Mes \d+$/.test(m) ? m : `Mes ${h.mes_activo}`; })()
           };
         });
