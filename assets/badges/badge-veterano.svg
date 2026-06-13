@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#37474f"/>
+      <stop offset="100%" stop-color="#1a2428"/>
+    </linearGradient>
+  </defs>
+  <polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#bg)" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- 5 gold stars arrangement: top row 2, bottom row 3 -->
+  <!-- Top row -->
+  <polygon points="80,80 83,90 94,90 85,96 88,107 80,101 72,107 75,96 66,90 77,90" fill="#f1c40f" stroke="#c8873a" stroke-width="1"/>
+  <polygon points="120,80 123,90 134,90 125,96 128,107 120,101 112,107 115,96 106,90 117,90" fill="#f1c40f" stroke="#c8873a" stroke-width="1"/>
+  <!-- Bottom row -->
+  <polygon points="65,108 68,118 79,118 70,124 73,135 65,129 57,135 60,124 51,118 62,118" fill="#f1c40f" stroke="#c8873a" stroke-width="1"/>
+  <polygon points="100,108 103,118 114,118 105,124 108,135 100,129 92,135 95,124 86,118 97,118" fill="#f1c40f" stroke="#c8873a" stroke-width="1"/>
+  <polygon points="135,108 138,118 149,118 140,124 143,135 135,129 127,135 130,124 121,118 132,118" fill="#f1c40f" stroke="#c8873a" stroke-width="1"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#c8873a">VETERANO</text>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6a1b9a"/>
+      <stop offset="100%" stop-color="#2e0060"/>
+    </linearGradient>
+  </defs>
+  <polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#bg)" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- Graduation cap board -->
+  <polygon points="100,66 140,80 100,94 60,80" fill="#1a1a2e"/>
+  <polygon points="100,68 138,81 100,92 62,81" fill="#2e2e5e"/>
+  <!-- Cap top -->
+  <rect x="88" y="62" width="24" height="6" rx="2" fill="#1a1a2e"/>
+  <!-- Tassel string -->
+  <line x1="136" y1="80" x2="136" y2="104" stroke="#f1c40f" stroke-width="2"/>
+  <line x1="136" y1="104" x2="132" y2="116" stroke="#f1c40f" stroke-width="2"/>
+  <line x1="136" y1="104" x2="136" y2="116" stroke="#f1c40f" stroke-width="2"/>
+  <line x1="136" y1="104" x2="140" y2="116" stroke="#f1c40f" stroke-width="2"/>
+  <!-- Diploma scroll -->
+  <rect x="76" y="100" width="44" height="30" rx="4" fill="#f0e0c0"/>
+  <ellipse cx="76" cy="115" rx="6" ry="15" fill="#e8d5b0"/>
+  <ellipse cx="120" cy="115" rx="6" ry="15" fill="#e8d5b0"/>
+  <!-- Diploma ribbon -->
+  <rect x="76" y="112" width="44" height="6" fill="#9b59b6" opacity="0.7"/>
+  <!-- Text lines -->
+  <line x1="84" y1="106" x2="112" y2="106" stroke="#c8873a" stroke-width="1" opacity="0.5"/>
+  <line x1="86" y1="122" x2="110" y2="122" stroke="#c8873a" stroke-width="1" opacity="0.5"/>
+  <!-- Stars -->
+  <circle cx="72" cy="74" r="2" fill="#f1c40f" opacity="0.8"/>
+  <circle cx="130" cy="70" r="2" fill="#f1c40f" opacity="0.8"/>
+  <circle cx="68" cy="86" r="1.5" fill="white" opacity="0.5"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="bold" fill="#c8873a">PREPARATORIA COMPLETA</text>
+</svg>

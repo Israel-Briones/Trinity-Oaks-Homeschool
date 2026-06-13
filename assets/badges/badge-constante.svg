@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e74c3c"/>
+      <stop offset="100%" stop-color="#7b241c"/>
+    </linearGradient>
+  </defs>
+  <polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#bg)" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- Flame outer -->
+  <path d="M100,65 C80,80 72,98 76,116 C80,134 92,142 100,142 C108,142 120,134 124,116 C128,98 120,80 100,65 Z" fill="#f39c12"/>
+  <!-- Flame mid -->
+  <path d="M100,78 C86,90 82,104 85,118 C88,130 94,136 100,136 C106,136 112,130 115,118 C118,104 114,90 100,78 Z" fill="#e74c3c"/>
+  <!-- Flame inner -->
+  <path d="M100,92 C92,100 90,112 93,120 C96,128 100,130 100,130 C100,130 104,128 107,120 C110,112 108,100 100,92 Z" fill="#f1c40f"/>
+  <!-- Core -->
+  <ellipse cx="100" cy="122" rx="6" ry="8" fill="white" opacity="0.6"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#c8873a">CONSTANTE</text>
+</svg>

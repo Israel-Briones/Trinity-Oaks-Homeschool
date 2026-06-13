@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f06292"/>
+      <stop offset="100%" stop-color="#ad1457"/>
+    </linearGradient>
+  </defs>
+  <polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#bg)" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- Backpack main body -->
+  <rect x="76" y="82" width="48" height="54" rx="8" fill="#7b1fa2"/>
+  <!-- Backpack top strap -->
+  <rect x="88" y="72" width="24" height="14" rx="6" fill="#6a1b9a"/>
+  <!-- Front pocket -->
+  <rect x="82" y="104" width="36" height="24" rx="6" fill="#9c27b0"/>
+  <!-- Zipper -->
+  <line x1="86" y1="104" x2="114" y2="104" stroke="#f1c40f" stroke-width="2"/>
+  <circle cx="114" cy="104" r="3" fill="#f1c40f"/>
+  <!-- Side straps -->
+  <rect x="70" y="86" width="8" height="36" rx="4" fill="#6a1b9a"/>
+  <rect x="122" y="86" width="8" height="36" rx="4" fill="#6a1b9a"/>
+  <!-- Colorful patches -->
+  <circle cx="92" cy="94" r="5" fill="#f1c40f"/>
+  <circle cx="108" cy="94" r="5" fill="#2ecc71"/>
+  <polygon points="100,86 103,93 110,93 105,97 107,104 100,100 93,104 95,97 90,93 97,93" fill="#ff6b35" opacity="0.9"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#c8873a">KINDER COMPLETO</text>
+</svg>

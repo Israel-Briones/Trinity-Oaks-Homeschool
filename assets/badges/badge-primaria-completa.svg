@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#43a047"/>
+      <stop offset="100%" stop-color="#1b5e20"/>
+    </linearGradient>
+  </defs>
+  <polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#bg)" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- School building -->
+  <!-- Main building -->
+  <rect x="68" y="100" width="64" height="48" fill="#e8d5b0"/>
+  <!-- Roof -->
+  <polygon points="62,100 100,68 138,100" fill="#c0392b"/>
+  <!-- Roof trim -->
+  <line x1="62" y1="100" x2="138" y2="100" stroke="#922b21" stroke-width="2"/>
+  <!-- Door -->
+  <rect x="90" y="120" width="20" height="28" rx="10" fill="#8B5E3C"/>
+  <circle cx="108" cy="135" r="2" fill="#f1c40f"/>
+  <!-- Windows -->
+  <rect x="72" y="108" width="16" height="14" rx="2" fill="#3498db" opacity="0.8"/>
+  <rect x="112" y="108" width="16" height="14" rx="2" fill="#3498db" opacity="0.8"/>
+  <!-- Window cross -->
+  <line x1="80" y1="108" x2="80" y2="122" stroke="white" stroke-width="1" opacity="0.6"/>
+  <line x1="72" y1="115" x2="88" y2="115" stroke="white" stroke-width="1" opacity="0.6"/>
+  <line x1="120" y1="108" x2="120" y2="122" stroke="white" stroke-width="1" opacity="0.6"/>
+  <line x1="112" y1="115" x2="128" y2="115" stroke="white" stroke-width="1" opacity="0.6"/>
+  <!-- Flag pole -->
+  <line x1="100" y1="68" x2="100" y2="52" stroke="#8B5E3C" stroke-width="2"/>
+  <rect x="100" y="52" width="16" height="10" fill="#e74c3c"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#c8873a">PRIMARIA COMPLETA</text>
+</svg>

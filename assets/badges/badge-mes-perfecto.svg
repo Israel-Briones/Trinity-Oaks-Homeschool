@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8e44ad"/>
+      <stop offset="100%" stop-color="#4a235a"/>
+    </linearGradient>
+    <linearGradient id="trophy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f1c40f"/>
+      <stop offset="100%" stop-color="#c8873a"/>
+    </linearGradient>
+  </defs>
+  <polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#bg)" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- Trophy cup -->
+  <path d="M 78,68 L 82,110 Q 100,124 118,110 L 122,68 Z" fill="url(#trophy)"/>
+  <!-- Trophy handles -->
+  <path d="M 78,76 Q 64,84 66,96 Q 68,106 80,104" fill="none" stroke="url(#trophy)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M 122,76 Q 136,84 134,96 Q 132,106 120,104" fill="none" stroke="url(#trophy)" stroke-width="5" stroke-linecap="round"/>
+  <!-- Trophy stem -->
+  <rect x="94" y="110" width="12" height="16" fill="#c8873a"/>
+  <rect x="82" y="126" width="36" height="6" rx="3" fill="url(#trophy)"/>
+  <!-- Gem star on trophy -->
+  <polygon points="100,80 104,90 115,90 106,97 110,107 100,100 90,107 94,97 85,90 96,90" fill="white" opacity="0.9"/>
+  <circle cx="100" cy="92" r="5" fill="#e91e8c"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#c8873a">MES PERFECTO</text>
+</svg>
