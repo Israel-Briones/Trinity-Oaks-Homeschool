@@ -623,7 +623,7 @@
             grado:         h.grado    || '',
             semestre:      h.semestre || '',
             nivel_display,
-            mes:           localByName[h.nombre]?.mes || `Mes ${h.mes_activo} — Agosto`
+            mes:           (() => { const m = localByName[h.nombre]?.mes || ''; return /^Mes \d+$/.test(m) ? m : `Mes ${h.mes_activo}`; })()
           };
         });
         saveHijos(synced);
