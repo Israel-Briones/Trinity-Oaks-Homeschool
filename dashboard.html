@@ -118,73 +118,124 @@
     }
     .hijo-ver-btn:hover { border-color: var(--copper); color: var(--copper); }
 
-    /* ── Seguimiento section ── */
+    /* ── Seguimiento Dashboard ── */
+    .seg-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .seg-kpi {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 1.25rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .seg-kpi-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .seg-kpi-value {
+      font-family: 'Fraunces', serif; font-size: 2.2rem;
+      font-weight: 700; color: var(--copper); line-height: 1;
+    }
+    .seg-kpi-sub {
+      font-size: 0.75rem; color: var(--muted);
+    }
     .seg-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+      gap: 1.5rem;
     }
     .seg-block {
-      background: var(--bg2);
-      border: 1px solid var(--border2);
-      border-radius: 14px;
-      padding: 2rem 2.25rem;
-      display: flex; gap: 2rem; align-items: flex-start;
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 12px; overflow: hidden;
     }
-    /* left: donut */
-    .seg-donut-wrap {
-      flex-shrink: 0; display: flex; flex-direction: column;
-      align-items: center; gap: 0.5rem;
+    .seg-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border2);
+      background: rgba(184,115,51,.04);
+    }
+    .seg-block-name {
+      font-family: 'Fraunces', serif; font-size: 1.2rem;
+      font-weight: 600; color: var(--cream);
+    }
+    .seg-block-meta {
+      font-size: 0.75rem; color: var(--muted);
+    }
+    .seg-block-pct {
+      font-family: 'Fraunces', serif; font-size: 1.5rem;
+      font-weight: 700; color: var(--copper);
+    }
+    .seg-block-body {
+      display: flex; gap: 0;
+    }
+    /* left panel: donut */
+    .seg-left {
+      width: 160px; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 0.5rem;
+      padding: 1.5rem 1rem;
+      border-right: 1px solid var(--border2);
     }
     .seg-donut {
-      position: relative; width: 96px; height: 96px;
+      position: relative; width: 110px; height: 110px;
     }
     .seg-donut svg { transform: rotate(-90deg); }
-    .seg-donut-track { fill: none; stroke: var(--border); stroke-width: 8; }
-    .seg-donut-fill  {
-      fill: none; stroke: var(--copper); stroke-width: 8;
+    .seg-donut-track { fill: none; stroke: var(--border); stroke-width: 10; }
+    .seg-donut-fill {
+      fill: none; stroke: var(--copper); stroke-width: 10;
       stroke-linecap: round;
-      transition: stroke-dashoffset .7s cubic-bezier(.4,0,.2,1);
+      transition: stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);
     }
-    .seg-donut-pct {
+    .seg-donut-inner {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      font-family: 'Fraunces', serif; font-size: 1.4rem;
+    }
+    .seg-donut-num {
+      font-family: 'Fraunces', serif; font-size: 1.6rem;
       font-weight: 700; color: var(--copper); line-height: 1;
     }
-    .seg-donut-pct small {
-      font-size: 0.65rem; font-weight: 400;
-      color: var(--muted); margin-top: 2px; letter-spacing: 0.05em;
+    .seg-donut-label {
+      font-size: 0.62rem; color: var(--muted);
+      letter-spacing: 0.06em; text-transform: uppercase;
     }
-    .seg-donut-nombre {
-      font-family: 'Fraunces', serif; font-size: 1.05rem;
-      font-weight: 600; color: var(--cream); text-align: center;
-      line-height: 1.2;
-    }
-    .seg-donut-sub {
+    .seg-left-tag {
       font-size: 0.72rem; color: var(--muted); text-align: center;
+      line-height: 1.4;
     }
-    /* right: bars */
-    .seg-bars { flex: 1; display: flex; flex-direction: column; gap: 1.1rem; }
+    /* right panel: stats + bars */
+    .seg-right {
+      flex: 1; padding: 1.25rem 1.5rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .seg-stat-row {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem;
+    }
+    .seg-stat {
+      background: var(--bg); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 0.75rem;
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    .seg-stat-num {
+      font-family: 'Fraunces', serif; font-size: 1.5rem;
+      font-weight: 700; color: var(--copper); line-height: 1;
+    }
+    .seg-stat-lbl {
+      font-size: 0.68rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .seg-divider { height: 1px; background: var(--border2); }
+    .seg-bar-section { display: flex; flex-direction: column; gap: 0.6rem; }
     .seg-bar-row {
-      display: flex; flex-direction: column; gap: 0.35rem;
+      display: flex; align-items: center; gap: 0.75rem;
     }
-    .seg-bar-header {
-      display: flex; justify-content: space-between; align-items: baseline;
+    .seg-bar-lbl {
+      font-size: 0.72rem; color: var(--muted); min-width: 120px;
+      flex-shrink: 0; display: flex; align-items: center; gap: 0.3rem;
     }
-    .seg-bar-label {
-      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
-      text-transform: uppercase; color: var(--muted);
-      display: flex; align-items: center; gap: 0.35rem;
-    }
-    .seg-bar-value {
-      font-family: 'Fraunces', serif;
-      font-size: 1rem; font-weight: 600; color: var(--copper);
-    }
-    .seg-bar-value span { font-size: 0.7rem; opacity: 0.5; }
     .seg-bar-track {
-      width: 100%; height: 8px; border-radius: 999px;
+      flex: 1; height: 7px; border-radius: 999px;
       background: var(--border); overflow: hidden;
     }
     .seg-bar-fill {
@@ -192,11 +243,15 @@
       background: linear-gradient(90deg, #b87333, #d9954a);
       transition: width .7s cubic-bezier(.4,0,.2,1);
     }
+    .seg-bar-val {
+      font-size: 0.78rem; font-weight: 600; color: var(--copper);
+      min-width: 2.5rem; text-align: right;
+    }
     .seg-nota {
-      font-size: 0.8rem; color: var(--muted);
+      font-size: 0.78rem; color: var(--muted);
       font-style: italic; line-height: 1.5;
       border-top: 1px solid var(--border2);
-      padding-top: 0.75rem; margin-top: 0.2rem;
+      padding-top: 0.75rem;
     }
 
     /* dashed add card */
@@ -410,6 +465,12 @@
         <h2 class="dash-sec-title">Seguimiento</h2>
       </div>
     </div>
+    <div class="seg-kpi-row" id="seg-kpis">
+      <div class="seg-kpi"><div class="seg-kpi-label">Actividades este mes</div><div class="seg-kpi-value" id="kpi-act">—</div><div class="seg-kpi-sub">del total disponible</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Meses desbloqueados</div><div class="seg-kpi-value" id="kpi-mes">—</div><div class="seg-kpi-sub">de 10 en el programa</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Exámenes generados</div><div class="seg-kpi-value" id="kpi-exam">—</div><div class="seg-kpi-sub">total acumulado</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Avance general</div><div class="seg-kpi-value" id="kpi-pct">—</div><div class="seg-kpi-sub">actividades completadas</div></div>
+    </div>
     <div class="seg-grid" id="seg-grid"></div>
   </div>
 </div>
@@ -527,40 +588,81 @@
       const examenes    = (d.examenes || []).length;
       const nota        = d.ultima_nota ? d.ultima_nota.slice(0, 80) + (d.ultima_nota.length > 80 ? '…' : '') : null;
 
-      // donut SVG: r=40, circumference=251.2
-      const r = 40, circ = 2 * Math.PI * r;
+      // donut: r=45, circ≈282.7
+      const r = 45, circ = 2 * Math.PI * r;
       const offset = circ - (pct / 100) * circ;
 
-      const bar = (icon, label, val, max) => `
+      const brow = (icon, lbl, val, max) => `
         <div class="seg-bar-row">
-          <div class="seg-bar-header">
-            <span class="seg-bar-label">${icon} ${label}</span>
-            <span class="seg-bar-value">${val}<span>/${max}</span></span>
-          </div>
-          <div class="seg-bar-track"><div class="seg-bar-fill" style="width:${Math.round((val/max)*100)}%"></div></div>
+          <span class="seg-bar-lbl">${icon} ${lbl}</span>
+          <div class="seg-bar-track"><div class="seg-bar-fill" style="width:${max ? Math.round((val/max)*100) : 0}%"></div></div>
+          <span class="seg-bar-val">${val}/${max}</span>
         </div>`;
 
       el.innerHTML = `
-        <div class="seg-donut-wrap">
-          <div class="seg-donut">
-            <svg width="96" height="96" viewBox="0 0 96 96">
-              <circle class="seg-donut-track" cx="48" cy="48" r="${r}"/>
-              <circle class="seg-donut-fill" cx="48" cy="48" r="${r}"
-                stroke-dasharray="${circ.toFixed(1)}"
-                stroke-dashoffset="${offset.toFixed(1)}"/>
-            </svg>
-            <div class="seg-donut-pct">${pct}%<small>avance</small></div>
+        <div class="seg-block-header">
+          <div>
+            <div class="seg-block-name">${escHtml(h.nombre)}</div>
+            <div class="seg-block-meta">${escHtml(h.nivel_display || h.nivel || '')} · ${escHtml(h.mes)}</div>
           </div>
-          <div class="seg-donut-nombre">${escHtml(h.nombre)}</div>
-          <div class="seg-donut-sub">${escHtml(h.mes)}</div>
+          <div class="seg-block-pct">${pct}%</div>
         </div>
-        <div class="seg-bars">
-          ${bar('📚', 'Actividades del mes', completadas, 4)}
-          ${bar('📅', 'Meses desbloqueados', meses, 10)}
-          ${bar('📝', 'Exámenes generados', examenes, 10)}
-          ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
+        <div class="seg-block-body">
+          <div class="seg-left">
+            <div class="seg-donut">
+              <svg width="110" height="110" viewBox="0 0 110 110">
+                <circle class="seg-donut-track" cx="55" cy="55" r="${r}"/>
+                <circle class="seg-donut-fill" cx="55" cy="55" r="${r}"
+                  stroke-dasharray="${circ.toFixed(1)}"
+                  stroke-dashoffset="${offset.toFixed(1)}"/>
+              </svg>
+              <div class="seg-donut-inner">
+                <div class="seg-donut-num">${pct}%</div>
+                <div class="seg-donut-label">avance</div>
+              </div>
+            </div>
+            <div class="seg-left-tag">${completadas} de ${total}<br>actividades</div>
+          </div>
+          <div class="seg-right">
+            <div class="seg-stat-row">
+              <div class="seg-stat">
+                <div class="seg-stat-num">${completadas}/${total}</div>
+                <div class="seg-stat-lbl">Actividades</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${meses}</div>
+                <div class="seg-stat-lbl">Meses</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${examenes}</div>
+                <div class="seg-stat-lbl">Exámenes</div>
+              </div>
+            </div>
+            <div class="seg-divider"></div>
+            <div class="seg-bar-section">
+              ${brow('📚', 'Actividades del mes', completadas, 4)}
+              ${brow('📅', 'Meses desbloqueados', meses, 10)}
+              ${brow('📝', 'Exámenes generados', examenes, 10)}
+            </div>
+            ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
+          </div>
         </div>
       `;
+
+      // update global KPIs
+      window._segData = window._segData || { act: 0, actTotal: 0, mes: 0, exam: 0, pctSum: 0, count: 0 };
+      window._segData.act      += completadas;
+      window._segData.actTotal += total;
+      window._segData.mes      += meses;
+      window._segData.exam     += examenes;
+      window._segData.pctSum   += pct;
+      window._segData.count    += 1;
+      const g = window._segData;
+      const avgPct = Math.round(g.pctSum / g.count);
+      document.getElementById('kpi-act').textContent  = `${g.act}/${g.actTotal}`;
+      document.getElementById('kpi-mes').textContent  = g.mes;
+      document.getElementById('kpi-exam').textContent = g.exam;
+      document.getElementById('kpi-pct').textContent  = `${avgPct}%`;
     } catch {}
   }
 
@@ -598,6 +700,7 @@
     hijos.forEach((h, i) => updateArrows(i));
 
     // populate seguimiento section
+    window._segData = { act: 0, actTotal: 0, mes: 0, exam: 0, pctSum: 0, count: 0 };
     const segGrid = document.getElementById('seg-grid');
     if (segGrid) {
       segGrid.innerHTML = '';
