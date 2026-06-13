@@ -890,14 +890,30 @@
 
   const settingsOverlay = document.getElementById('settings-overlay');
 
-  function openSettings() {
-    // Pre-fill Perfil
-    document.getElementById('s-correo').value  = localStorage.getItem('to_email') || '';
-    document.getElementById('s-nombre').value  = localStorage.getItem('to_nombre') || nameFromEmail(localStorage.getItem('to_email') || '');
+  async function openSettings() {
+    const em = localStorage.getItem('to_email') || '';
+    document.getElementById('s-correo').value  = em;
+    document.getElementById('s-nombre').value  = localStorage.getItem('to_nombre') || nameFromEmail(em);
     document.getElementById('s-sexo').value    = localStorage.getItem('to_sexo') || '';
     document.getElementById('s-telefono').value= localStorage.getItem('to_telefono') || '';
     document.getElementById('settings-toast').style.display = 'none';
     settingsOverlay.classList.add('open');
+    // Fetch latest from backend and update fields
+    try {
+      const res = await fetch(`${API_BASE}/get-perfil`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        body: JSON.stringify({ email: em })
+      });
+      if (res.ok) {
+        const d = await res.json();
+        if (d.nombre)   { document.getElementById('s-nombre').value   = d.nombre;   localStorage.setItem('to_nombre', d.nombre); }
+        if (d.sexo)     { document.getElementById('s-sexo').value     = d.sexo;     localStorage.setItem('to_sexo', d.sexo); }
+        if (d.telefono) { document.getElementById('s-telefono').value = d.telefono; localStorage.setItem('to_telefono', d.telefono); }
+        updateNavName(); updateBienvenido();
+        document.getElementById('nav-avatar').textContent = getDisplayName().charAt(0).toUpperCase();
+      }
+    } catch {}
   }
   function closeSettings() { settingsOverlay.classList.remove('open'); }
 
@@ -913,16 +929,37 @@
   document.getElementById('logros-modal-close').addEventListener('click', closeLogros);
   logrosOverlay.addEventListener('click', e => { if (e.target === logrosOverlay) closeLogros(); });
 
-  // Save profile (localStorage only for now)
-  document.getElementById('settings-save-btn').addEventListener('click', () => {
-    localStorage.setItem('to_nombre',   document.getElementById('s-nombre').value.trim());
-    localStorage.setItem('to_sexo',     document.getElementById('s-sexo').value);
-    localStorage.setItem('to_telefono', document.getElementById('s-telefono').value.trim());
+  // Save profile
+  document.getElementById('settings-save-btn').addEventListener('click', async () => {
+    const nombre   = document.getElementById('s-nombre').value.trim();
+    const sexo     = document.getElementById('s-sexo').value;
+    const telefono = document.getElementById('s-telefono').value.trim();
+    const email    = localStorage.getItem('to_email') || '';
+    const toast    = document.getElementById('settings-toast');
+
+    try {
+      const res = await fetch(`${API_BASE}/update-perfil`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        body: JSON.stringify({ email, nombre, sexo, telefono })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error || 'Error');
+      localStorage.setItem('to_nombre',   d.nombre   || nombre);
+      localStorage.setItem('to_sexo',     d.sexo     || sexo);
+      localStorage.setItem('to_telefono', d.telefono || telefono);
+      toast.textContent = '✓ Perfil actualizado';
+    } catch (err) {
+      // Fallback: save locally anyway
+      localStorage.setItem('to_nombre', nombre);
+      localStorage.setItem('to_sexo', sexo);
+      localStorage.setItem('to_telefono', telefono);
+      toast.textContent = '✓ Guardado localmente';
+    }
+
     updateNavName();
     updateBienvenido();
-    const n = getDisplayName();
-    document.getElementById('nav-avatar').textContent = n.charAt(0).toUpperCase();
-    const toast = document.getElementById('settings-toast');
+    document.getElementById('nav-avatar').textContent = getDisplayName().charAt(0).toUpperCase();
     toast.style.display = 'block';
     setTimeout(() => { toast.style.display = 'none'; }, 3000);
   });
