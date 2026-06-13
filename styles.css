@@ -87,6 +87,7 @@ nav {
   text-decoration: none;
 }
 .nav-btn:hover { background: var(--oak-green); }
+.nav-btn-mobile { display: none; }
 
 /* HERO */
 .hero {
@@ -641,7 +642,11 @@ footer {
   .nav-links { flex-direction: column; gap: 0; align-items: stretch; }
   .nav-links a { padding: 0.85rem 1.5rem; font-size: 1rem; border-bottom: 1px solid var(--border); }
   .nav-asesor { margin: 0.75rem 1.5rem 0; text-align: center; }
-  .nav-btn { display: none; }
+  .nav-btn-desktop { display: none; }
+  .nav-btn-mobile {
+    display: block; margin: 0.75rem 1.5rem 0.5rem;
+    text-align: center; width: calc(100% - 3rem);
+  }
 
   /* Hero */
   .hero-content { padding-left: 1.25rem; padding-right: 1.25rem; text-align: center; }

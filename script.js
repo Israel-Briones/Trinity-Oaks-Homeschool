@@ -259,6 +259,11 @@ async function startCheckout(plan, btn) {
     e.preventDefault();
     openLogin();
   });
+  document.getElementById('btn-login-mobile')?.addEventListener('click', e => {
+    e.preventDefault();
+    closeMenu();
+    openLogin();
+  });
 
   function openLogin() {
     emailEl.value = '';
