@@ -263,18 +263,53 @@
     }
 
     /* badges strip */
+    .seg-badges-section { display: flex; flex-direction: column; gap: 0.6rem; }
+    .seg-badges-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--copper);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .seg-badges-title::after {
+      content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(184,115,51,.5), transparent);
+    }
     .seg-badges {
-      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;
+      display: flex; flex-wrap: wrap; gap: 16px;
+      justify-content: flex-start; margin-top: 0.25rem;
+    }
+    .seg-badge-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      animation: badge-in .4s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes badge-in {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
     }
     .seg-badge-img {
-      width: 40px; height: 44px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-      transition: transform .2s;
+      width: 80px; height: 88px;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.45));
+      transition: transform .2s ease, filter .2s ease;
       cursor: default;
     }
-    .seg-badge-img:hover { transform: scale(1.25); }
-    .seg-badge-empty {
-      font-size: 0.75rem; color: var(--muted); font-style: italic;
+    .seg-badge-img:hover {
+      transform: scale(1.15);
+      filter: drop-shadow(0 4px 12px rgba(200,135,58,.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    .seg-badge-lbl {
+      font-size: 0.65rem; color: var(--copper); text-align: center;
+      max-width: 80px; line-height: 1.3; font-weight: 600;
+    }
+    .seg-badge-locked {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      opacity: 0.35;
+    }
+    .seg-badge-locked-hex {
+      width: 80px; height: 88px;
+    }
+    .seg-badge-locked-lbl {
+      font-size: 0.65rem; color: var(--muted); text-align: center; max-width: 80px;
+    }
+    .seg-badges-empty-msg {
+      font-size: 0.75rem; color: var(--muted); font-style: italic; margin-top: 0.4rem;
     }
 
     /* badge toast */
@@ -734,9 +769,11 @@
             ${lastExam ? `<div class="seg-last-exam">📝 Último examen: ${lastExam}</div>` : ''}
             ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
             <div class="seg-divider"></div>
-            <div class="seg-chart-label">Logros obtenidos</div>
-            <div class="seg-badges" id="badges-${idx}">
-              <span class="seg-badge-empty">Cargando logros…</span>
+            <div class="seg-badges-section">
+              <div class="seg-badges-title">Logros obtenidos</div>
+              <div class="seg-badges" id="badges-${idx}">
+                <span class="seg-badges-empty-msg">Cargando logros…</span>
+              </div>
             </div>
           </div>
         </div>
@@ -831,14 +868,24 @@
       const { badges } = await res.json();
 
       if (!badges.length) {
-        el.innerHTML = '<span class="seg-badge-empty">Sin logros aún — ¡completa actividades para ganar!</span>';
+        const lockedHex = `<svg width="80" height="88" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg"><polygon points="102,12 184,56 184,152 102,196 20,152 20,56" fill="rgba(0,0,0,0.3)"/><polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="4"/><polygon points="100,22 170,61 170,139 100,178 30,139 30,61" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><text x="100" y="115" text-anchor="middle" font-size="52" font-family="serif">🔒</text></svg>`;
+        el.innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:0.75rem;width:100%;">
+            <div style="display:flex;gap:16px;">
+              ${[1,2,3].map(() => `<div class="seg-badge-locked">${lockedHex}<span class="seg-badge-locked-lbl">???</span></div>`).join('')}
+            </div>
+            <p class="seg-badges-empty-msg">Completa actividades para ganar insignias</p>
+          </div>`;
         return;
       }
 
-      el.innerHTML = badges.map(b => {
+      el.innerHTML = badges.map((b, i) => {
         const label = BADGE_LABELS[b.badge_id] || b.badge_id;
         const date  = new Date(b.obtenido_en).toLocaleDateString('es-MX', { day:'numeric', month:'short' });
-        return `<img class="seg-badge-img" src="assets/badges/${b.badge_id}.svg" alt="${label}" title="${label} · ${date}">`;
+        return `<div class="seg-badge-wrap" style="animation-delay:${i * 60}ms">
+          <img class="seg-badge-img" src="assets/badges/${b.badge_id}.svg" alt="${label}" title="${label} · ${date}">
+          <span class="seg-badge-lbl">${label}</span>
+        </div>`;
       }).join('');
     } catch {}
   }
