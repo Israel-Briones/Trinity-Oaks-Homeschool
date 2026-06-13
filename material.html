@@ -746,6 +746,11 @@
       });
       clearTimeout(tid);
       const data = await res.json();
+      console.log('examen raw response:', JSON.stringify(data).slice(0, 300));
+      if (!res.ok) {
+        result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">Error del servidor: ${data.error || res.status}</p>`;
+        return;
+      }
       // backend returns { examen: { preguntas: [...] } } or { examen: [...] }
       const raw = data.examen ?? data;
       const preguntas = raw?.preguntas || raw?.questions || (Array.isArray(raw) ? raw : []);
