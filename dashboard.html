@@ -480,10 +480,122 @@
     }
     .nav-user-label { font-size: 0.82rem; color: var(--cream); font-weight: 500; }
     .nav-logout-link {
-      font-size: 0.82rem; color: var(--muted);
+      font-size: 0.78rem; color: var(--muted);
       text-decoration: none; transition: color .2s;
     }
     .nav-logout-link:hover { color: var(--copper); }
+    .nav-settings-btn {
+      font-size: 0.78rem; font-weight: 600; color: var(--copper);
+      background: transparent; border: 1.5px solid var(--copper);
+      border-radius: 6px; padding: 0.3rem 0.75rem;
+      cursor: pointer; transition: background .2s, color .2s;
+      letter-spacing: 0.04em;
+    }
+    .nav-settings-btn:hover { background: var(--copper); color: #1a1208; }
+
+    /* ── Settings Modal ── */
+    .settings-overlay {
+      display: none; position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,0.72); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .settings-overlay.open { display: flex; }
+    .settings-modal {
+      background: var(--bg2); border: 1.5px solid var(--copper);
+      border-radius: 16px; width: 480px; max-width: calc(100vw - 2rem);
+      max-height: 90vh; display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      animation: modal-in .25s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .settings-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem 0;
+    }
+    .settings-title {
+      font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700;
+      color: var(--copper); letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .settings-close {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.4rem; cursor: pointer; line-height: 1;
+      padding: 0.2rem 0.4rem; border-radius: 4px; transition: color .2s;
+    }
+    .settings-close:hover { color: var(--cream); }
+    .settings-tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border2);
+      padding: 0 1.5rem; margin-top: 1rem;
+    }
+    .settings-tab {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 0.6rem 1.1rem; border-bottom: 2px solid transparent;
+      cursor: pointer; transition: color .2s, border-color .2s;
+      background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .settings-tab.active { color: var(--copper); border-bottom-color: var(--copper); }
+    .settings-body { overflow-y: auto; padding: 1.5rem; flex: 1; }
+    .settings-panel { display: none; }
+    .settings-panel.active { display: block; }
+
+    /* Perfil tab */
+    .settings-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .settings-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .settings-input, .settings-select {
+      background: var(--bg); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 0.6rem 0.85rem;
+      color: var(--cream); font-size: 0.9rem; font-family: inherit;
+      outline: none; transition: border-color .2s;
+      width: 100%; box-sizing: border-box;
+    }
+    .settings-input:focus, .settings-select:focus { border-color: var(--copper); }
+    .settings-input[readonly] { color: var(--muted); cursor: default; }
+    .settings-save-btn {
+      margin-top: 0.5rem; width: 100%;
+      background: var(--copper); color: #1a1208;
+      border: none; border-radius: 8px; padding: 0.7rem;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      transition: opacity .2s; letter-spacing: 0.04em;
+    }
+    .settings-save-btn:hover { opacity: 0.85; }
+    .settings-toast {
+      margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+      background: rgba(184,115,51,.15); border: 1px solid var(--copper);
+      border-radius: 8px; font-size: 0.82rem; color: var(--copper);
+      text-align: center; display: none;
+    }
+
+    /* Logros tab */
+    .logros-header {
+      font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem;
+    }
+    .logros-header strong { color: var(--copper); }
+    .logros-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    }
+    .logro-item {
+      display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+      position: relative;
+    }
+    .logro-item img {
+      width: 64px; height: 70px;
+      transition: transform .2s, filter .2s;
+    }
+    .logro-item.earned img { filter: none; }
+    .logro-item.locked img { filter: grayscale(100%) opacity(0.3); }
+    .logro-item.earned img:hover { transform: scale(1.1); }
+    .logro-lock-icon {
+      position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+      font-size: 1.1rem; pointer-events: none;
+    }
+    .logro-name {
+      font-size: 0.6rem; text-align: center; max-width: 64px;
+      line-height: 1.3; color: var(--muted);
+    }
+    .logro-item.earned .logro-name { color: var(--copper); }
 
     @media(max-width:640px) {
       .dash-hero-inner { padding-left: 1rem; }
@@ -500,12 +612,60 @@
     <img src="Logo 2.png" height="120" alt="Trinity Oaks">
   </div>
   <span class="nav-title-main" style="position:absolute;left:50%;transform:translateX(-50%);font-size:3rem;pointer-events:none;">Dashboard</span>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.35rem;margin-right:2rem;">
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.45rem;margin-right:2rem;">
     <span class="nav-user-label" id="nav-user-name"></span>
-    <a href="index.html" class="nav-logout-link" style="font-size:0.82rem;">Inicio</a>
-    <a href="#" class="nav-logout-link" id="nav-logout">Cerrar sesión</a>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <a href="#" class="nav-logout-link" id="nav-logout">Cerrar sesión</a>
+      <button class="nav-settings-btn" id="nav-settings-btn">⚙️ Settings</button>
+    </div>
   </div>
 </nav>
+
+<!-- SETTINGS MODAL -->
+<div class="settings-overlay" id="settings-overlay">
+  <div class="settings-modal">
+    <div class="settings-header">
+      <span class="settings-title">Configuración</span>
+      <button class="settings-close" id="settings-close">✕</button>
+    </div>
+    <div class="settings-tabs">
+      <button class="settings-tab active" data-tab="perfil">Perfil</button>
+      <button class="settings-tab" data-tab="logros">Mis Logros</button>
+    </div>
+    <div class="settings-body">
+      <!-- TAB: Perfil -->
+      <div class="settings-panel active" id="settings-panel-perfil">
+        <div class="settings-field">
+          <label class="settings-label">Nombre completo</label>
+          <input class="settings-input" id="s-nombre" type="text" placeholder="Tu nombre">
+        </div>
+        <div class="settings-field">
+          <label class="settings-label">Sexo</label>
+          <select class="settings-select" id="s-sexo">
+            <option value="">Seleccionar…</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+          </select>
+        </div>
+        <div class="settings-field">
+          <label class="settings-label">Teléfono</label>
+          <input class="settings-input" id="s-telefono" type="tel" placeholder="Tu teléfono">
+        </div>
+        <div class="settings-field">
+          <label class="settings-label">Correo electrónico</label>
+          <input class="settings-input" id="s-correo" type="email" readonly>
+        </div>
+        <button class="settings-save-btn" id="settings-save-btn">Guardar cambios</button>
+        <div class="settings-toast" id="settings-toast">✓ Cambios guardados correctamente</div>
+      </div>
+      <!-- TAB: Mis Logros -->
+      <div class="settings-panel" id="settings-panel-logros">
+        <p class="logros-header" id="logros-header">Cargando logros…</p>
+        <div class="logros-grid" id="logros-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- WELCOME HERO -->
 <div class="dash-hero">
@@ -630,9 +790,95 @@
   // ── Logout ────────────────────────────────────────────────
   document.getElementById('nav-logout').addEventListener('click', e => {
     e.preventDefault();
-    ['to_email','to_plan','to_billing','to_hijos'].forEach(k => localStorage.removeItem(k));
+    ['to_email','to_nombre','to_plan','to_billing','to_hijos','to_sub_start','to_sub_end'].forEach(k => localStorage.removeItem(k));
     window.location.href = 'index.html';
   });
+
+  // ── Settings Modal ────────────────────────────────────────
+  const ALL_BADGES = [
+    'badge-primera-actividad','badge-primer-examen','badge-primer-reporte',
+    'badge-explorador-nato','badge-valiente','badge-semana-completa',
+    'badge-mes-perfecto','badge-imparable','badge-constante','badge-leyenda',
+    'badge-asistente-frecuente','badge-dedicado','badge-comprometido',
+    'badge-campeon','badge-sabio','badge-veterano','badge-teamwork',
+    'badge-kinder-completo','badge-primaria-completa','badge-secundaria-completa',
+    'badge-preparatoria-completa','badge-inicio-ciclo','badge-navideno','badge-verano',
+  ];
+
+  const settingsOverlay = document.getElementById('settings-overlay');
+
+  function openSettings() {
+    // Pre-fill Perfil
+    document.getElementById('s-correo').value  = localStorage.getItem('to_email') || '';
+    document.getElementById('s-nombre').value  = localStorage.getItem('to_nombre') || nameFromEmail(localStorage.getItem('to_email') || '');
+    document.getElementById('s-sexo').value    = localStorage.getItem('to_sexo') || '';
+    document.getElementById('s-telefono').value= localStorage.getItem('to_telefono') || '';
+    document.getElementById('settings-toast').style.display = 'none';
+    settingsOverlay.classList.add('open');
+  }
+  function closeSettings() { settingsOverlay.classList.remove('open'); }
+
+  document.getElementById('nav-settings-btn').addEventListener('click', openSettings);
+  document.getElementById('settings-close').addEventListener('click', closeSettings);
+  settingsOverlay.addEventListener('click', e => { if (e.target === settingsOverlay) closeSettings(); });
+
+  // Tabs
+  document.querySelectorAll('.settings-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(`settings-panel-${tab.dataset.tab}`).classList.add('active');
+      if (tab.dataset.tab === 'logros') renderLogros();
+    });
+  });
+
+  // Save profile (localStorage only for now)
+  document.getElementById('settings-save-btn').addEventListener('click', () => {
+    localStorage.setItem('to_nombre',    document.getElementById('s-nombre').value.trim());
+    localStorage.setItem('to_sexo',      document.getElementById('s-sexo').value);
+    localStorage.setItem('to_telefono',  document.getElementById('s-telefono').value.trim());
+    const toast = document.getElementById('settings-toast');
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 3000);
+  });
+
+  // Logros tab
+  async function renderLogros() {
+    const grid   = document.getElementById('logros-grid');
+    const header = document.getElementById('logros-header');
+    grid.innerHTML = '<span style="color:var(--muted);font-size:.82rem;">Cargando…</span>';
+
+    let earnedSet = new Set();
+    try {
+      const hijos = loadHijos();
+      const firstHijo = hijos[0];
+      if (firstHijo) {
+        const res = await fetch(`${API_BASE}/badges-hijo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+          body: JSON.stringify({ email: localStorage.getItem('to_email'), hijo_id: firstHijo.id })
+        });
+        if (res.ok) {
+          const { badges } = await res.json();
+          badges.forEach(b => earnedSet.add(b.badge_id));
+        }
+      }
+    } catch {}
+
+    header.innerHTML = `<strong>${earnedSet.size} / 24</strong> logros obtenidos`;
+
+    grid.innerHTML = ALL_BADGES.map(id => {
+      const label   = BADGE_LABELS[id] || id;
+      const isEarned = earnedSet.has(id);
+      return `
+        <div class="logro-item ${isEarned ? 'earned' : 'locked'}">
+          <img src="assets/badges/${id}.svg" alt="${label}">
+          ${isEarned ? '' : '<span class="logro-lock-icon">🔒</span>'}
+          <span class="logro-name">${label}</span>
+        </div>`;
+    }).join('');
+  }
 
   // ── Hijos (localStorage) ──────────────────────────────────
   function loadHijos() {
