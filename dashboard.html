@@ -210,7 +210,15 @@
       display: flex; flex-direction: column; gap: 1rem;
     }
     .seg-stat-row {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem;
+    }
+    .seg-chart-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem;
+    }
+    .seg-mini-chart { overflow: visible; }
+    .seg-last-exam {
+      font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem;
     }
     .seg-stat {
       background: var(--bg); border: 1px solid var(--border2);
@@ -466,10 +474,10 @@
       </div>
     </div>
     <div class="seg-kpi-row" id="seg-kpis">
-      <div class="seg-kpi"><div class="seg-kpi-label">Actividades este mes</div><div class="seg-kpi-value" id="kpi-act">—</div><div class="seg-kpi-sub">del total disponible</div></div>
-      <div class="seg-kpi"><div class="seg-kpi-label">Meses desbloqueados</div><div class="seg-kpi-value" id="kpi-mes">—</div><div class="seg-kpi-sub">de 10 en el programa</div></div>
-      <div class="seg-kpi"><div class="seg-kpi-label">Exámenes generados</div><div class="seg-kpi-value" id="kpi-exam">—</div><div class="seg-kpi-sub">total acumulado</div></div>
-      <div class="seg-kpi"><div class="seg-kpi-label">Avance general</div><div class="seg-kpi-value" id="kpi-pct">—</div><div class="seg-kpi-sub">actividades completadas</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Actividades completadas</div><div class="seg-kpi-value" id="kpi-act">—</div><div class="seg-kpi-sub">del total posible</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Meses al 100%</div><div class="seg-kpi-value" id="kpi-mes">—</div><div class="seg-kpi-sub">meses con 4/4 actividades</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Exámenes generados</div><div class="seg-kpi-value" id="kpi-exam">—</div><div class="seg-kpi-sub">todos los hijos</div></div>
+      <div class="seg-kpi"><div class="seg-kpi-label">Avance total</div><div class="seg-kpi-value" id="kpi-pct">—</div><div class="seg-kpi-sub">promedio entre hijos</div></div>
     </div>
     <div class="seg-grid" id="seg-grid"></div>
   </div>
@@ -579,25 +587,61 @@
       if (!res.ok) return;
       const d = await res.json();
 
-      const mesNum      = parseInt((h.mes || '').match(/\d+/)?.[0]) || 1;
-      const actMes      = (d.actividades_por_mes || []).find(a => a.mes === mesNum);
-      const completadas = actMes ? actMes.completadas : 0;
-      const total       = 4;
-      const pct         = Math.round((completadas / total) * 100);
+      const actPorMes   = d.actividades_por_mes || [];
+      const examenes    = d.examenes || [];
       const meses       = d.meses_desbloqueados || 0;
-      const examenes    = (d.examenes || []).length;
-      const nota        = d.ultima_nota ? d.ultima_nota.slice(0, 80) + (d.ultima_nota.length > 80 ? '…' : '') : null;
+      const mesNum      = parseInt((h.mes || '').match(/\d+/)?.[0]) || 1;
 
-      // donut: r=45, circ≈282.7
+      // ── Derived stats ──────────────────────────────────────
+      const actMesActual    = actPorMes.find(a => a.mes === mesNum);
+      const actCurrentMes   = actMesActual ? actMesActual.completadas : 0;
+
+      // Total actividades completadas (todos los meses)
+      const totalCompletadas = actPorMes.reduce((s, a) => s + a.completadas, 0);
+      const totalPosibles    = meses * 4;  // 4 per unlocked month
+
+      // Avance total del programa
+      const pctTotal = totalPosibles > 0 ? Math.round((totalCompletadas / totalPosibles) * 100) : 0;
+
+      // Meses completados (todos 4/4)
+      const mesesCompletos = actPorMes.filter(a => a.completadas >= 4).length;
+
+      // Consistencia: meses con al menos 1 actividad
+      const mesesActivos = actPorMes.filter(a => a.completadas > 0).length;
+
+      // Racha actual: meses consecutivos con actividad (desde el más reciente)
+      const sorted = [...actPorMes].sort((a,b) => b.mes - a.mes);
+      let racha = 0;
+      for (const a of sorted) { if (a.completadas > 0) racha++; else break; }
+
+      // Examen más reciente
+      const lastExam = examenes.length
+        ? new Date(examenes[examenes.length-1].created_at).toLocaleDateString('es-MX',{month:'short',year:'numeric'})
+        : null;
+
+      const nota = d.ultima_nota ? d.ultima_nota.slice(0, 100) + (d.ultima_nota.length > 100 ? '…' : '') : null;
+
+      // ── Donut: avance total ────────────────────────────────
       const r = 45, circ = 2 * Math.PI * r;
-      const offset = circ - (pct / 100) * circ;
+      const offset = circ - (pctTotal / 100) * circ;
 
-      const brow = (icon, lbl, val, max) => `
-        <div class="seg-bar-row">
-          <span class="seg-bar-lbl">${icon} ${lbl}</span>
-          <div class="seg-bar-track"><div class="seg-bar-fill" style="width:${max ? Math.round((val/max)*100) : 0}%"></div></div>
-          <span class="seg-bar-val">${val}/${max}</span>
-        </div>`;
+      // ── Mini bar chart: actividades por mes ───────────────
+      const chartW = 180, chartH = 48, barW = 12, gap = 5;
+      const slots = Array.from({length: meses || 1}, (_, i) => i + 1);
+      const maxBars = Math.min(slots.length, Math.floor(chartW / (barW + gap)));
+      const visSlots = slots.slice(-maxBars);
+      const miniChart = `<svg width="${chartW}" height="${chartH}" viewBox="0 0 ${chartW} ${chartH}">
+        ${visSlots.map((m, i) => {
+          const entry = actPorMes.find(a => a.mes === m);
+          const v = entry ? entry.completadas : 0;
+          const barH = Math.max(3, Math.round((v / 4) * (chartH - 10)));
+          const x = i * (barW + gap);
+          const y = chartH - barH;
+          const col = m === mesNum ? '#d9954a' : (v >= 4 ? '#b87333' : v > 0 ? 'rgba(184,115,51,.5)' : 'rgba(255,255,255,.08)');
+          return `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="3" fill="${col}"/>
+                  <text x="${x + barW/2}" y="${chartH}" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.3)">${m}</text>`;
+        }).join('')}
+      </svg>`;
 
       el.innerHTML = `
         <div class="seg-block-header">
@@ -605,7 +649,7 @@
             <div class="seg-block-name">${escHtml(h.nombre)}</div>
             <div class="seg-block-meta">${escHtml(h.nivel_display || h.nivel || '')} · ${escHtml(h.mes)}</div>
           </div>
-          <div class="seg-block-pct">${pct}%</div>
+          <div class="seg-block-pct">${pctTotal}%</div>
         </div>
         <div class="seg-block-body">
           <div class="seg-left">
@@ -617,52 +661,60 @@
                   stroke-dashoffset="${offset.toFixed(1)}"/>
               </svg>
               <div class="seg-donut-inner">
-                <div class="seg-donut-num">${pct}%</div>
-                <div class="seg-donut-label">avance</div>
+                <div class="seg-donut-num">${pctTotal}%</div>
+                <div class="seg-donut-label">progreso</div>
               </div>
             </div>
-            <div class="seg-left-tag">${completadas} de ${total}<br>actividades</div>
+            <div class="seg-left-tag">${totalCompletadas} de ${totalPosibles}<br>actividades totales</div>
           </div>
           <div class="seg-right">
             <div class="seg-stat-row">
               <div class="seg-stat">
-                <div class="seg-stat-num">${completadas}/${total}</div>
-                <div class="seg-stat-lbl">Actividades</div>
+                <div class="seg-stat-num">${actCurrentMes}/4</div>
+                <div class="seg-stat-lbl">Mes actual</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${mesesCompletos}</div>
+                <div class="seg-stat-lbl">Meses 100%</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${racha}</div>
+                <div class="seg-stat-lbl">Racha actual</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${mesesActivos}/${meses}</div>
+                <div class="seg-stat-lbl">Consistencia</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${examenes.length}</div>
+                <div class="seg-stat-lbl">Exámenes</div>
               </div>
               <div class="seg-stat">
                 <div class="seg-stat-num">${meses}</div>
-                <div class="seg-stat-lbl">Meses</div>
-              </div>
-              <div class="seg-stat">
-                <div class="seg-stat-num">${examenes}</div>
-                <div class="seg-stat-lbl">Exámenes</div>
+                <div class="seg-stat-lbl">Meses activos</div>
               </div>
             </div>
             <div class="seg-divider"></div>
-            <div class="seg-bar-section">
-              ${brow('📚', 'Actividades del mes', completadas, 4)}
-              ${brow('📅', 'Meses desbloqueados', meses, 10)}
-              ${brow('📝', 'Exámenes generados', examenes, 10)}
-            </div>
+            <div class="seg-chart-label">Actividades por mes</div>
+            <div class="seg-mini-chart">${miniChart}</div>
+            ${lastExam ? `<div class="seg-last-exam">📝 Último examen: ${lastExam}</div>` : ''}
             ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
           </div>
         </div>
       `;
 
-      // update global KPIs
-      window._segData = window._segData || { act: 0, actTotal: 0, mes: 0, exam: 0, pctSum: 0, count: 0 };
-      window._segData.act      += completadas;
-      window._segData.actTotal += total;
-      window._segData.mes      += meses;
-      window._segData.exam     += examenes;
-      window._segData.pctSum   += pct;
-      window._segData.count    += 1;
+      // ── Global KPIs ────────────────────────────────────────
       const g = window._segData;
-      const avgPct = Math.round(g.pctSum / g.count);
-      document.getElementById('kpi-act').textContent  = `${g.act}/${g.actTotal}`;
-      document.getElementById('kpi-mes').textContent  = g.mes;
-      document.getElementById('kpi-exam').textContent = g.exam;
-      document.getElementById('kpi-pct').textContent  = `${avgPct}%`;
+      g.actCompleted += totalCompletadas;
+      g.actPosibles  += totalPosibles;
+      g.mesesComp    += mesesCompletos;
+      g.examTotal    += examenes.length;
+      g.pctSum       += pctTotal;
+      g.count        += 1;
+      document.getElementById('kpi-act').textContent  = `${g.actCompleted}/${g.actPosibles}`;
+      document.getElementById('kpi-mes').textContent  = `${g.mesesComp}`;
+      document.getElementById('kpi-exam').textContent = g.examTotal;
+      document.getElementById('kpi-pct').textContent  = `${Math.round(g.pctSum / g.count)}%`;
     } catch {}
   }
 
@@ -700,7 +752,7 @@
     hijos.forEach((h, i) => updateArrows(i));
 
     // populate seguimiento section
-    window._segData = { act: 0, actTotal: 0, mes: 0, exam: 0, pctSum: 0, count: 0 };
+    window._segData = { actCompleted: 0, actPosibles: 0, mesesComp: 0, examTotal: 0, pctSum: 0, count: 0 };
     const segGrid = document.getElementById('seg-grid');
     if (segGrid) {
       segGrid.innerHTML = '';
