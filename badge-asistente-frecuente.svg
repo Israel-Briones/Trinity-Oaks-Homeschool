@@ -1,0 +1,52 @@
+<svg width="200" height="220" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9b59b6"/>
+      <stop offset="50%" style="stop-color:#7d3c98"/>
+      <stop offset="100%" style="stop-color:#4a235a"/>
+    </linearGradient>
+    <linearGradient id="hexShine" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#4a235a" flood-opacity="0.6"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="hexClip"><polygon points="100,8 182,52 182,148 100,192 18,148 18,52"/></clipPath>
+  </defs>
+  <polygon points="100,12 184,56 184,152 100,196 16,152 16,56" fill="#4a235a" opacity="0.4" transform="translate(2,4)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#hexGrad)" filter="url(#shadow)"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="none" stroke="#c8873a" stroke-width="4"/>
+  <polygon points="100,8 182,52 182,148 100,192 18,148 18,52" fill="url(#hexShine)" clip-path="url(#hexClip)"/>
+  <polygon points="100,18 172,58 172,142 100,182 28,142 28,58" fill="none" stroke="#c8873a" stroke-width="1.5" opacity="0.4"/>
+  <!-- Robot/AI illustration -->
+  <g transform="translate(100,100)" filter="url(#glow)">
+    <!-- Antenna -->
+    <line x1="0" y1="-44" x2="0" y2="-30" stroke="#e0e0e0" stroke-width="2.5"/>
+    <circle cx="0" cy="-48" r="5" fill="#ffd700" stroke="#c8873a" stroke-width="1.5"/>
+    <!-- Head -->
+    <rect x="-22" y="-30" width="44" height="36" rx="8" fill="#e0e0e0"/>
+    <rect x="-22" y="-30" width="44" height="36" rx="8" fill="url(#hexShine)"/>
+    <!-- Eyes -->
+    <rect x="-16" y="-20" width="12" height="10" rx="3" fill="#3498db"/>
+    <rect x="4" y="-20" width="12" height="10" rx="3" fill="#3498db"/>
+    <circle cx="-10" cy="-15" r="3" fill="#fff" opacity="0.8"/>
+    <circle cx="10" cy="-15" r="3" fill="#fff" opacity="0.8"/>
+    <!-- Mouth/chat indicator -->
+    <rect x="-12" y="-4" width="24" height="6" rx="3" fill="#9b59b6" opacity="0.8"/>
+    <!-- Body -->
+    <rect x="-18" y="10" width="36" height="28" rx="5" fill="#b0bec5"/>
+    <!-- Chest panel -->
+    <rect x="-12" y="15" width="24" height="16" rx="3" fill="#78909c"/>
+    <!-- Buttons -->
+    <circle cx="-6" cy="22" r="3" fill="#ffd700"/>
+    <circle cx="6" cy="22" r="3" fill="#e74c3c"/>
+    <!-- Chat bubble -->
+    <path d="M22,-15 Q40,-18 40,-5 Q40,5 28,5 L22,8 L24,3 Q18,2 18,-5 Q18,-15 22,-15 Z" fill="#ffd700" opacity="0.9"/>
+    <circle cx="28" cy="-5" r="2" fill="#7d3c98"/>
+    <circle cx="33" cy="-5" r="2" fill="#7d3c98"/>
+    <circle cx="38" cy="-5" r="2" fill="#7d3c98"/>
+  </g>
+  <circle cx="55" cy="72" r="2.5" fill="#ffd700" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="148" cy="68" r="2" fill="#e0e0e0" opacity="0.7"/>
+  <text x="100" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#c8873a" letter-spacing="1">ASISTENTE FRECUENTE</text>
+</svg>
