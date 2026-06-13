@@ -120,41 +120,61 @@
 
     /* ── Seguimiento section ── */
     .seg-grid {
-      display: flex; flex-direction: column; gap: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 1.75rem;
     }
     .seg-block {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-top: 3px solid var(--copper);
+      border-radius: 10px;
+      padding: 1.75rem 2rem 1.5rem;
       display: flex; flex-direction: column; gap: 0;
-      border-left: 3px solid var(--copper); padding-left: 1rem;
     }
     .seg-nombre {
-      font-weight: 700; font-size: 1.1rem; color: var(--copper);
-      margin-bottom: 14px;
+      font-family: 'Fraunces', serif;
+      font-weight: 600; font-size: 1.35rem; color: var(--cream);
+      margin-bottom: 0.2rem;
+    }
+    .seg-mes-tag {
+      font-size: 0.75rem; color: var(--muted); margin-bottom: 1.5rem;
+      letter-spacing: 0.04em;
     }
     .seg-bar-row {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .seg-bar-left {
+      display: flex; align-items: center; gap: 0.5rem;
+      min-width: 195px; flex-shrink: 0;
+    }
+    .seg-bar-icon {
+      font-size: 1.1rem; line-height: 1; flex-shrink: 0;
     }
     .seg-bar-label {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em;
-      text-transform: uppercase; color: var(--copper);
-      min-width: 175px; flex-shrink: 0;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--cream);
     }
     .seg-bar-track {
       flex: 1; height: 10px; border-radius: 6px;
-      background: var(--border2); overflow: hidden;
+      background: var(--border); overflow: hidden;
     }
     .seg-bar-fill {
       height: 100%; border-radius: 6px;
-      background: var(--copper); transition: width .5s;
+      background: linear-gradient(90deg, var(--copper), #d9954a);
+      transition: width .6s cubic-bezier(.4,0,.2,1);
     }
     .seg-bar-value {
-      font-size: 0.85rem; font-weight: 600; color: var(--copper);
-      min-width: 3rem; text-align: right; flex-shrink: 0;
+      font-family: 'Fraunces', serif;
+      font-size: 1rem; font-weight: 600; color: var(--copper);
+      min-width: 3.5rem; text-align: right; flex-shrink: 0;
     }
     .seg-nota {
-      font-size: 0.78rem; color: var(--muted);
-      font-style: italic; line-height: 1.4;
-      border-top: 1px solid var(--border2); padding-top: 0.6rem; margin-top: 0.2rem;
+      font-size: 0.82rem; color: var(--muted);
+      font-style: italic; line-height: 1.55;
+      border-top: 1px solid var(--border2);
+      padding-top: 1rem; margin-top: 0.5rem;
     }
 
     /* dashed add card */
@@ -485,18 +505,22 @@
       const examenes    = (d.examenes || []).length;
       const nota        = d.ultima_nota ? d.ultima_nota.slice(0, 80) + (d.ultima_nota.length > 80 ? '…' : '') : null;
 
-      const bar = (label, val, max) => `
+      const bar = (icon, label, val, max) => `
         <div class="seg-bar-row">
-          <div class="seg-bar-label">${label}</div>
+          <div class="seg-bar-left">
+            <span class="seg-bar-icon">${icon}</span>
+            <span class="seg-bar-label">${label}</span>
+          </div>
           <div class="seg-bar-track"><div class="seg-bar-fill" style="width:${Math.round((val/max)*100)}%"></div></div>
-          <div class="seg-bar-value">${val}/${max}</div>
+          <div class="seg-bar-value">${val}<span style="font-size:.75rem;opacity:.5">/${max}</span></div>
         </div>`;
 
       el.innerHTML = `
         <div class="seg-nombre">${escHtml(h.nombre)}</div>
-        ${bar('📚 Actividades del mes', completadas, 4)}
-        ${bar('📅 Meses desbloqueados', meses, 10)}
-        ${bar('📝 Exámenes generados', examenes, 10)}
+        <div class="seg-mes-tag">${escHtml(h.mes)} · ${escHtml(h.nivel_display || h.nivel || '')}</div>
+        ${bar('📚', 'Actividades del mes', completadas, 4)}
+        ${bar('📅', 'Meses desbloqueados', meses, 10)}
+        ${bar('📝', 'Exámenes generados', examenes, 10)}
         ${nota ? `<div class="seg-nota">"${nota}"</div>` : ''}
       `;
     } catch {}
