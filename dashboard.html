@@ -857,7 +857,10 @@
     return localStorage.getItem('to_nombre') || nameFromEmail(email || '');
   }
   function updateNavName() {
-    document.getElementById('nav-user-name').textContent = getDisplayName();
+    const name = getDisplayName();
+    document.getElementById('nav-user-name').textContent = name;
+    document.getElementById('dash-name').textContent     = name;
+    document.getElementById('nav-avatar').textContent    = name.charAt(0).toUpperCase();
   }
   const displayName = getDisplayName();
   function updateBienvenido() {
