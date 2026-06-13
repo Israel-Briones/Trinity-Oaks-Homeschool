@@ -478,20 +478,38 @@
       text-transform: uppercase;
       white-space: nowrap;
     }
-    .nav-user-label { font-size: 0.82rem; color: var(--cream); font-weight: 500; }
-    .nav-logout-link {
-      font-size: 0.78rem; color: var(--muted);
-      text-decoration: none; transition: color .2s;
+    .nav-profile-widget {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 6px; padding: 8px 0; max-width: 160px; margin-right: 2rem;
     }
-    .nav-logout-link:hover { color: var(--copper); }
+    .nav-profile-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-avatar {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #c8873a, #8b5a1a);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-size: 0.95rem;
+      font-weight: 700; color: #fff; line-height: 1;
+    }
+    .nav-user-label {
+      font-family: 'Fraunces', serif; font-size: 0.95rem;
+      font-weight: 600; color: var(--copper); white-space: nowrap;
+    }
     .nav-settings-btn {
-      font-size: 0.78rem; font-weight: 600; color: var(--copper);
+      width: 130px; height: 28px;
       background: transparent; border: 1.5px solid var(--copper);
-      border-radius: 6px; padding: 0.3rem 0.75rem;
-      cursor: pointer; transition: background .2s, color .2s;
-      letter-spacing: 0.04em;
+      border-radius: 6px; cursor: pointer;
+      font-size: 0.72rem; color: var(--copper);
+      letter-spacing: 0.05em; transition: background .2s, color .2s;
     }
-    .nav-settings-btn:hover { background: var(--copper); color: #1a1208; }
+    .nav-settings-btn:hover { background: var(--copper); color: var(--bg); }
+    .nav-logout-link {
+      font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
+      background: none; border: none; cursor: pointer;
+      text-decoration: none; transition: color .2s; padding: 0;
+    }
+    .nav-logout-link:hover { color: var(--cream); }
 
     /* ── Settings Modal ── */
     .settings-overlay {
@@ -612,12 +630,13 @@
     <img src="Logo 2.png" height="120" alt="Trinity Oaks">
   </div>
   <span class="nav-title-main" style="position:absolute;left:50%;transform:translateX(-50%);font-size:3rem;pointer-events:none;">Dashboard</span>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.45rem;margin-right:2rem;">
-    <span class="nav-user-label" id="nav-user-name"></span>
-    <div style="display:flex;align-items:center;gap:0.75rem;">
-      <a href="#" class="nav-logout-link" id="nav-logout">Cerrar sesión</a>
-      <button class="nav-settings-btn" id="nav-settings-btn">⚙️ Settings</button>
+  <div class="nav-profile-widget">
+    <div class="nav-profile-row">
+      <div class="nav-avatar" id="nav-avatar"></div>
+      <span class="nav-user-label" id="nav-user-name"></span>
     </div>
+    <button class="nav-settings-btn" id="nav-settings-btn">⚙ Configuración</button>
+    <a href="#" class="nav-logout-link" id="nav-logout">→ Cerrar sesión</a>
   </div>
 </nav>
 
@@ -792,6 +811,7 @@
   document.getElementById('dash-name').textContent     = displayName;
   document.getElementById('dash-email').textContent    = email;
   document.getElementById('nav-user-name').textContent = displayName;
+  document.getElementById('nav-avatar').textContent    = displayName.charAt(0).toUpperCase();
 
   // ── Logout ────────────────────────────────────────────────
   document.getElementById('nav-logout').addEventListener('click', e => {
@@ -845,6 +865,8 @@
     localStorage.setItem('to_sexo',     document.getElementById('s-sexo').value);
     localStorage.setItem('to_telefono', document.getElementById('s-telefono').value.trim());
     updateNavName();
+    const n = getDisplayName();
+    document.getElementById('nav-avatar').textContent = n.charAt(0).toUpperCase();
     const toast = document.getElementById('settings-toast');
     toast.style.display = 'block';
     setTimeout(() => { toast.style.display = 'none'; }, 3000);
