@@ -751,8 +751,9 @@
         result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">Error del servidor: ${data.error || res.status}</p>`;
         return;
       }
-      // backend returns { examen: { preguntas: [...] } } or { examen: [...] }
-      const raw = data.examen ?? data;
+      // backend returns { examen: { examen: { preguntas: [...] } } } (double-nested from JSON.parse)
+      const outer = data.examen ?? data;
+      const raw = outer?.examen ?? outer;
       const preguntas = raw?.preguntas || raw?.questions || (Array.isArray(raw) ? raw : []);
       window._examData = Array.isArray(preguntas) ? preguntas : [];
 
