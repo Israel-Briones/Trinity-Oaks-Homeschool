@@ -1183,13 +1183,14 @@
 
       // Total actividades completadas (todos los meses)
       const totalCompletadas = actPorMes.reduce((s, a) => s + a.completadas, 0);
-      const totalPosibles    = meses * 4;  // 4 per unlocked month
+      const actPorMesDef = actPorMes.length > 0 ? (actPorMes[0].total || 4) : 4;
+      const totalPosibles = actPorMes.reduce((s, a) => s + (a.total || actPorMesDef), 0);
 
       // Avance total del programa
       const pctTotal = totalPosibles > 0 ? Math.round((totalCompletadas / totalPosibles) * 100) : 0;
 
       // Meses completados (todos 4/4)
-      const mesesCompletos = actPorMes.filter(a => a.completadas >= 4).length;
+      const mesesCompletos = actPorMes.filter(a => a.completadas >= (a.total || 4)).length;
 
       // Consistencia: meses con al menos 1 actividad
       const mesesActivos = actPorMes.filter(a => a.completadas > 0).length;
@@ -1219,10 +1220,11 @@
         ${visSlots.map((m, i) => {
           const entry = actPorMes.find(a => a.mes === m);
           const v = entry ? entry.completadas : 0;
-          const barH = Math.max(3, Math.round((v / 4) * (chartH - 10)));
+          const entryTotal = entry ? (entry.total || 4) : 4;
+          const barH = Math.max(3, Math.round((v / entryTotal) * (chartH - 10)));
           const x = i * (barW + gap);
           const y = chartH - barH;
-          const col = m === mesNum ? '#d9954a' : (v >= 4 ? '#b87333' : v > 0 ? 'rgba(184,115,51,.5)' : 'rgba(255,255,255,.08)');
+          const col = m === mesNum ? '#d9954a' : (v >= entryTotal ? '#b87333' : v > 0 ? 'rgba(184,115,51,.5)' : 'rgba(255,255,255,.08)');
           return `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="3" fill="${col}"/>
                   <text x="${x + barW/2}" y="${chartH}" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.3)">${m}</text>`;
         }).join('')}
@@ -1255,7 +1257,7 @@
           <div class="seg-right">
             <div class="seg-stat-row">
               <div class="seg-stat">
-                <div class="seg-stat-num">${actCurrentMes}/10</div>
+                <div class="seg-stat-num">${actCurrentMes}/${actMesActual ? (actMesActual.total || 4) : 4}</div>
                 <div class="seg-stat-lbl">Mes actual</div>
               </div>
               <div class="seg-stat">
