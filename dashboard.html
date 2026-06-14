@@ -1176,6 +1176,7 @@
       const examenes    = d.examenes || [];
       const meses       = d.meses_desbloqueados || 0;
       const mesNum      = parseInt((h.mes || '').match(/\d+/)?.[0]) || 1;
+      const totalPorNivel = h.nivel === 'secundaria' ? 12 : 4;
 
       // ── Derived stats ──────────────────────────────────────
       const actMesActual    = actPorMes.find(a => a.mes === mesNum);
@@ -1257,12 +1258,12 @@
           <div class="seg-right">
             <div class="seg-stat-row">
               <div class="seg-stat">
-                <div class="seg-stat-num">${actCurrentMes}/${actMesActual ? (actMesActual.total || 4) : 4}</div>
+                <div class="seg-stat-num">${actCurrentMes}/${actMesActual ? (actMesActual.total || totalPorNivel) : totalPorNivel}</div>
                 <div class="seg-stat-lbl">Actividades del mes</div>
               </div>
               <div class="seg-stat">
                 <div class="seg-stat-num">${mesesCompletos}</div>
-                <div class="seg-stat-lbl">Meses 100%</div>
+                <div class="seg-stat-lbl">${h.nivel === 'preparatoria' ? 'Semestres 100%' : 'Meses 100%'}</div>
               </div>
               <div class="seg-stat">
                 <div class="seg-stat-num">${racha}</div>
