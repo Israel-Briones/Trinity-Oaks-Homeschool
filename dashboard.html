@@ -936,6 +936,13 @@
         <option>Mes 10</option>
       </select>
     </div>
+    <div id="ah-alumno-wrap" style="display:none;">
+      <div class="ah-field-label">Email del alumno</div>
+      <input id="ah-email-alumno" class="ah-input" type="email" placeholder="correo@ejemplo.com">
+      <div class="ah-field-label" style="margin-top:0.75rem;">Contraseña del alumno</div>
+      <input id="ah-password-alumno" class="ah-input" type="password" placeholder="Mínimo 8 caracteres">
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:0.4rem;">El alumno usará estas credenciales para entrar a su dashboard personal.</div>
+    </div>
     <div class="ah-actions">
       <button class="ah-btn ah-btn-ghost" id="ah-cancel">Cancelar</button>
       <button class="ah-btn ah-btn-primary" id="ah-submit">Agregar</button>
@@ -1528,6 +1535,12 @@
     select.innerHTML = `<option value="">Seleccionar ${cfg.label.toLowerCase()}</option>` +
       cfg.opts.map(o => `<option value="${o}">${o}</option>`).join('');
     wrap.style.display = '';
+    const esSecundaria = this.value === 'secundaria' || this.value === 'preparatoria';
+    document.getElementById('ah-alumno-wrap').style.display = esSecundaria ? 'block' : 'none';
+    if (!esSecundaria) {
+      document.getElementById('ah-email-alumno').value = '';
+      document.getElementById('ah-password-alumno').value = '';
+    }
   });
 
   function openAddHijo() {
@@ -1552,6 +1565,13 @@
     const nivel    = document.getElementById('ah-nivel').value;
     const subVal   = document.getElementById('ah-sub').value;
     const mes      = document.getElementById('ah-mes').value;
+    const emailAlumno    = document.getElementById('ah-email-alumno').value.trim();
+    const passwordAlumno = document.getElementById('ah-password-alumno').value.trim();
+    const esSecundaria   = nivel === 'secundaria' || nivel === 'preparatoria';
+    if (esSecundaria && (!emailAlumno || passwordAlumno.length < 8)) {
+      alert('Para secundaria y preparatoria debes ingresar email y contraseña del alumno (mínimo 8 caracteres).');
+      return;
+    }
     if (!nombre || !nivel || !subVal) {
       document.getElementById(!nombre ? 'ah-nombre' : !nivel ? 'ah-nivel' : 'ah-sub').focus();
       return;
@@ -1573,7 +1593,9 @@
     try {
       const res  = await fetch(`${API}/add-hijo`, {
         method: 'POST', headers: HEADERS,
-        body: JSON.stringify({ email, nombre, nivel, grado, semestre })
+        body: JSON.stringify({ email, nombre, nivel, grado, semestre,
+          email_alumno: esSecundaria ? emailAlumno : null,
+          password_alumno: esSecundaria ? passwordAlumno : null })
       });
       const data = await res.json();
       if (!res.ok) { alert(data.error || 'Error al agregar hijo.'); return; }
