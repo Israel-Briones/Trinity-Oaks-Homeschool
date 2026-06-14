@@ -969,16 +969,35 @@
     const dn = document.getElementById('nav-dropdown-name');
     if (dn) dn.textContent = name;
   }
-  const displayName = getDisplayName();
   function updateBienvenido() {
     const sexo = localStorage.getItem('to_sexo') || '';
     document.getElementById('dash-bienvenido').textContent = sexo === 'Femenino' ? 'Bienvenida' : 'Bienvenido';
   }
-  document.getElementById('dash-name').textContent     = displayName;
+  // Show placeholder until /get-perfil responds
+  document.getElementById('dash-name').textContent     = '...';
   document.getElementById('dash-email').textContent    = email;
-  document.getElementById('nav-user-name').textContent = displayName;
-  document.getElementById('nav-avatar').textContent    = displayName.charAt(0).toUpperCase();
+  document.getElementById('nav-user-name').textContent = '...';
+  document.getElementById('nav-avatar').textContent    = '?';
   updateBienvenido();
+
+  async function loadPerfil() {
+    try {
+      const res = await fetch(`${API_BASE}/get-perfil`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        body: JSON.stringify({ email: localStorage.getItem('to_email') })
+      });
+      if (res.ok) {
+        const d = await res.json();
+        if (d.nombre)   { localStorage.setItem('to_nombre',   d.nombre);   }
+        if (d.sexo)     { localStorage.setItem('to_sexo',     d.sexo);     }
+        if (d.telefono) { localStorage.setItem('to_telefono', d.telefono); }
+      }
+    } catch {}
+    // Always update with best available name (API result or localStorage fallback)
+    updateNavName();
+    updateBienvenido();
+  }
 
   // ── Logout ────────────────────────────────────────────────
   document.getElementById('nav-logout').addEventListener('click', e => {
@@ -1724,7 +1743,7 @@
 
   renderHijos();
   renderPlan();
-  syncDashboard();
+  loadPerfil().then(() => syncDashboard());
 </script>
 </body>
 </html>
