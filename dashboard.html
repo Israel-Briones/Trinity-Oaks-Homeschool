@@ -94,6 +94,12 @@
       letter-spacing: 0.06em; text-transform: uppercase;
     }
     .hijo-row-val { font-size: 0.88rem; color: var(--cream); font-weight: 500; }
+    .btn-edit-hijo, .btn-delete-hijo {
+      background: none; border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7); padding: 0.3rem 0.75rem;
+      border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-left: 0.5rem;
+    }
+    .btn-delete-hijo { border-color: rgba(220,50,50,0.4); color: rgba(220,100,100,0.9); }
     .hijo-mes-badge {
       background: rgba(184,115,51,.15); border: 1px solid var(--border);
       color: var(--copper); border-radius: 4px;
@@ -1442,6 +1448,12 @@
           </div>
         </div>
         <button class="hijo-ver-btn" data-idx="${i}">Ver material →</button>
+        <div style="margin-top:0.5rem;text-align:right;">
+          <button class="btn-edit-hijo" data-id="${h.id}" data-nombre="${escHtml(h.nombre)}"
+            data-email-alumno="${escHtml(h.email_alumno||'')}"
+            data-nivel="${escHtml(h.nivel||'')}">✏️ Editar</button>
+          <button class="btn-delete-hijo" data-id="${h.id}" data-nombre="${escHtml(h.nombre)}">🗑️ Eliminar</button>
+        </div>
       `;
       grid.appendChild(card);
     });
@@ -1769,6 +1781,54 @@
   renderHijos();
   renderPlan();
   loadPerfil().then(() => syncDashboard());
+
+  document.addEventListener('click', async (e) => {
+    // ELIMINAR
+    if (e.target.classList.contains('btn-delete-hijo')) {
+      const id = e.target.dataset.id
+      const nombre = e.target.dataset.nombre
+      if (!confirm(`¿Eliminar a ${nombre}? Su progreso se conservará 30 días.`)) return
+      try {
+        const res = await fetch(`${API}/delete-hijo`, {
+          method: 'POST', headers: HEADERS,
+          body: JSON.stringify({ email, hijo_id: parseInt(id) })
+        })
+        if (res.ok) {
+          const hijos = loadHijos().filter(h => h.id !== parseInt(id))
+          saveHijos(hijos)
+          renderHijos()
+        } else { alert('Error al eliminar hijo.') }
+      } catch { alert('Error de conexión.') }
+    }
+
+    // EDITAR
+    if (e.target.classList.contains('btn-edit-hijo')) {
+      const id = e.target.dataset.id
+      const nombre = e.target.dataset.nombre
+      const nivel = e.target.dataset.nivel
+      const emailAlumno = e.target.dataset.emailAlumno
+      const nuevoNombre = prompt('Nombre del hijo:', nombre)
+      if (!nuevoNombre) return
+      const body = { email, hijo_id: parseInt(id), nombre: nuevoNombre }
+      if (nivel === 'secundaria' || nivel === 'preparatoria') {
+        const nuevoEmail = prompt('Email del alumno:', emailAlumno)
+        if (nuevoEmail) body.email_alumno = nuevoEmail
+        const nuevaPass = prompt('Nueva contraseña (dejar vacío para no cambiar):')
+        if (nuevaPass && nuevaPass.length >= 8) body.password_alumno = nuevaPass
+      }
+      try {
+        const res = await fetch(`${API}/edit-hijo`, {
+          method: 'POST', headers: HEADERS,
+          body: JSON.stringify(body)
+        })
+        if (res.ok) {
+          const hijos = loadHijos().map(h => h.id === parseInt(id) ? {...h, nombre: nuevoNombre} : h)
+          saveHijos(hijos)
+          renderHijos()
+        } else { alert('Error al editar hijo.') }
+      } catch { alert('Error de conexión.') }
+    }
+  })
 </script>
 </body>
 </html>
