@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Dashboard · Trinity Oak</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap">
+  <style>
+    /* ── Login screen ── */
+    .st-login-wrap {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .st-login-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem 2rem;
+      width: min(400px, 100%);
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+    .st-login-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--copper); text-align: center;
+      letter-spacing: 0.08em;
+    }
+    .st-login-sub {
+      text-align: center; font-size: 0.8rem;
+      color: var(--muted); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-top: -0.5rem;
+    }
+    .st-field-label {
+      font-size: 0.72rem; font-weight: 600; color: var(--muted);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.35rem;
+    }
+    .st-input {
+      font-family: 'Inter', sans-serif;
+      width: 100%; box-sizing: border-box;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--cream);
+      font-size: 0.95rem; padding: .7rem 1rem;
+      outline: none; transition: border-color .2s;
+    }
+    .st-input:focus { border-color: var(--copper); }
+    .st-input::placeholder { color: var(--muted); }
+    .st-btn {
+      width: 100%; padding: 0.85rem;
+      background: var(--copper); border: none;
+      border-radius: 8px; color: var(--bg);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    .st-btn:hover { background: var(--copper2); }
+    .st-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .st-login-error {
+      font-size: 0.82rem; color: rgba(220,100,100,0.9);
+      text-align: center; display: none;
+    }
+
+    /* ── Dashboard header ── */
+    .st-header {
+      background: rgba(30,30,30,0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .st-header-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--copper); letter-spacing: 0.08em;
+    }
+    .st-header-right {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .st-header-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem; font-weight: 600; color: var(--cream);
+    }
+    .st-signout-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 6px; color: var(--muted);
+      font-size: 0.8rem; padding: 0.35rem 0.85rem;
+      cursor: pointer; transition: all .2s;
+    }
+    .st-signout-btn:hover { border-color: var(--copper); color: var(--copper); }
+
+    /* ── Hero ── */
+    .st-hero {
+      padding: 3rem 2rem 2.5rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border2);
+      position: relative; overflow: hidden;
+    }
+    .st-hero::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, var(--copper), transparent);
+      opacity: 0.4;
+    }
+    .st-hero-inner { max-width: 900px; margin: 0 auto; padding-left: 2rem; }
+    .st-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--copper); margin-bottom: 0.75rem;
+    }
+    .st-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--copper); }
+    .st-hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 600; color: var(--cream);
+      margin-bottom: 0.3rem; letter-spacing: -0.02em;
+    }
+    .st-hero-title em { font-style: normal; color: var(--copper); }
+    .st-hero-sub { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── Sections ── */
+    .st-wrap     { padding: 3rem 2rem; background: var(--bg); }
+    .st-wrap-alt { padding: 3rem 2rem; background: var(--bg2); }
+    .st-inner    { max-width: 900px; margin: 0 auto; }
+    .st-sec-label {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--copper); margin-bottom: 0.4rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .st-sec-label::after { content: ''; width: 32px; height: 1px; background: var(--copper); }
+    .st-sec-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem; font-weight: 600; color: var(--cream);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Material button ── */
+    .st-mat-btn {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--copper); border: none; border-radius: 8px;
+      color: var(--bg); font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      padding: 0.9rem 1.75rem; cursor: pointer;
+      transition: background .2s; text-decoration: none;
+    }
+    .st-mat-btn:hover { background: var(--copper2); }
+    .st-mat-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.25rem;
+    }
+    .st-mat-info { display: flex; flex-direction: column; gap: 0.3rem; }
+    .st-mat-nivel {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .st-mat-mes {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--cream);
+    }
+
+    /* ── Progreso: reuse seg- classes from dashboard ── */
+    .seg-block {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 12px; overflow: hidden;
+    }
+    .seg-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border2);
+      background: rgba(184,115,51,.04);
+    }
+    .seg-block-name {
+      font-family: 'Fraunces', serif; font-size: 1.2rem;
+      font-weight: 600; color: var(--cream);
+    }
+    .seg-block-meta { font-size: 0.75rem; color: var(--muted); }
+    .seg-block-pct {
+      font-family: 'Fraunces', serif; font-size: 1.5rem;
+      font-weight: 700; color: var(--copper);
+    }
+    .seg-block-body { display: flex; gap: 0; }
+    .seg-left {
+      width: 160px; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 0.5rem;
+      padding: 1.5rem 1rem;
+      border-right: 1px solid var(--border2);
+    }
+    .seg-donut { position: relative; width: 110px; height: 110px; }
+    .seg-donut svg { transform: rotate(-90deg); }
+    .seg-donut-track { fill: none; stroke: var(--border); stroke-width: 10; }
+    .seg-donut-fill {
+      fill: none; stroke: var(--copper); stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);
+    }
+    .seg-donut-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .seg-donut-num {
+      font-family: 'Fraunces', serif; font-size: 1.6rem;
+      font-weight: 700; color: var(--copper); line-height: 1;
+    }
+    .seg-donut-label {
+      font-size: 0.62rem; color: var(--muted);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .seg-left-tag {
+      font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.4;
+    }
+    .seg-right {
+      flex: 1; padding: 1.25rem 1.5rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .seg-stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem; }
+    .seg-stat {
+      background: var(--bg); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 0.75rem;
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    .seg-stat-num {
+      font-family: 'Fraunces', serif; font-size: 1.5rem;
+      font-weight: 700; color: var(--copper); line-height: 1;
+    }
+    .seg-stat-lbl {
+      font-size: 0.68rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .seg-divider { height: 1px; background: var(--border2); }
+    .seg-bar-section { display: flex; flex-direction: column; gap: 0.6rem; }
+    .seg-bar-row { display: flex; align-items: center; gap: 0.75rem; }
+    .seg-bar-lbl {
+      font-size: 0.72rem; color: var(--muted); min-width: 120px;
+      flex-shrink: 0; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .seg-bar-track {
+      flex: 1; height: 7px; border-radius: 999px;
+      background: var(--border); overflow: hidden;
+    }
+    .seg-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, #b87333, #d9954a);
+      transition: width .7s cubic-bezier(.4,0,.2,1);
+    }
+    .seg-bar-val {
+      font-size: 0.78rem; font-weight: 600; color: var(--copper);
+      min-width: 2.5rem; text-align: right;
+    }
+    .seg-chart-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem;
+    }
+    .seg-last-exam { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+    .seg-nota {
+      font-size: 0.78rem; color: var(--muted);
+      font-style: italic; line-height: 1.5;
+      border-top: 1px solid var(--border2); padding-top: 0.75rem;
+    }
+    .seg-mini-chart { overflow: visible; }
+
+    /* ── Badges ── */
+    .seg-badges-section { display: flex; flex-direction: column; gap: 0.6rem; }
+    .seg-badges-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--copper);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .seg-badges-title::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, rgba(184,115,51,.5), transparent);
+    }
+    .seg-badges {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      justify-content: flex-start; margin-top: 0.25rem;
+    }
+    .seg-badge-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      animation: badge-in .4s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes badge-in {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .seg-badge-img {
+      width: 96px; height: 106px;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.45));
+      transition: transform .2s ease, filter .2s ease;
+    }
+    .seg-badge-img:hover {
+      transform: scale(1.15);
+      filter: drop-shadow(0 4px 12px rgba(200,135,58,.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    .seg-badge-lbl {
+      font-size: 0.65rem; color: var(--copper); text-align: center;
+      max-width: 96px; line-height: 1.3; font-weight: 600;
+    }
+    .seg-badge-locked {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      opacity: 0.35;
+    }
+    .seg-badge-locked-hex { width: 96px; height: 106px; }
+    .seg-badge-locked-lbl {
+      font-size: 0.65rem; color: var(--muted); text-align: center; max-width: 96px;
+    }
+    .seg-badges-empty-msg {
+      font-size: 0.75rem; color: var(--muted); font-style: italic; margin-top: 0.4rem;
+    }
+
+    /* ── Loading / empty states ── */
+    .st-loading {
+      font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 1rem 0;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      .st-header { padding: 0.85rem 1rem; }
+      .st-hero { padding: 2rem 1rem 1.5rem; }
+      .st-hero-inner { padding-left: 1rem; }
+      .st-wrap, .st-wrap-alt { padding: 2rem 1rem; }
+      .seg-block-body { flex-direction: column; }
+      .seg-left { width: 100%; border-right: none; border-bottom: 1px solid var(--border2); flex-direction: row; padding: 1rem 1.5rem; }
+      .seg-stat-row { grid-template-columns: repeat(2,1fr); }
+      .st-mat-card { flex-direction: column; align-items: flex-start; }
+      .st-header-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div id="st-login-screen" class="st-login-wrap" style="display:none;">
+  <div class="st-login-card">
+    <div class="st-login-logo">TRINITY OAK</div>
+    <div class="st-login-sub">Portal del Alumno</div>
+
+    <div>
+      <div class="st-field-label">Correo electrónico</div>
+      <input id="st-email" class="st-input" type="email" placeholder="correo@ejemplo.com" autocomplete="email">
+    </div>
+    <div>
+      <div class="st-field-label">Contraseña</div>
+      <input id="st-password" class="st-input" type="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div id="st-login-error" class="st-login-error">Correo o contraseña incorrectos.</div>
+    <button id="st-login-btn" class="st-btn">Entrar</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════ -->
+<div id="st-dashboard" style="display:none;">
+
+  <!-- Header -->
+  <header class="st-header">
+    <div class="st-header-logo">TRINITY OAK</div>
+    <div class="st-header-right">
+      <span class="st-header-name" id="st-header-name"></span>
+      <button class="st-signout-btn" id="st-signout">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="st-hero">
+    <div class="st-hero-inner">
+      <div class="st-eyebrow">Mi Dashboard</div>
+      <h1 class="st-hero-title">Hola, <em id="st-hero-nombre"></em></h1>
+      <div class="st-hero-sub" id="st-hero-sub"></div>
+    </div>
+  </div>
+
+  <!-- Mi Material -->
+  <div class="st-wrap">
+    <div class="st-inner">
+      <div class="st-sec-label">Material</div>
+      <div class="st-sec-title">Mi Material del Mes</div>
+      <div class="st-mat-card">
+        <div class="st-mat-info">
+          <div class="st-mat-nivel" id="st-mat-nivel"></div>
+          <div class="st-mat-mes" id="st-mat-mes"></div>
+        </div>
+        <a id="st-mat-link" class="st-mat-btn" href="#">
+          Ver material →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mi Progreso -->
+  <div class="st-wrap-alt">
+    <div class="st-inner">
+      <div class="st-sec-label">Seguimiento</div>
+      <div class="st-sec-title">Mi Progreso</div>
+      <div id="st-progreso-container"><div class="st-loading">Cargando progreso…</div></div>
+    </div>
+  </div>
+
+  <!-- Mis Logros -->
+  <div class="st-wrap">
+    <div class="st-inner">
+      <div class="st-sec-label">Logros</div>
+      <div class="st-sec-title">Mis Logros</div>
+      <div id="st-badges-container"><div class="st-loading">Cargando logros…</div></div>
+    </div>
+  </div>
+
+</div><!-- /dashboard -->
+
+<script>
+  const API     = 'https://trinity-oaks-api-production.up.railway.app'
+  const HEADERS = { 'Content-Type': 'application/json', 'x-api-key': 'to-api-2025-secure' }
+
+  // ── Session helpers ──────────────────────────────────────
+  function getSession() {
+    return {
+      email:      localStorage.getItem('st_email')      || '',
+      hijo_id:    localStorage.getItem('st_hijo_id')    || '',
+      nombre:     localStorage.getItem('st_nombre')     || '',
+      nivel:      localStorage.getItem('st_nivel')      || '',
+      mes:        localStorage.getItem('st_mes')        || '1',
+      email_padre:localStorage.getItem('st_email_padre')|| '',
+      grado:      localStorage.getItem('st_grado')      || '',
+      semestre:   localStorage.getItem('st_semestre')   || '',
+    }
+  }
+  function saveSession(hijo, email_alumno) {
+    localStorage.setItem('st_email',       email_alumno)
+    localStorage.setItem('st_hijo_id',     hijo.id)
+    localStorage.setItem('st_nombre',      hijo.nombre)
+    localStorage.setItem('st_nivel',       hijo.nivel)
+    localStorage.setItem('st_mes',         hijo.mes_activo || '1')
+    localStorage.setItem('st_email_padre', hijo.email_padre)
+    localStorage.setItem('st_grado',       hijo.grado    || '')
+    localStorage.setItem('st_semestre',    hijo.semestre || '')
+  }
+  function clearSession() {
+    ['st_email','st_hijo_id','st_nombre','st_nivel','st_mes','st_email_padre','st_grado','st_semestre']
+      .forEach(k => localStorage.removeItem(k))
+  }
+  function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+  }
+
+  // ── Boot ─────────────────────────────────────────────────
+  const session = getSession()
+  if (session.email) {
+    showDashboard(session)
+  } else {
+    document.getElementById('st-login-screen').style.display = 'flex'
+  }
+
+  // ── Login ─────────────────────────────────────────────────
+  document.getElementById('st-login-btn').addEventListener('click', doLogin)
+  document.getElementById('st-password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin() })
+
+  async function doLogin() {
+    const btn      = document.getElementById('st-login-btn')
+    const errEl    = document.getElementById('st-login-error')
+    const email    = document.getElementById('st-email').value.trim()
+    const password = document.getElementById('st-password').value
+    errEl.style.display = 'none'
+    if (!email || !password) return
+    btn.disabled = true; btn.textContent = 'Entrando…'
+    try {
+      const res  = await fetch(`${API}/login-alumno`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ email_alumno: email, password })
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) {
+        errEl.style.display = 'block'
+      } else {
+        saveSession(data.hijo, email)
+        location.reload()
+      }
+    } catch {
+      errEl.textContent = 'Error de conexión. Intenta de nuevo.'
+      errEl.style.display = 'block'
+    } finally {
+      btn.disabled = false; btn.textContent = 'Entrar'
+    }
+  }
+
+  // ── Sign out ──────────────────────────────────────────────
+  document.getElementById('st-signout').addEventListener('click', () => {
+    clearSession()
+    location.reload()
+  })
+
+  // ── Dashboard ─────────────────────────────────────────────
+  function showDashboard(s) {
+    document.getElementById('st-login-screen').style.display = 'none'
+    document.getElementById('st-dashboard').style.display    = 'block'
+
+    // Header / hero
+    document.getElementById('st-header-name').textContent = s.nombre
+    document.getElementById('st-hero-nombre').textContent  = s.nombre
+
+    const nivelLabel = { kinder:'Kínder', primaria:'Primaria', secundaria:'Secundaria', preparatoria:'Preparatoria' }[s.nivel] || s.nivel
+    const subLabel   = s.semestre ? `Semestre ${s.semestre.replace('°','')} · ${nivelLabel}` : `${s.grado} ${nivelLabel}`
+    document.getElementById('st-hero-sub').textContent = subLabel
+
+    // Material link
+    document.getElementById('st-mat-nivel').textContent = nivelLabel
+    document.getElementById('st-mat-mes').textContent   = `Mes ${s.mes}`
+    const matUrl = `material.html?email=${encodeURIComponent(s.email_padre)}&hijo_id=${encodeURIComponent(s.hijo_id)}&nivel=${encodeURIComponent(s.nivel)}&mes=${encodeURIComponent(s.mes)}&grado=${encodeURIComponent(s.grado)}&semestre=${encodeURIComponent(s.semestre)}`
+    document.getElementById('st-mat-link').href = matUrl
+
+    // Load remote data
+    loadProgreso(s)
+    loadBadges(s)
+  }
+
+  // ── Progreso ──────────────────────────────────────────────
+  async function loadProgreso(s) {
+    const container = document.getElementById('st-progreso-container')
+    try {
+      const res  = await fetch(`${API}/progreso-hijo`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ email: s.email_padre, hijo_id: parseInt(s.hijo_id) })
+      })
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+      renderProgreso(container, data, s)
+    } catch {
+      container.innerHTML = '<div class="st-loading">No se pudo cargar el progreso.</div>'
+    }
+  }
+
+  function renderProgreso(container, data, s) {
+    const actComp    = data.actividades_completadas ?? 0
+    const actTotal   = data.actividades_totales     ?? 0
+    const examPct    = data.examen_promedio          ?? 0
+    const mesesComp  = data.meses_completados        ?? 0
+    const mesActual  = parseInt(s.mes) || 1
+    const pct        = actTotal > 0 ? Math.round((actComp / actTotal) * 100) : 0
+    const C = 2 * Math.PI * 50
+    const dashOffset = C - (pct / 100) * C
+
+    const nivelLabel = { kinder:'Kínder', primaria:'Primaria', secundaria:'Secundaria', preparatoria:'Preparatoria' }[s.nivel] || s.nivel
+    const subLabel   = s.semestre ? `Semestre ${s.semestre.replace('°','')} · ${nivelLabel}` : `${s.grado} ${nivelLabel}`
+
+    // Activity bars per month (if API returns them)
+    const meses = Array.isArray(data.meses) ? data.meses : []
+    const barsHtml = meses.length ? `
+      <div class="seg-divider"></div>
+      <div class="seg-bar-section">
+        <div class="seg-chart-label">Actividades por mes</div>
+        ${meses.slice(0,6).map(m => {
+          const mpct = m.total > 0 ? Math.round((m.completadas / m.total) * 100) : 0
+          return `<div class="seg-bar-row">
+            <div class="seg-bar-lbl">Mes ${m.mes}</div>
+            <div class="seg-bar-track"><div class="seg-bar-fill" style="width:${mpct}%"></div></div>
+            <div class="seg-bar-val">${mpct}%</div>
+          </div>`
+        }).join('')}
+      </div>` : ''
+
+    container.innerHTML = `
+      <div class="seg-block">
+        <div class="seg-block-header">
+          <div>
+            <div class="seg-block-name">${escHtml(s.nombre)}</div>
+            <div class="seg-block-meta">${escHtml(subLabel)} · Mes ${mesActual}</div>
+          </div>
+          <div class="seg-block-pct">${pct}%</div>
+        </div>
+        <div class="seg-block-body">
+          <div class="seg-left">
+            <div class="seg-donut">
+              <svg width="110" height="110" viewBox="0 0 110 110">
+                <circle class="seg-donut-track" cx="55" cy="55" r="50"/>
+                <circle class="seg-donut-fill" cx="55" cy="55" r="50"
+                  stroke-dasharray="${C.toFixed(2)}"
+                  stroke-dashoffset="${dashOffset.toFixed(2)}"/>
+              </svg>
+              <div class="seg-donut-inner">
+                <div class="seg-donut-num">${pct}%</div>
+                <div class="seg-donut-label">completado</div>
+              </div>
+            </div>
+            <div class="seg-left-tag">Mes ${mesActual} de ${mesActual}</div>
+          </div>
+          <div class="seg-right">
+            <div class="seg-stat-row">
+              <div class="seg-stat">
+                <div class="seg-stat-num">${actComp}</div>
+                <div class="seg-stat-lbl">Actividades</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${mesesComp}</div>
+                <div class="seg-stat-lbl">Meses 100%</div>
+              </div>
+              <div class="seg-stat">
+                <div class="seg-stat-num">${examPct > 0 ? examPct + '%' : '—'}</div>
+                <div class="seg-stat-lbl">Últ. examen</div>
+              </div>
+            </div>
+            ${barsHtml}
+          </div>
+        </div>
+      </div>`
+  }
+
+  // ── Badges ────────────────────────────────────────────────
+  const BADGE_META = {
+    'primera-actividad':  { label: 'Primera Actividad', file: 'badge-primera-actividad.svg' },
+    'semana-completa':    { label: 'Semana Completa',   file: 'badge-semana-completa.svg'   },
+    'mes-perfecto':       { label: 'Mes Perfecto',      file: 'badge-mes-perfecto.svg'      },
+    'constante':          { label: 'Constante',         file: 'badge-constante.svg'          },
+    'campeon':            { label: 'Campeón',           file: 'badge-campeon.svg'            },
+    'asistente-frecuente':{ label: 'Asistente Frecuente',file:'badge-asistente-frecuente.svg'},
+  }
+
+  async function loadBadges(s) {
+    const container = document.getElementById('st-badges-container')
+    try {
+      const res  = await fetch(`${API}/badges-hijo`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ hijo_id: parseInt(s.hijo_id) })
+      })
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+      renderBadges(container, data.badges || [])
+    } catch {
+      container.innerHTML = '<div class="st-loading">No se pudieron cargar los logros.</div>'
+    }
+  }
+
+  function renderBadges(container, earned) {
+    const earnedSet = new Set(earned.map(b => b.badge_id || b))
+    const all = Object.keys(BADGE_META)
+
+    const earnedHtml = all.filter(id => earnedSet.has(id)).map(id => {
+      const m = BADGE_META[id]
+      return `<div class="seg-badge-wrap">
+        <img class="seg-badge-img" src="${m.file}" alt="${escHtml(m.label)}" title="${escHtml(m.label)}">
+        <div class="seg-badge-lbl">${escHtml(m.label)}</div>
+      </div>`
+    }).join('')
+
+    const lockedHtml = all.filter(id => !earnedSet.has(id)).map(id => {
+      const m = BADGE_META[id]
+      return `<div class="seg-badge-locked">
+        <svg class="seg-badge-locked-hex" viewBox="0 0 96 106" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M48 4 L92 27 L92 79 L48 102 L4 79 L4 27 Z"
+            fill="none" stroke="rgba(184,115,51,0.15)" stroke-width="2"/>
+          <text x="48" y="58" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="28">🔒</text>
+        </svg>
+        <div class="seg-badge-locked-lbl">${escHtml(m.label)}</div>
+      </div>`
+    }).join('')
+
+    if (!earnedHtml && !lockedHtml) {
+      container.innerHTML = '<div class="st-loading">No hay logros disponibles.</div>'
+      return
+    }
+
+    container.innerHTML = `
+      <div class="seg-badges-section">
+        ${earnedHtml ? `
+          <div class="seg-badges-title">Obtenidos</div>
+          <div class="seg-badges">${earnedHtml}</div>` : ''}
+        ${lockedHtml ? `
+          <div class="seg-badges-title" style="margin-top:${earnedHtml ? '1.5rem' : '0'}">Por desbloquear</div>
+          <div class="seg-badges">${lockedHtml}</div>` : ''}
+      </div>`
+  }
+</script>
+</body>
+</html>
