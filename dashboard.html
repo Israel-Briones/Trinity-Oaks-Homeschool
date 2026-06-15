@@ -94,12 +94,29 @@
       letter-spacing: 0.06em; text-transform: uppercase;
     }
     .hijo-row-val { font-size: 0.88rem; color: var(--cream); font-weight: 500; }
-    .btn-edit-hijo, .btn-delete-hijo {
-      background: none; border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.7); padding: 0.3rem 0.75rem;
-      border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-left: 0.5rem;
+    .hijo-menu-btn {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      background: none; border: none; color: rgba(255,255,255,0.4);
+      font-size: 1.2rem; cursor: pointer; padding: 0.2rem 0.4rem;
+      border-radius: 4px; line-height: 1;
     }
-    .btn-delete-hijo { border-color: rgba(220,50,50,0.4); color: rgba(220,100,100,0.9); }
+    .hijo-menu-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+    .hijo-dropdown {
+      position: absolute; top: 2.2rem; right: 0.75rem;
+      background: #2a2a2a; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; overflow: hidden; z-index: 100;
+      min-width: 130px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      display: none;
+    }
+    .hijo-dropdown.open { display: block; }
+    .hijo-dropdown-item {
+      padding: 0.65rem 1rem; font-size: 0.85rem; cursor: pointer;
+      color: rgba(255,255,255,0.8); display: block; width: 100%;
+      background: none; border: none; text-align: left;
+    }
+    .hijo-dropdown-item:hover { background: rgba(255,255,255,0.07); }
+    .hijo-dropdown-item.danger { color: rgba(220,100,100,0.9); }
+    .hijo-card { position: relative; }
     .hijo-mes-badge {
       background: rgba(184,115,51,.15); border: 1px solid var(--border);
       color: var(--copper); border-radius: 4px;
@@ -1448,11 +1465,14 @@
           </div>
         </div>
         <button class="hijo-ver-btn" data-idx="${i}">Ver material →</button>
-        <div style="margin-top:0.5rem;text-align:right;">
-          <button class="btn-edit-hijo" data-id="${h.id}" data-nombre="${escHtml(h.nombre)}"
+        <button class="hijo-menu-btn" data-menu="${h.id}">⋯</button>
+        <div class="hijo-dropdown" id="hijo-menu-${h.id}">
+          <button class="hijo-dropdown-item btn-edit-hijo"
+            data-id="${h.id}" data-nombre="${escHtml(h.nombre)}"
             data-email-alumno="${escHtml(h.email_alumno||'')}"
             data-nivel="${escHtml(h.nivel||'')}">✏️ Editar</button>
-          <button class="btn-delete-hijo" data-id="${h.id}" data-nombre="${escHtml(h.nombre)}">🗑️ Eliminar</button>
+          <button class="hijo-dropdown-item danger btn-delete-hijo"
+            data-id="${h.id}" data-nombre="${escHtml(h.nombre)}">🗑️ Eliminar</button>
         </div>
       `;
       grid.appendChild(card);
@@ -1827,6 +1847,23 @@
           renderHijos()
         } else { alert('Error al editar hijo.') }
       } catch { alert('Error de conexión.') }
+    }
+  })
+
+  document.addEventListener('click', (e) => {
+    const menuBtn = e.target.closest('[data-menu]')
+    if (menuBtn) {
+      e.stopPropagation()
+      const id = menuBtn.dataset.menu
+      const dropdown = document.getElementById(`hijo-menu-${id}`)
+      document.querySelectorAll('.hijo-dropdown').forEach(d => {
+        if (d !== dropdown) d.classList.remove('open')
+      })
+      dropdown.classList.toggle('open')
+      return
+    }
+    if (!e.target.closest('.hijo-dropdown')) {
+      document.querySelectorAll('.hijo-dropdown').forEach(d => d.classList.remove('open'))
     }
   })
 </script>
