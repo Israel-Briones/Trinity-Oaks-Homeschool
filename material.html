@@ -596,15 +596,19 @@
 
   <script>
   (() => {
-    if (!localStorage.getItem('to_email')) {
+    const isAlumno = !!localStorage.getItem('st_email');
+    if (!localStorage.getItem('to_email') && !isAlumno) {
       window.location.href = 'index.html';
       return;
+    }
+    if (isAlumno && !localStorage.getItem('to_email')) {
+      localStorage.setItem('to_email', localStorage.getItem('st_email_padre'));
     }
 
     /* ── URL params ── */
     const params   = new URLSearchParams(window.location.search);
     window._hijoId = parseInt(params.get('hijo_id'), 10) || 0;
-    window._email  = localStorage.getItem('to_email') || '';
+    window._email  = localStorage.getItem('st_email_padre') || localStorage.getItem('to_email') || '';
     const nombre        = params.get('nombre')        || 'Hijo';
     const nivel         = params.get('nivel')         || '';
     const grado         = params.get('grado')         || '';
