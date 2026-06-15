@@ -1802,12 +1802,35 @@
   renderPlan();
   loadPerfil().then(() => syncDashboard());
 
+  // ── Modal helpers ──────────────────────────────────────────
+  function showModal(title, bodyHTML, confirmLabel, confirmClass) {
+    return new Promise(resolve => {
+      const overlay = document.getElementById('modal-overlay')
+      document.getElementById('modal-title').textContent = title
+      document.getElementById('modal-body').innerHTML = bodyHTML
+      const confirmBtn = document.getElementById('modal-confirm')
+      confirmBtn.textContent = confirmLabel || 'Confirmar'
+      confirmBtn.style.background = confirmClass === 'danger' ? '#c0392b' : '#b87333'
+      overlay.style.display = 'flex'
+      const close = (val) => { overlay.style.display = 'none'; resolve(val) }
+      confirmBtn.onclick = () => close(true)
+      document.getElementById('modal-cancel').onclick = () => close(false)
+      overlay.onclick = (e) => { if (e.target === overlay) close(false) }
+    })
+  }
+  function modalInput(id) { return document.getElementById(id)?.value?.trim() || '' }
+
   document.addEventListener('click', async (e) => {
     // ELIMINAR
     if (e.target.classList.contains('btn-delete-hijo')) {
       const id = e.target.dataset.id
       const nombre = e.target.dataset.nombre
-      if (!confirm(`¿Eliminar a ${nombre}? Su progreso se conservará 30 días.`)) return
+      const confirmed = await showModal(
+        `Eliminar a ${nombre}`,
+        `<p style="color:rgba(255,255,255,0.6);margin:0;font-size:0.9rem;">El progreso de <strong style="color:#f5f0e8;">${nombre}</strong> se conservará durante 30 días. Después de ese periodo se eliminará permanentemente.<br><br>¿Deseas continuar?</p>`,
+        'Eliminar', 'danger'
+      )
+      if (!confirmed) return
       try {
         const res = await fetch(`${API}/delete-hijo`, {
           method: 'POST', headers: HEADERS,
@@ -1817,8 +1840,8 @@
           const hijos = loadHijos().filter(h => h.id !== parseInt(id))
           saveHijos(hijos)
           renderHijos()
-        } else { alert('Error al eliminar hijo.') }
-      } catch { alert('Error de conexión.') }
+        } else { await showModal('Error', '<p style="color:rgba(255,255,255,0.6);margin:0;">No se pudo eliminar al hijo.</p>', 'Cerrar') }
+      } catch { await showModal('Error', '<p style="color:rgba(255,255,255,0.6);margin:0;">Error de conexión.</p>', 'Cerrar') }
     }
 
     // EDITAR
@@ -1827,13 +1850,39 @@
       const nombre = e.target.dataset.nombre
       const nivel = e.target.dataset.nivel
       const emailAlumno = e.target.dataset.emailAlumno
-      const nuevoNombre = prompt('Nombre del hijo:', nombre)
+      const esSecundaria = nivel === 'secundaria' || nivel === 'preparatoria'
+
+      const extraFields = esSecundaria ? `
+        <div style="margin-top:1rem;">
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;">Email del alumno</div>
+          <input id="edit-email-alumno" type="email" value="${emailAlumno}"
+            style="width:100%;background:#2a2a2a;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:0.5rem 0.75rem;color:#f5f0e8;font-size:0.9rem;box-sizing:border-box;">
+        </div>
+        <div style="margin-top:0.75rem;">
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;">Nueva contraseña (dejar vacío para no cambiar)</div>
+          <input id="edit-password-alumno" type="password" placeholder="Mínimo 8 caracteres"
+            style="width:100%;background:#2a2a2a;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:0.5rem 0.75rem;color:#f5f0e8;font-size:0.9rem;box-sizing:border-box;">
+        </div>` : ''
+
+      const confirmed = await showModal(
+        `Editar a ${nombre}`,
+        `<div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;">Nombre</div>
+          <input id="edit-nombre" type="text" value="${nombre}"
+            style="width:100%;background:#2a2a2a;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:0.5rem 0.75rem;color:#f5f0e8;font-size:0.9rem;box-sizing:border-box;">
+          ${extraFields}
+        </div>`,
+        'Guardar'
+      )
+      if (!confirmed) return
+
+      const nuevoNombre = modalInput('edit-nombre')
       if (!nuevoNombre) return
       const body = { email, hijo_id: parseInt(id), nombre: nuevoNombre }
-      if (nivel === 'secundaria' || nivel === 'preparatoria') {
-        const nuevoEmail = prompt('Email del alumno:', emailAlumno)
+      if (esSecundaria) {
+        const nuevoEmail = modalInput('edit-email-alumno')
+        const nuevaPass = modalInput('edit-password-alumno')
         if (nuevoEmail) body.email_alumno = nuevoEmail
-        const nuevaPass = prompt('Nueva contraseña (dejar vacío para no cambiar):')
         if (nuevaPass && nuevaPass.length >= 8) body.password_alumno = nuevaPass
       }
       try {
@@ -1845,8 +1894,8 @@
           const hijos = loadHijos().map(h => h.id === parseInt(id) ? {...h, nombre: nuevoNombre} : h)
           saveHijos(hijos)
           renderHijos()
-        } else { alert('Error al editar hijo.') }
-      } catch { alert('Error de conexión.') }
+        } else { await showModal('Error', '<p style="color:rgba(255,255,255,0.6);margin:0;">No se pudo editar al hijo.</p>', 'Cerrar') }
+      } catch { await showModal('Error', '<p style="color:rgba(255,255,255,0.6);margin:0;">Error de conexión.</p>', 'Cerrar') }
     }
   })
 
@@ -1867,5 +1916,15 @@
     }
   })
 </script>
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#1e1e1e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:2rem;min-width:320px;max-width:420px;width:90%;">
+    <h3 id="modal-title" style="margin:0 0 1.25rem;color:#f5f0e8;font-size:1.1rem;"></h3>
+    <div id="modal-body"></div>
+    <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.5rem;">
+      <button id="modal-cancel" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:0.5rem 1.25rem;border-radius:8px;cursor:pointer;font-size:0.9rem;">Cancelar</button>
+      <button id="modal-confirm" style="background:#b87333;border:none;color:#fff;padding:0.5rem 1.25rem;border-radius:8px;cursor:pointer;font-size:0.9rem;font-weight:600;">Confirmar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
