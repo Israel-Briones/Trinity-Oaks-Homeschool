@@ -88,6 +88,12 @@ nav {
 }
 .nav-btn:hover { background: var(--oak-green); }
 .nav-btn-mobile { display: none; }
+.nav-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--copper);
+  color: var(--copper);
+}
+.nav-btn-secondary:hover { background: rgba(184,115,51,.1); }
 
 /* HERO */
 .hero {
