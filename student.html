@@ -87,6 +87,40 @@
       cursor: pointer; transition: all .2s;
     }
     .st-signout-btn:hover { border-color: var(--copper); color: var(--copper); }
+    /* ── User menu dropdown ── */
+    .st-user-btn {
+      display: flex; align-items: center; gap: 0.6rem;
+      background: none; border: none; cursor: pointer; position: relative;
+    }
+    .st-user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--copper); color: var(--bg);
+      font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .st-user-label {
+      font-family: 'Fraunces', serif; font-size: 0.95rem;
+      font-weight: 600; color: var(--cream);
+    }
+    .st-user-dropdown {
+      position: absolute; top: calc(100% + 0.6rem); right: 0;
+      background: #1e1e1e; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; overflow: hidden; z-index: 200;
+      min-width: 160px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: none;
+    }
+    .st-user-dropdown.open { display: block; }
+    .st-user-menu-item {
+      display: block; width: 100%; padding: 0.7rem 1rem;
+      background: none; border: none; text-align: left;
+      font-size: 0.85rem; color: rgba(255,255,255,0.75);
+      cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .st-user-menu-item:last-child { border-bottom: none; }
+    .st-user-menu-item:hover { background: rgba(255,255,255,0.06); color: var(--copper); }
+    .st-user-menu-item.danger { color: rgba(220,100,100,0.85); }
+    .st-user-menu-item.danger:hover { background: rgba(220,50,50,0.08); color: rgba(220,100,100,1); }
 
     /* ── Hero ── */
     .st-hero {
@@ -361,9 +395,15 @@
   <!-- Header -->
   <header class="st-header">
     <div class="st-header-logo">TRINITY OAK</div>
-    <div class="st-header-right">
-      <span class="st-header-name" id="st-header-name"></span>
-      <button class="st-signout-btn" id="st-signout">Cerrar sesión</button>
+    <div class="st-header-right" style="position:relative;">
+      <button class="st-user-btn" id="st-user-btn">
+        <div class="st-user-avatar" id="st-user-avatar">?</div>
+        <span class="st-user-label" id="st-header-name"></span>
+      </button>
+      <div class="st-user-dropdown" id="st-user-dropdown">
+        <button class="st-user-menu-item" id="st-menu-logros">🏆 Mis Logros</button>
+        <button class="st-user-menu-item danger" id="st-signout">→ Cerrar sesión</button>
+      </div>
     </div>
   </header>
 
@@ -488,6 +528,19 @@
     }
   }
 
+  // ── User dropdown ─────────────────────────────────────────
+  document.getElementById('st-user-btn').addEventListener('click', (e) => {
+    e.stopPropagation()
+    document.getElementById('st-user-dropdown').classList.toggle('open')
+  })
+  document.addEventListener('click', () => {
+    document.getElementById('st-user-dropdown').classList.remove('open')
+  })
+  document.getElementById('st-menu-logros').addEventListener('click', () => {
+    document.getElementById('st-user-dropdown').classList.remove('open')
+    document.getElementById('st-badges-container').scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+
   // ── Sign out ──────────────────────────────────────────────
   document.getElementById('st-signout').addEventListener('click', () => {
     clearSession()
@@ -501,6 +554,7 @@
 
     // Header / hero
     document.getElementById('st-header-name').textContent = s.nombre
+    document.getElementById('st-user-avatar').textContent = s.nombre.charAt(0).toUpperCase()
     document.getElementById('st-hero-nombre').textContent  = s.nombre
 
     const nivelLabel = { kinder:'Kínder', primaria:'Primaria', secundaria:'Secundaria', preparatoria:'Preparatoria' }[s.nivel] || s.nivel
@@ -611,12 +665,30 @@
 
   // ── Badges ────────────────────────────────────────────────
   const BADGE_META = {
-    'primera-actividad':  { label: 'Primera Actividad', file: 'assets/badges/badge-primera-actividad.svg' },
-    'semana-completa':    { label: 'Semana Completa',   file: 'assets/badges/badge-semana-completa.svg'   },
-    'mes-perfecto':       { label: 'Mes Perfecto',      file: 'assets/badges/badge-mes-perfecto.svg'      },
-    'constante':          { label: 'Constante',         file: 'assets/badges/badge-constante.svg'          },
-    'campeon':            { label: 'Campeón',           file: 'assets/badges/badge-campeon.svg'            },
-    'asistente-frecuente':{ label: 'Asistente Frecuente',file:'assets/badges/badge-asistente-frecuente.svg'},
+    'badge-primera-actividad':     { label: 'Primera Actividad',      file: 'assets/badges/badge-primera-actividad.svg'     },
+    'badge-primer-examen':         { label: 'Primer Examen',          file: 'assets/badges/badge-primer-examen.svg'         },
+    'badge-primer-reporte':        { label: 'Primer Reporte',         file: 'assets/badges/badge-primer-reporte.svg'        },
+    'badge-explorador-nato':       { label: 'Explorador Nato',        file: 'assets/badges/badge-explorador-nato.svg'       },
+    'badge-valiente':              { label: 'Valiente',               file: 'assets/badges/badge-valiente.svg'              },
+    'badge-semana-completa':       { label: 'Semana Completa',        file: 'assets/badges/badge-semana-completa.svg'       },
+    'badge-mes-perfecto':          { label: 'Mes Perfecto',           file: 'assets/badges/badge-mes-perfecto.svg'          },
+    'badge-imparable':             { label: 'Imparable',              file: 'assets/badges/badge-imparable.svg'             },
+    'badge-constante':             { label: 'Constante',              file: 'assets/badges/badge-constante.svg'             },
+    'badge-leyenda':               { label: 'Leyenda',                file: 'assets/badges/badge-leyenda.svg'               },
+    'badge-asistente-frecuente':   { label: 'Asistente Frecuente',    file: 'assets/badges/badge-asistente-frecuente.svg'   },
+    'badge-dedicado':              { label: 'Dedicado',               file: 'assets/badges/badge-dedicado.svg'              },
+    'badge-comprometido':          { label: 'Comprometido',           file: 'assets/badges/badge-comprometido.svg'          },
+    'badge-campeon':               { label: 'Campeón',                file: 'assets/badges/badge-campeon.svg'               },
+    'badge-sabio':                 { label: 'Sabio',                  file: 'assets/badges/badge-sabio.svg'                 },
+    'badge-veterano':              { label: 'Veterano',               file: 'assets/badges/badge-veterano.svg'              },
+    'badge-teamwork':              { label: 'Teamwork',               file: 'assets/badges/badge-teamwork.svg'              },
+    'badge-kinder-completo':       { label: 'Kínder Completo',        file: 'assets/badges/badge-kinder-completo.svg'       },
+    'badge-primaria-completa':     { label: 'Primaria Completa',      file: 'assets/badges/badge-primaria-completa.svg'     },
+    'badge-secundaria-completa':   { label: 'Secundaria Completa',    file: 'assets/badges/badge-secundaria-completa.svg'   },
+    'badge-preparatoria-completa': { label: 'Preparatoria Completa',  file: 'assets/badges/badge-preparatoria-completa.svg' },
+    'badge-inicio-ciclo':          { label: 'Inicio de Ciclo',        file: 'assets/badges/badge-inicio-ciclo.svg'          },
+    'badge-navideno':              { label: 'Navideño',               file: 'assets/badges/badge-navideno.svg'              },
+    'badge-verano':                { label: 'Verano',                 file: 'assets/badges/badge-verano.svg'                },
   }
 
   async function loadBadges(s) {
