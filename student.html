@@ -624,7 +624,7 @@
     try {
       const res  = await fetch(`${API}/badges-hijo`, {
         method: 'POST', headers: HEADERS,
-        body: JSON.stringify({ hijo_id: parseInt(s.hijo_id) })
+        body: JSON.stringify({ email: s.email_padre, hijo_id: parseInt(s.hijo_id) })
       })
       if (!res.ok) throw new Error()
       const data = await res.json()
