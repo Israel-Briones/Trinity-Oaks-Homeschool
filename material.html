@@ -471,7 +471,11 @@
 
   <!-- Header -->
   <div class="mat-header">
-    <a class="mat-back" href="dashboard.html">← Regresar</a>
+    <a class="mat-back" id="btn-back">← Regresar</a>
+    <script>
+      document.getElementById('btn-back').href =
+        localStorage.getItem('st_email') ? 'student.html' : 'dashboard.html';
+    </script>
     <span class="mat-title" id="mat-nombre">—</span>
     <span class="mat-badge mat-badge-nivel" id="mat-nivel"></span>
     <span class="mat-badge mat-badge-mes"   id="mat-mes"></span>
