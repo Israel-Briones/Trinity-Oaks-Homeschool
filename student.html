@@ -90,7 +90,12 @@
     /* ── User menu dropdown ── */
     .st-user-btn {
       display: flex; align-items: center; gap: 0.6rem;
-      background: none; border: none; cursor: pointer; position: relative;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px; padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+      cursor: pointer; position: relative; transition: background .2s, border-color .2s;
+    }
+    .st-user-btn:hover {
+      background: rgba(255,255,255,0.09); border-color: var(--copper);
     }
     .st-user-avatar {
       width: 36px; height: 36px; border-radius: 50%;
