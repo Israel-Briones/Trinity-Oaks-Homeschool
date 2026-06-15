@@ -367,6 +367,22 @@
       .st-mat-card { flex-direction: column; align-items: flex-start; }
       .st-header-name { display: none; }
     }
+    .proy-card { background:#1a1a1a; border:1px solid rgba(184,115,51,.2); border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:1rem; }
+    .proy-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:.75rem; }
+    .proy-titulo { font-family:'Fraunces',serif; font-size:1rem; color:var(--cream); font-weight:600; }
+    .proy-badge { font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:.25rem .75rem; border-radius:99px; }
+    .proy-badge.pendiente { background:rgba(184,115,51,.15); color:var(--copper); }
+    .proy-badge.entregado { background:rgba(100,150,255,.15); color:#7ab0ff; }
+    .proy-badge.calificado { background:rgba(100,200,100,.15); color:#7abb6a; }
+    .proy-nota { font-size:2rem; font-weight:700; color:var(--copper); margin:.5rem 0 .25rem; }
+    .proy-feedback { font-size:.88rem; color:var(--muted); line-height:1.6; margin-bottom:.75rem; }
+    .proy-upload { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; margin-top:.5rem; }
+    .proy-file-btn { font-family:'Inter',sans-serif; background:transparent; border:1px solid rgba(184,115,51,.4); color:var(--copper); border-radius:8px; padding:.5rem 1rem; font-size:.85rem; cursor:pointer; transition:all .2s; }
+    .proy-file-btn:hover { background:rgba(184,115,51,.1); }
+    .proy-submit-btn { font-family:'Inter',sans-serif; background:var(--copper); color:#0D0D0D; border:none; border-radius:8px; padding:.5rem 1.25rem; font-size:.85rem; font-weight:700; cursor:pointer; transition:background .2s; }
+    .proy-submit-btn:hover { background:var(--copper2); }
+    .proy-submit-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .proy-filename { font-size:.8rem; color:var(--muted); }
   </style>
 </head>
 <body>
@@ -453,6 +469,15 @@
       <div class="st-sec-label">Logros</div>
       <div class="st-sec-title">Mis Logros</div>
       <div id="st-badges-container"><div class="st-loading">Cargando logros…</div></div>
+    </div>
+  </div>
+
+  <!-- Mis Proyectos (solo Prepa) -->
+  <div class="st-wrap-alt" id="st-proyectos-section" style="display:none;">
+    <div class="st-inner">
+      <div class="st-sec-label">Proyectos</div>
+      <div class="st-sec-title">Mis Proyectos</div>
+      <div id="st-proyectos-container"><div class="st-loading">Cargando proyectos…</div></div>
     </div>
   </div>
 
@@ -572,9 +597,21 @@
     const matUrl = `material.html?email=${encodeURIComponent(s.email_padre)}&hijo_id=${encodeURIComponent(s.hijo_id)}&nivel=${encodeURIComponent(s.nivel)}&mes=${encodeURIComponent(s.mes)}&grado=${encodeURIComponent(s.grado)}&semestre=${encodeURIComponent(s.semestre)}`
     document.getElementById('st-mat-link').href = matUrl
 
+    // Globals for proyectos
+    window.ST_NIVEL      = s.nivel
+    window.ST_HIJO_ID    = parseInt(s.hijo_id)
+    window.ST_MES_ACTIVO = parseInt(s.mes) || 1
+    window.ST_SEMESTRE   = s.semestre ? s.semestre.replace('°','') : 1
+    window.ST_NOMBRE     = s.nombre
+
     // Load remote data
     loadProgreso(s)
     loadBadges(s)
+
+    if (window.ST_NIVEL === 'preparatoria') {
+      document.getElementById('st-proyectos-section').style.display = ''
+      cargarProyectos()
+    }
   }
 
   // ── Progreso ──────────────────────────────────────────────
@@ -749,6 +786,105 @@
           <div class="seg-badges-title" style="margin-top:${earnedHtml ? '1.5rem' : '0'}">Por desbloquear</div>
           <div class="seg-badges">${lockedHtml}</div>` : ''}
       </div>`
+  }
+  async function cargarProyectos() {
+    const container = document.getElementById('st-proyectos-container')
+    try {
+      const res = await fetch(`${API}/mis-proyectos`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({ hijo_id: window.ST_HIJO_ID })
+      })
+      const data = await res.json()
+      const proyectos = data.proyectos || []
+
+      const mesActual = window.ST_MES_ACTIVO || 1
+      const semanas = [1, 2, 3, 4]
+
+      let html = ''
+      for (const semana of semanas) {
+        const p = proyectos.find(x => x.mes == mesActual && x.semana == semana)
+        const estado = !p ? 'pendiente' : (p.calificacion !== null ? 'calificado' : 'entregado')
+        const labelEstado = estado === 'pendiente' ? 'Pendiente' : estado === 'entregado' ? 'Entregado — En revisión' : 'Calificado'
+
+        html += `<div class="proy-card">
+          <div class="proy-header">
+            <div class="proy-titulo">Semana ${semana} — Mes ${mesActual}</div>
+            <span class="proy-badge ${estado}">${labelEstado}</span>
+          </div>`
+
+        if (estado === 'calificado') {
+          html += `<div class="proy-nota">${p.calificacion}/100</div>
+            <div class="proy-feedback">${escHtml(p.feedback)}</div>`
+        }
+
+        if (estado === 'pendiente' || estado === 'entregado') {
+          html += `<div class="proy-upload">
+            <input type="file" id="file-s${semana}" style="display:none" onchange="previewFile(${semana})">
+            <button class="proy-file-btn" onclick="document.getElementById('file-s${semana}').click()">📎 Seleccionar archivo</button>
+            <span class="proy-filename" id="fname-s${semana}">${p ? escHtml(p.archivo_nombre) : 'Ningún archivo seleccionado'}</span>
+            <button class="proy-submit-btn" id="sbtn-s${semana}" onclick="subirProyecto(${semana})">Entregar</button>
+          </div>`
+        }
+
+        html += `</div>`
+      }
+      container.innerHTML = html
+    } catch(e) {
+      container.innerHTML = '<div class="st-loading">Error al cargar proyectos.</div>'
+    }
+  }
+
+  function previewFile(semana) {
+    const file = document.getElementById(`file-s${semana}`).files[0]
+    if (file) document.getElementById(`fname-s${semana}`).textContent = file.name
+  }
+
+  async function subirProyecto(semana) {
+    const fileInput = document.getElementById(`file-s${semana}`)
+    const btn = document.getElementById(`sbtn-s${semana}`)
+    if (!fileInput.files[0]) { alert('Selecciona un archivo primero'); return }
+
+    btn.disabled = true
+    btn.textContent = 'Subiendo...'
+
+    try {
+      const formData = new FormData()
+      formData.append('archivo', fileInput.files[0])
+      formData.append('hijo_id', window.ST_HIJO_ID)
+      formData.append('mes', window.ST_MES_ACTIVO || 1)
+      formData.append('semana', semana)
+
+      const res = await fetch(`${API}/subir-proyecto`, {
+        method: 'POST',
+        headers: { 'x-api-key': 'to-api-2025-secure' },
+        body: formData
+      })
+
+      if (!res.ok) throw new Error('Error al subir')
+
+      btn.textContent = '✓ Entregado'
+      document.getElementById(`fname-s${semana}`).textContent = fileInput.files[0].name
+
+      setTimeout(() => {
+        fetch(`${API}/calificar-proyecto`, {
+          method: 'POST',
+          headers: HEADERS,
+          body: JSON.stringify({
+            hijo_id: window.ST_HIJO_ID,
+            mes: window.ST_MES_ACTIVO || 1,
+            semana,
+            semestre: window.ST_SEMESTRE || 1,
+            nombre_hijo: window.ST_NOMBRE || 'el alumno'
+          })
+        }).then(() => cargarProyectos())
+      }, 1500)
+
+    } catch(e) {
+      btn.disabled = false
+      btn.textContent = 'Entregar'
+      alert('Error al subir el archivo. Intenta de nuevo.')
+    }
   }
 </script>
 </body>
