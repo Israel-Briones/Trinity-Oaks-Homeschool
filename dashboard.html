@@ -1206,7 +1206,7 @@
       const examenes    = d.examenes || [];
       const meses       = d.meses_desbloqueados || 0;
       const mesNum      = parseInt((h.mes || '').match(/\d+/)?.[0]) || 1;
-      const totalPorNivel = h.nivel === 'secundaria' ? 12 : 4;
+      const totalPorNivel = h.nivel === 'kinder' || h.nivel === 'primaria' ? 16 : 4;
 
       // ── Derived stats ──────────────────────────────────────
       const actMesActual    = actPorMes.find(a => a.mes === mesNum);
