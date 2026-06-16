@@ -473,8 +473,9 @@
   <div class="mat-header">
     <a class="mat-back" id="btn-back">← Regresar</a>
     <script>
+      const _esPadre = new URLSearchParams(window.location.search).get('modo') === 'padre';
       document.getElementById('btn-back').href =
-        localStorage.getItem('st_email') ? 'student.html' : 'dashboard.html';
+        _esPadre ? 'dashboard.html' : (localStorage.getItem('st_email') ? 'student.html' : 'dashboard.html');
     </script>
     <span class="mat-title" id="mat-nombre">—</span>
     <span class="mat-badge mat-badge-nivel" id="mat-nivel"></span>
