@@ -1214,6 +1214,8 @@
 
       // Total actividades completadas (todos los meses)
       const totalCompletadas = actPorMes.reduce((s, a) => s + a.completadas, 0);
+      const matVistos = d.material_vistos || 0;
+      const matTotal  = d.material_total  || 0;
       const actPorMesDef = actPorMes.length > 0 ? (actPorMes[0].total || 4) : 4;
       const totalPosibles = actPorMes.reduce((s, a) => s + (a.total || actPorMesDef), 0);
 
@@ -1284,6 +1286,7 @@
               </div>
             </div>
             <div class="seg-left-tag">${totalCompletadas} de ${totalPosibles}<br>actividades totales</div>
+            ${matTotal > 0 ? `<div class="seg-left-tag" style="margin-top:.5rem;font-size:.78rem;color:var(--copper);">📄 ${matVistos} de ${matTotal} materiales vistos</div>` : ''}
           </div>
           <div class="seg-right">
             <div class="seg-stat-row">
