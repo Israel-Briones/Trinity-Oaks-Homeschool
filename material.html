@@ -475,7 +475,7 @@
     <script>
       const _esPadre = new URLSearchParams(window.location.search).get('modo') === 'padre';
       document.getElementById('btn-back').href =
-        _esPadre ? 'dashboard.html' : (localStorage.getItem('st_email') ? 'student.html' : 'dashboard.html');
+        _esPadre ? 'dashboard.html' : (sessionStorage.getItem('st_email') ? 'student.html' : 'dashboard.html');
     </script>
     <span class="mat-title" id="mat-nombre">—</span>
     <span class="mat-badge mat-badge-nivel" id="mat-nivel"></span>
@@ -599,21 +599,21 @@
   (() => {
     const params   = new URLSearchParams(window.location.search);
     const esPadre  = params.get('modo') === 'padre';
-    const isAlumno = !esPadre && !!localStorage.getItem('st_email');
+    const isAlumno = !esPadre && !!sessionStorage.getItem('st_email');
 
     if (esPadre) {
       if (!localStorage.getItem('to_email')) { window.location.href = 'index.html'; return; }
     } else {
       if (!localStorage.getItem('to_email') && !isAlumno) { window.location.href = 'index.html'; return; }
       if (isAlumno && !localStorage.getItem('to_email')) {
-        localStorage.setItem('to_email', localStorage.getItem('st_email_padre'));
+        localStorage.setItem('to_email', sessionStorage.getItem('st_email_padre'));
       }
     }
 
     window._hijoId = parseInt(params.get('hijo_id'), 10) || 0;
     window._email  = esPadre
       ? localStorage.getItem('to_email') || ''
-      : localStorage.getItem('st_email_padre') || localStorage.getItem('to_email') || '';
+      : sessionStorage.getItem('st_email_padre') || localStorage.getItem('to_email') || '';
     const nombre        = params.get('nombre')        || 'Hijo';
     const nivel         = params.get('nivel')         || '';
     const grado         = params.get('grado')         || '';
