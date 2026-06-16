@@ -652,6 +652,15 @@
       return 'tipo-otro';
     };
 
+    function marcarMaterial(contenidoId) {
+      if (!window._hijoId || !contenidoId) return;
+      fetch(`${API}/marcar-material`, {
+        method: 'POST',
+        headers: HDR,
+        body: JSON.stringify({ hijo_id: window._hijoId, contenido_id: contenidoId, mes: window._mes || 1 })
+      }).catch(() => {})
+    }
+
     function applyModuleLocks(desbloqueado_en) {
       const LOCKED_SECTIONS = ['sec-act', 'sec-exam', 'sec-rep'];
       const unlocked = desbloqueado_en
@@ -711,7 +720,7 @@
           <span class="mat-card-tipo ${tipoClass(item.tipo)}">${item.tipo || 'Recurso'}</span>
           <div class="mat-card-titulo">${item.titulo || 'Sin título'}</div>
           ${item.descripcion ? `<div class="mat-card-desc">${item.descripcion}</div>` : ''}
-          ${item.url ? `<a class="mat-card-btn" href="${item.url}" target="_blank" rel="noopener">Descargar</a>` : ''}
+          ${item.url ? `<a class="mat-card-btn" href="${item.url}" target="_blank" rel="noopener" onclick="marcarMaterial(${item.id})">Descargar</a>` : ''}
         `;
         grid.appendChild(card);
       });
