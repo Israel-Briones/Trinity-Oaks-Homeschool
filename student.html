@@ -492,25 +492,25 @@
   // ── Session helpers ──────────────────────────────────────
   function getSession() {
     return {
-      email:      localStorage.getItem('st_email')      || '',
-      hijo_id:    localStorage.getItem('st_hijo_id')    || '',
-      nombre:     localStorage.getItem('st_nombre')     || '',
-      nivel:      localStorage.getItem('st_nivel')      || '',
-      mes:        localStorage.getItem('st_mes')        || '1',
-      email_padre:localStorage.getItem('st_email_padre')|| '',
-      grado:      localStorage.getItem('st_grado')      || '',
-      semestre:   localStorage.getItem('st_semestre')   || '',
+      email:      sessionStorage.getItem('st_email')      || '',
+      hijo_id:    sessionStorage.getItem('st_hijo_id')    || '',
+      nombre:     sessionStorage.getItem('st_nombre')     || '',
+      nivel:      sessionStorage.getItem('st_nivel')      || '',
+      mes:        sessionStorage.getItem('st_mes')        || '1',
+      email_padre:sessionStorage.getItem('st_email_padre')|| '',
+      grado:      sessionStorage.getItem('st_grado')      || '',
+      semestre:   sessionStorage.getItem('st_semestre')   || '',
     }
   }
   function saveSession(hijo, email_alumno) {
-    localStorage.setItem('st_email',       email_alumno)
-    localStorage.setItem('st_hijo_id',     hijo.id)
-    localStorage.setItem('st_nombre',      hijo.nombre)
-    localStorage.setItem('st_nivel',       hijo.nivel)
-    localStorage.setItem('st_mes',         hijo.mes_activo || '1')
-    localStorage.setItem('st_email_padre', hijo.email_padre)
-    localStorage.setItem('st_grado',       hijo.grado    || '')
-    localStorage.setItem('st_semestre',    hijo.semestre || '')
+    sessionStorage.setItem('st_email',       email_alumno)
+    sessionStorage.setItem('st_hijo_id',     hijo.id)
+    sessionStorage.setItem('st_nombre',      hijo.nombre)
+    sessionStorage.setItem('st_nivel',       hijo.nivel)
+    sessionStorage.setItem('st_mes',         hijo.mes_activo || '1')
+    sessionStorage.setItem('st_email_padre', hijo.email_padre)
+    sessionStorage.setItem('st_grado',       hijo.grado    || '')
+    sessionStorage.setItem('st_semestre',    hijo.semestre || '')
   }
   function clearSession() {
     ['st_email','st_hijo_id','st_nombre','st_nivel','st_mes','st_email_padre','st_grado','st_semestre']
