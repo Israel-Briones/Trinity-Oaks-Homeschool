@@ -559,10 +559,6 @@ section { padding: 5rem 2rem; }
   border: 1px solid var(--border);
 }
 .grado-btn:hover { border-color: var(--copper); color: var(--copper); }
-.grado-card.featured .grado-btn {
-  background: var(--copper); color: var(--bg); border: none;
-}
-.grado-card.featured .grado-btn:hover { background: var(--copper2); }
 
 /* PARA QUIEN ES */
 .para-quien-section { padding: 5rem 2rem; background: var(--bg2); }
