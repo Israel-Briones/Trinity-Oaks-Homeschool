@@ -514,7 +514,7 @@
   }
   function clearSession() {
     ['st_email','st_hijo_id','st_nombre','st_nivel','st_mes','st_email_padre','st_grado','st_semestre']
-      .forEach(k => localStorage.removeItem(k))
+      .forEach(k => sessionStorage.removeItem(k))
   }
   function escHtml(s) {
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
@@ -576,7 +576,7 @@
   // ── Sign out ──────────────────────────────────────────────
   document.getElementById('st-signout').addEventListener('click', () => {
     clearSession()
-    location.reload()
+    window.location.href = 'index.html'
   })
 
   // ── Dashboard ─────────────────────────────────────────────
