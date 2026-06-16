@@ -644,6 +644,12 @@
     const emptyMsg = document.getElementById('mat-empty-msg');
     const aiMods   = document.getElementById('ai-modules');
 
+    const esPadre = new URLSearchParams(window.location.search).get('modo') === 'padre';
+    if (esPadre) {
+      const aiMods = document.getElementById('ai-modules');
+      if (aiMods) aiMods.hidden = true;
+    }
+
     const tipoClass = t => {
       const k = (t || '').toLowerCase();
       if (k === 'pdf')       return 'tipo-pdf';

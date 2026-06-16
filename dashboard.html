@@ -1532,7 +1532,7 @@
     grid.querySelectorAll('.hijo-ver-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const h = loadHijos()[+btn.dataset.idx];
-        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel)}&grado=${encodeURIComponent(h.grado||'')}&semestre=${encodeURIComponent(h.semestre||'')}&nivel_display=${encodeURIComponent(h.nivel_display||h.nivel)}&mes=${encodeURIComponent(h.mes)}`;
+        window.location.href = `material.html?hijo_id=${h.id}&nombre=${encodeURIComponent(h.nombre)}&nivel=${encodeURIComponent(h.nivel)}&grado=${encodeURIComponent(h.grado||'')}&semestre=${encodeURIComponent(h.semestre||'')}&nivel_display=${encodeURIComponent(h.nivel_display||h.nivel)}&mes=${encodeURIComponent(h.mes)}&modo=padre`;
       });
     });
   }
