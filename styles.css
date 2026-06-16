@@ -519,9 +519,9 @@ section { padding: 5rem 2rem; }
 }
 .grado-icon { font-size: 1.8rem; margin-bottom: 1rem; }
 .grado-img {
-  width: 100%; height: 200px;
+  width: 100%; height: 200px; max-width: 160px;
   object-fit: contain; border-radius: 4px;
-  margin-bottom: 0.5rem;
+  margin: 0 auto 0.5rem;
   display: block;
 }
 .grado-nivel {
