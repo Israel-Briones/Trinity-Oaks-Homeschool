@@ -202,15 +202,14 @@
     .saw-kpi:last-child { border-right: none; }
     .saw-kpi-label { font-size: 0.6rem; color: var(--muted); margin-bottom: 0.12rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .saw-kpi-val { font-size: 1.2rem; font-weight: 700; color: var(--cream); font-family: 'Fraunces', serif; line-height: 1.1; }
-    .saw-heat { padding: 0.6rem 0.75rem 0.35rem; }
+    .saw-heat { padding: 0.5rem 0.75rem 0.4rem; }
     .saw-heat-grid {
       display: grid;
-      grid-template-columns: repeat(14, 12px);
-      grid-auto-rows: 12px;
+      grid-template-columns: repeat(25, 1fr);
       gap: 3px;
     }
     .saw-heat-day {
-      width: 12px; height: 12px; border-radius: 2px; background: rgba(255,255,255,0.07);
+      aspect-ratio: 1; border-radius: 2px; background: rgba(255,255,255,0.07);
     }
     .saw-heat-day.active { background: var(--copper); }
     .saw-footer {
@@ -1520,11 +1519,12 @@
     } catch {}
 
     const diasSet = new Set(dias)
+    const COLS = 25, ROWS = 7, TOTAL = COLS * ROWS
     grid.innerHTML = ''
-    for (let day = 1; day <= total_dias; day++) {
+    for (let i = 1; i <= TOTAL; i++) {
       const sq = document.createElement('div')
-      sq.className = `saw-heat-day${diasSet.has(day) ? ' active' : ''}`
-      sq.title = `Día ${day}`
+      sq.className = `saw-heat-day${(diasSet.has(i) && i <= total_dias) ? ' active' : ''}`
+      if (i <= total_dias) sq.title = `Día ${i}`
       grid.appendChild(sq)
     }
 
