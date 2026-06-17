@@ -1,0 +1,262 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1781533795.3483667,
+    "ast_hash": "e1073342e958ac9f00716938c8f165e3",
+    "semantic_hash": "e1073342e958ac9f00716938c8f165e3"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1781526586.559649,
+    "ast_hash": "de1ba4c8e494ade4c32754e297284f92",
+    "semantic_hash": "de1ba4c8e494ade4c32754e297284f92"
+  },
+  "script.js": {
+    "mtime": 1781357441.417507,
+    "ast_hash": "3221d4fc004c43f675a9df172a59d8cd",
+    "semantic_hash": "3221d4fc004c43f675a9df172a59d8cd"
+  },
+  "CLAUDE.md": {
+    "mtime": 1781533629.001475,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": ""
+  },
+  "dashboard.html": {
+    "mtime": 1781703434.8606076,
+    "ast_hash": "29ce077e78305b0136417c8050a18dfd",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1781584305.5251956,
+    "ast_hash": "ee40158e1721839b3cc1fe158961d018",
+    "semantic_hash": ""
+  },
+  "material.html": {
+    "mtime": 1781700532.1729112,
+    "ast_hash": "1832f2f632a52e919ad04fda44bd01dd",
+    "semantic_hash": ""
+  },
+  "student.html": {
+    "mtime": 1781706689.4821897,
+    "ast_hash": "2d2b1e97e2eeb12c533be56820c90ea9",
+    "semantic_hash": ""
+  },
+  "Logo 2.png": {
+    "mtime": 1781107228.9955087,
+    "ast_hash": "4e8e128a9f260eb3e85577d1e3508444",
+    "semantic_hash": ""
+  },
+  "Logo.png": {
+    "mtime": 1781100674.4543228,
+    "ast_hash": "82b0be82d16ffab498f1013ced17d129",
+    "semantic_hash": ""
+  },
+  "Primaria.png": {
+    "mtime": 1781154209.083243,
+    "ast_hash": "a47d0da6ed15d2f76119da65dcf26c5a",
+    "semantic_hash": ""
+  },
+  "Secundaria.png": {
+    "mtime": 1781154791.2239308,
+    "ast_hash": "18717775f2086800300154bce9c0fdab",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-asistente-frecuente.svg": {
+    "mtime": 1781327908.1444237,
+    "ast_hash": "08d22d7551acfbe407ba95d96a1102fe",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-campeon.svg": {
+    "mtime": 1781327938.8928108,
+    "ast_hash": "0d9b58a2f90f46516d84e81f52a3f7e7",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-comprometido.svg": {
+    "mtime": 1781327929.013475,
+    "ast_hash": "381b37c8c7f0d0b76f1c331645e9047c",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-constante.svg": {
+    "mtime": 1781327886.377822,
+    "ast_hash": "532bd60b8db38131c89a4c101b0fa07d",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-dedicado.svg": {
+    "mtime": 1781327918.9490092,
+    "ast_hash": "5485521b441e0245ce962525dc03567f",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-explorador-nato.svg": {
+    "mtime": 1781327834.0724819,
+    "ast_hash": "a31254ba7146dbb38ce8b51cb1907b1d",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-imparable.svg": {
+    "mtime": 1781327876.4147756,
+    "ast_hash": "3866477acb5fb0fafbb1f951cbb49c0f",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-inicio-ciclo.svg": {
+    "mtime": 1781328041.4272175,
+    "ast_hash": "c97283e2f80e053a67ca6b5252e79ead",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-kinder-completo.svg": {
+    "mtime": 1781327988.114942,
+    "ast_hash": "80db713b2f47ba39546159530ef88907",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-leyenda.svg": {
+    "mtime": 1781327896.2277927,
+    "ast_hash": "534ce0b002046d3f276192f9229106c3",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-mes-perfecto.svg": {
+    "mtime": 1781327865.0886567,
+    "ast_hash": "0cf0b24718e6930ef90434ff6403635e",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-navideno.svg": {
+    "mtime": 1781328054.686743,
+    "ast_hash": "d0490c17deee2fd7aeaf0c0f88dbacf1",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-preparatoria-completa.svg": {
+    "mtime": 1781328029.7468557,
+    "ast_hash": "a82599b417e4aa19cc975d80cba29d34",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-primaria-completa.svg": {
+    "mtime": 1781328001.7442982,
+    "ast_hash": "e963f9967b18a1d0232613d60423a888",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-primer-examen.svg": {
+    "mtime": 1781327813.723018,
+    "ast_hash": "bce3350019e75b1ba318d45cd256047c",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-primer-reporte.svg": {
+    "mtime": 1781327823.1722577,
+    "ast_hash": "a5a1857ed1985eacd9661bb181136a83",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-primera-actividad.svg": {
+    "mtime": 1781327804.6228695,
+    "ast_hash": "4c00e13e527f9687bee6b51c2f3b2a25",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-sabio.svg": {
+    "mtime": 1781327953.502826,
+    "ast_hash": "b64263ecbedea6ed70566aa8476950bb",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-secundaria-completa.svg": {
+    "mtime": 1781328015.965785,
+    "ast_hash": "423871dfbd9c980d9e344890756ce91f",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-semana-completa.svg": {
+    "mtime": 1781327853.7767768,
+    "ast_hash": "d85c4db47ec6cdc6e262b797ba46293a",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-teamwork.svg": {
+    "mtime": 1781327976.955027,
+    "ast_hash": "c7e4af103a018beeadb713e15d4bc091",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-valiente.svg": {
+    "mtime": 1781327845.812421,
+    "ast_hash": "c8902ccf622a848c3709e01487e6dc4e",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-verano.svg": {
+    "mtime": 1781328068.407971,
+    "ast_hash": "c47ec2cb183d3fccca2bcd1697833f43",
+    "semantic_hash": ""
+  },
+  "assets/badges/badge-veterano.svg": {
+    "mtime": 1781327963.2995248,
+    "ast_hash": "feab63b9d3d8a53928f32090db3cd9fa",
+    "semantic_hash": ""
+  },
+  "assets/icons/estrella.png": {
+    "mtime": 1781359747.285094,
+    "ast_hash": "10686ca6e8f14b0aa31a66063d9f14b2",
+    "semantic_hash": ""
+  },
+  "assets/icons/examen.png": {
+    "mtime": 1781359747.3229446,
+    "ast_hash": "6e0dbe704e5a91c721f445601bb174bf",
+    "semantic_hash": ""
+  },
+  "assets/icons/grafica.png": {
+    "mtime": 1781359747.358197,
+    "ast_hash": "f6f18a3aa155a87042150859dfc27cab",
+    "semantic_hash": ""
+  },
+  "assets/icons/robot.png": {
+    "mtime": 1781359747.3989341,
+    "ast_hash": "3b421f7139b94243ceb522093e811a29",
+    "semantic_hash": ""
+  },
+  "badge-asistente-frecuente.svg": {
+    "mtime": 1781352786.9103496,
+    "ast_hash": "73dbfce2a5ba98a86860dd7612c76172",
+    "semantic_hash": ""
+  },
+  "badge-campeon.svg": {
+    "mtime": 1781352786.9108577,
+    "ast_hash": "6bdb1097fd6d6031db5a044bbaf76f82",
+    "semantic_hash": ""
+  },
+  "badge-constante.svg": {
+    "mtime": 1781352786.9113967,
+    "ast_hash": "ca60b519c6fecbd0454fd55de971a5fa",
+    "semantic_hash": ""
+  },
+  "badge-mes-perfecto.svg": {
+    "mtime": 1781352786.9119284,
+    "ast_hash": "fa203732449df1cfca7be34c8c217ac7",
+    "semantic_hash": ""
+  },
+  "badge-primera-actividad.svg": {
+    "mtime": 1781352786.9128616,
+    "ast_hash": "ced7929509510e0af8494195458a69e5",
+    "semantic_hash": ""
+  },
+  "badge-semana-completa.svg": {
+    "mtime": 1781352786.913642,
+    "ast_hash": "e61d686f2f35859f9a5164024212b677",
+    "semantic_hash": ""
+  },
+  "estrella.png": {
+    "mtime": 1781319600.620655,
+    "ast_hash": "10686ca6e8f14b0aa31a66063d9f14b2",
+    "semantic_hash": ""
+  },
+  "examen.png": {
+    "mtime": 1781319600.6292398,
+    "ast_hash": "6e0dbe704e5a91c721f445601bb174bf",
+    "semantic_hash": ""
+  },
+  "grafica.png": {
+    "mtime": 1781319600.6425774,
+    "ast_hash": "f6f18a3aa155a87042150859dfc27cab",
+    "semantic_hash": ""
+  },
+  "kinder.png": {
+    "mtime": 1781152516.9777124,
+    "ast_hash": "9888e784fa36e59b3d9b7c9bc4f53815",
+    "semantic_hash": ""
+  },
+  "preparatoria_transparente.png": {
+    "mtime": 1781315317.3703103,
+    "ast_hash": "1d60e1a22eab2f9015994554b7f19560",
+    "semantic_hash": ""
+  },
+  "robot.png": {
+    "mtime": 1781319600.655161,
+    "ast_hash": "3b421f7139b94243ceb522093e811a29",
+    "semantic_hash": ""
+  }
+}

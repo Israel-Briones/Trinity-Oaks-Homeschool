@@ -1,0 +1,5 @@
+# graphify regenerable cache (run `graphify update .` to rebuild)
+graphify-out/cache/
+
+# Claude local machine-specific settings
+.claude/settings.local.json

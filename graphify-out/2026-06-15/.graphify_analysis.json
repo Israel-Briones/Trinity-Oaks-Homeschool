@@ -1,0 +1,291 @@
+{
+  "communities": {
+    "0": [
+      "badge_campeon",
+      "badge_comprometido",
+      "badge_constante",
+      "badge_dedicado",
+      "badge_imparable",
+      "badge_inicio_ciclo_svg",
+      "badge_kinder_completo_svg",
+      "badge_leyenda_svg",
+      "badge_mes_perfecto_svg",
+      "badge_navideno_svg",
+      "badge_preparatoria_completa_svg",
+      "badge_primaria_completa_svg",
+      "badge_primer_examen_svg",
+      "badge_primer_reporte_svg",
+      "badge_primera_actividad_svg",
+      "badge_sabio_svg",
+      "badge_secundaria_completa_svg",
+      "badge_semana_completa_svg",
+      "badge_teamwork_svg",
+      "badge_valiente_svg",
+      "badge_verano_svg",
+      "badge_veterano_svg",
+      "concept_achievement_badge",
+      "concept_educational_progression",
+      "concept_hexagonal_badge_shape",
+      "concept_star_reward",
+      "estrella_png"
+    ],
+    "1": [
+      "concept_ai_tutor",
+      "concept_charlotte_mason",
+      "concept_homeschool",
+      "concept_russian_math",
+      "concept_singapore_math",
+      "concept_waldorf",
+      "ext_whatsapp",
+      "index_email_modal",
+      "index_estrellapng",
+      "index_examenpng",
+      "index_graficapng",
+      "index_html",
+      "index_kinderpng",
+      "index_logo2png",
+      "index_month_nav",
+      "index_primarapng",
+      "index_robotpng",
+      "index_secundariapng",
+      "index_startcheckout",
+      "index_togglebilling"
+    ],
+    "2": [
+      "concept_primaria_level",
+      "concept_trinity_oak_homeschool",
+      "logo2png_trinity_oak_logo_dark",
+      "logopng_trinity_oak_logo_color",
+      "primariapng_primaria_badge",
+      "studenthtml_cinzel_font",
+      "studenthtml_clearsession",
+      "studenthtml_dologin",
+      "studenthtml_getsession",
+      "studenthtml_login_screen",
+      "studenthtml_logros_section",
+      "studenthtml_material_section",
+      "studenthtml_progreso_section",
+      "studenthtml_savesession",
+      "studenthtml_showdashboard",
+      "studenthtml_student_dashboard",
+      "studenthtml_styles_css",
+      "studenthtml_trinity_oak_api"
+    ],
+    "3": [
+      "material_chatsend",
+      "material_dashboard_html",
+      "material_generaractividades",
+      "material_generarexamen",
+      "material_generarreporte",
+      "material_html",
+      "material_iife",
+      "material_index_html",
+      "material_localstorage",
+      "material_sec_act",
+      "material_sec_chat",
+      "material_sec_exam",
+      "material_sec_rep",
+      "material_student_html",
+      "material_styles_css",
+      "material_togglesection",
+      "material_urlsearchparams"
+    ],
+    "4": [
+      "script",
+      "script_askemailmodal",
+      "script_cards",
+      "script_closefp",
+      "script_closelogin",
+      "script_months",
+      "script_nav",
+      "script_openfp",
+      "script_openlogin",
+      "script_periods",
+      "script_prices",
+      "script_sha256",
+      "script_showerror",
+      "script_startcheckout",
+      "script_submitfp",
+      "script_submitlogin",
+      "script_togglebilling"
+    ],
+    "5": [
+      "badge_asistente_frecuente",
+      "badge_mes_perfecto",
+      "badge_primera_actividad",
+      "badge_semana_completa",
+      "concept_ai_assistant",
+      "concept_data_visualization",
+      "concept_education_platform",
+      "concept_exam_activity",
+      "concept_gamification",
+      "concept_text_editing",
+      "estrella_icon",
+      "examen_icon",
+      "grafica_icon",
+      "robot_icon",
+      "robot_image",
+      "secundaria_logo"
+    ],
+    "6": [
+      "dashboard_ah_overlay",
+      "dashboard_badge_toast",
+      "dashboard_dash_hero",
+      "dashboard_hijos_grid",
+      "dashboard_html",
+      "dashboard_nav_title",
+      "dashboard_plan_info_card",
+      "dashboard_seg_block",
+      "googlefonts_cinzel",
+      "styles_css"
+    ],
+    "7": [
+      "badge_explorador_nato",
+      "concept_education_level",
+      "concept_educational_platform",
+      "concept_statistics",
+      "grafica_image",
+      "kinder_image",
+      "preparatoria_image"
+    ],
+    "8": [
+      "claude_md",
+      "graphify_out_graph_json",
+      "graphify_out_graph_report_md",
+      "graphify_out_wiki_index_md"
+    ],
+    "9": [
+      "index_closemenu",
+      "index_nav_hamburger_handler"
+    ],
+    "10": [
+      "studenthtml_eschtml"
+    ]
+  },
+  "cohesion": {
+    "0": 0.16524216524216523,
+    "1": 0.11578947368421053,
+    "2": 0.16339869281045752,
+    "3": 0.14705882352941177,
+    "4": 0.13970588235294118,
+    "5": 0.175,
+    "6": 0.24444444444444444,
+    "7": 0.3333333333333333,
+    "8": 0.5,
+    "9": 1.0,
+    "10": 1.0
+  },
+  "gods": [
+    {
+      "id": "index_html",
+      "label": "Trinity Oaks Homeschool Index Page",
+      "degree": 20
+    },
+    {
+      "id": "material_html",
+      "label": "material.html \u2014 Trinity Oaks Homeschool Material Page",
+      "degree": 11
+    },
+    {
+      "id": "studenthtml_student_dashboard",
+      "label": "Student Dashboard Page",
+      "degree": 10
+    },
+    {
+      "id": "dashboard_html",
+      "label": "Dashboard HTML",
+      "degree": 9
+    },
+    {
+      "id": "material_iife",
+      "label": "IIFE Init Script",
+      "degree": 5
+    },
+    {
+      "id": "examen_icon",
+      "label": "Notepad and Pencil Exam Icon",
+      "degree": 5
+    },
+    {
+      "id": "badge_campeon",
+      "label": "Badge: Campeon (Champion)",
+      "degree": 5
+    },
+    {
+      "id": "badge_primaria_completa_svg",
+      "label": "Badge: Primaria Completa (SVG)",
+      "degree": 5
+    },
+    {
+      "id": "badge_secundaria_completa_svg",
+      "label": "Badge: Secundaria Completa (SVG)",
+      "degree": 5
+    },
+    {
+      "id": "studenthtml_dologin",
+      "label": "doLogin Function",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "material.html \u2014 Trinity Oaks Homeschool Material Page",
+      "target": "assets/icons/estrella.png",
+      "source_files": [
+        "material.html",
+        "assets/icons/estrella.png"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (doc \u2194 image); connects across different repos/directories; bridges separate communities; peripheral node `assets/icons/estrella.png` unexpectedly reaches hub `material.html \u2014 Trinity Oaks Homeschool Material Page`"
+    },
+    {
+      "source": "material.html \u2014 Trinity Oaks Homeschool Material Page",
+      "target": "assets/icons/examen.png",
+      "source_files": [
+        "material.html",
+        "assets/icons/examen.png"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (doc \u2194 image); connects across different repos/directories; bridges separate communities; peripheral node `assets/icons/examen.png` unexpectedly reaches hub `material.html \u2014 Trinity Oaks Homeschool Material Page`"
+    },
+    {
+      "source": "material.html \u2014 Trinity Oaks Homeschool Material Page",
+      "target": "assets/icons/grafica.png",
+      "source_files": [
+        "material.html",
+        "assets/icons/grafica.png"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (doc \u2194 image); connects across different repos/directories; bridges separate communities; peripheral node `assets/icons/grafica.png` unexpectedly reaches hub `material.html \u2014 Trinity Oaks Homeschool Material Page`"
+    },
+    {
+      "source": "material.html \u2014 Trinity Oaks Homeschool Material Page",
+      "target": "assets/icons/robot.png",
+      "source_files": [
+        "material.html",
+        "assets/icons/robot.png"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (doc \u2194 image); connects across different repos/directories; bridges separate communities; peripheral node `assets/icons/robot.png` unexpectedly reaches hub `material.html \u2014 Trinity Oaks Homeschool Material Page`"
+    },
+    {
+      "source": "Trinity Oak Homeschool Logo (Dark/White variant)",
+      "target": "Student Dashboard Page",
+      "source_files": [
+        "Logo 2.png",
+        "student.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image); connects across different repos/directories"
+    }
+  ],
+  "tokens": {
+    "input": 82876,
+    "output": 28555
+  }
+}
