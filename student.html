@@ -168,6 +168,32 @@
       display: flex; align-items: center; gap: 8px;
     }
     .st-sec-label::after { content: ''; width: 32px; height: 1px; background: var(--copper); }
+    .seg-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .seg-kpi {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 1.25rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .seg-kpi-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .seg-kpi-value {
+      font-family: 'Fraunces', serif; font-size: 2.2rem;
+      font-weight: 700; color: var(--copper); line-height: 1;
+    }
+    .seg-kpi-sub {
+      font-size: 0.75rem; color: var(--muted);
+    }
+    @media (max-width: 640px) {
+      .seg-kpi-row { grid-template-columns: repeat(2, 1fr) !important; }
+      .seg-kpi { padding: 0.85rem 1rem !important; min-width: 0 !important; }
+      .seg-kpi-value { font-size: 1.6rem !important; }
+    }
     .st-sec-title {
       font-family: 'Fraunces', serif;
       font-size: 1.5rem; font-weight: 600; color: var(--cream);
@@ -462,6 +488,21 @@
       <div class="st-sec-label">Seguimiento</div>
       <div class="st-sec-title">Mi Progreso</div>
       <div id="st-progreso-container"><div class="st-loading">Cargando progreso…</div></div>
+
+      <!-- ESTADÍSTICAS -->
+      <div id="st-stats-wrap" style="display:none; margin-top:2rem;">
+        <div class="st-sec-label" style="margin-bottom:1rem;">Mis Estadísticas</div>
+        <div class="seg-kpi-row" id="st-stats-kpis" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="seg-kpi"><div class="seg-kpi-label">Día más productivo</div><div class="seg-kpi-value" id="st-stat-dia">—</div><div class="seg-kpi-sub">día con más actividad</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Hora pico</div><div class="seg-kpi-value" id="st-stat-hora">—</div><div class="seg-kpi-sub">mayor concentración</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Material este mes</div><div class="seg-kpi-value" id="st-stat-material">—</div><div class="seg-kpi-sub">contenidos vistos</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Racha de semanas</div><div class="seg-kpi-value" id="st-stat-racha">—</div><div class="seg-kpi-sub">semanas consecutivas</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Badges este mes</div><div class="seg-kpi-value" id="st-stat-badges">—</div><div class="seg-kpi-sub">insignias obtenidas</div></div>
+          <div class="seg-kpi" id="st-stat-calif-wrap" style="display:none"><div class="seg-kpi-label">Promedio</div><div class="seg-kpi-value" id="st-stat-calif">—</div><div class="seg-kpi-sub">calificación promedio</div></div>
+          <div class="seg-kpi" id="st-stat-entregas-wrap" style="display:none"><div class="seg-kpi-label">Entregas a tiempo</div><div class="seg-kpi-value" id="st-stat-entregas">—</div><div class="seg-kpi-sub">proyectos puntuales</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Período activo</div><div class="seg-kpi-value" id="st-stat-periodo">—</div><div class="seg-kpi-sub">mes o semestre actual</div></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -611,6 +652,7 @@
 
     // Load remote data
     loadProgreso(s)
+    renderEstadisticasAlumno(s)
     loadBadges(s)
 
     if (window.ST_NIVEL === 'preparatoria') {
@@ -632,6 +674,38 @@
       renderProgreso(container, data, s)
     } catch {
       container.innerHTML = '<div class="st-loading">No se pudo cargar el progreso.</div>'
+    }
+  }
+
+  // ── Estadísticas ──────────────────────────────────────────
+  async function renderEstadisticasAlumno(s) {
+    try {
+      const res = await fetch(`${API}/estadisticas-hijo`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ hijo_id: parseInt(s.hijo_id), email: s.email_padre })
+      })
+      const d = await res.json()
+      if (!res.ok) return
+
+      document.getElementById('st-stats-wrap').style.display = 'block'
+      document.getElementById('st-stat-dia').textContent = d.dia_productivo || '—'
+      document.getElementById('st-stat-hora').textContent = d.hora_pico || '—'
+      document.getElementById('st-stat-material').textContent = d.material_mes ?? '—'
+      document.getElementById('st-stat-racha').textContent = d.racha_semanas ? `${d.racha_semanas}sem` : '—'
+      document.getElementById('st-stat-badges').textContent = d.badges_mes ?? '—'
+      document.getElementById('st-stat-periodo').textContent = d.periodo_activo ?? '—'
+
+      if (d.calificacion_promedio !== null) {
+        document.getElementById('st-stat-calif-wrap').style.display = 'block'
+        document.getElementById('st-stat-calif').textContent = d.calificacion_promedio ?? '—'
+      }
+      if (d.entregas_a_tiempo !== null) {
+        document.getElementById('st-stat-entregas-wrap').style.display = 'block'
+        const e = d.entregas_a_tiempo
+        document.getElementById('st-stat-entregas').textContent = `${e.entregados}/${e.total}`
+      }
+    } catch (e) {
+      console.error('Error estadisticas alumno:', e)
     }
   }
 

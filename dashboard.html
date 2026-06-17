@@ -906,6 +906,21 @@
       <div class="seg-kpi"><div class="seg-kpi-label">Avance total</div><div class="seg-kpi-value" id="kpi-pct">—</div><div class="seg-kpi-sub">promedio entre hijos</div></div>
     </div>
     <div class="seg-grid" id="seg-grid"></div>
+
+    <!-- ESTADÍSTICAS DEL ALUMNO -->
+    <div id="stats-alumno-wrap" style="display:none; margin-top:2rem;">
+      <div class="dash-sec-label" style="margin-bottom:1rem;">Estadísticas del alumno</div>
+      <div class="seg-kpi-row" id="stats-kpis" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="seg-kpi"><div class="seg-kpi-label">Día más productivo</div><div class="seg-kpi-value" id="stat-dia">—</div><div class="seg-kpi-sub">día con más actividad</div></div>
+        <div class="seg-kpi"><div class="seg-kpi-label">Hora pico</div><div class="seg-kpi-value" id="stat-hora">—</div><div class="seg-kpi-sub">mayor concentración</div></div>
+        <div class="seg-kpi"><div class="seg-kpi-label">Material este mes</div><div class="seg-kpi-value" id="stat-material">—</div><div class="seg-kpi-sub">contenidos vistos</div></div>
+        <div class="seg-kpi"><div class="seg-kpi-label">Racha de semanas</div><div class="seg-kpi-value" id="stat-racha">—</div><div class="seg-kpi-sub">semanas consecutivas</div></div>
+        <div class="seg-kpi"><div class="seg-kpi-label">Badges este mes</div><div class="seg-kpi-value" id="stat-badges">—</div><div class="seg-kpi-sub">insignias obtenidas</div></div>
+        <div class="seg-kpi" id="stat-calif-wrap" style="display:none"><div class="seg-kpi-label">Promedio Prepa</div><div class="seg-kpi-value" id="stat-calif">—</div><div class="seg-kpi-sub">calificación promedio</div></div>
+        <div class="seg-kpi" id="stat-entregas-wrap" style="display:none"><div class="seg-kpi-label">Entregas a tiempo</div><div class="seg-kpi-value" id="stat-entregas">—</div><div class="seg-kpi-sub">proyectos puntuales</div></div>
+        <div class="seg-kpi"><div class="seg-kpi-label">Período activo</div><div class="seg-kpi-value" id="stat-periodo">—</div><div class="seg-kpi-sub">mes o semestre actual</div></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1349,6 +1364,39 @@
     } catch {}
   }
 
+  // Estadísticas del alumno
+  async function renderEstadisticas(hijoId, email) {
+    try {
+      const res = await fetch(`${API_BASE}/estadisticas-hijo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        body: JSON.stringify({ hijo_id: hijoId, email })
+      })
+      const d = await res.json()
+      if (!res.ok) return
+
+      document.getElementById('stats-alumno-wrap').style.display = 'block'
+      document.getElementById('stat-dia').textContent = d.dia_productivo || '—'
+      document.getElementById('stat-hora').textContent = d.hora_pico || '—'
+      document.getElementById('stat-material').textContent = d.material_mes ?? '—'
+      document.getElementById('stat-racha').textContent = d.racha_semanas ? `${d.racha_semanas}sem` : '—'
+      document.getElementById('stat-badges').textContent = d.badges_mes ?? '—'
+      document.getElementById('stat-periodo').textContent = d.periodo_activo ?? '—'
+
+      if (d.calificacion_promedio !== null) {
+        document.getElementById('stat-calif-wrap').style.display = 'block'
+        document.getElementById('stat-calif').textContent = d.calificacion_promedio ?? '—'
+      }
+      if (d.entregas_a_tiempo !== null) {
+        document.getElementById('stat-entregas-wrap').style.display = 'block'
+        const e = d.entregas_a_tiempo
+        document.getElementById('stat-entregas').textContent = `${e.entregados}/${e.total}`
+      }
+    } catch (e) {
+      console.error('Error estadisticas:', e)
+    }
+  }
+
   const BADGE_LABELS = {
     'badge-primera-actividad':     'Primera Actividad',
     'badge-primer-examen':         'Primer Examen',
@@ -1495,12 +1543,16 @@
         block.innerHTML = `<div class="seg-row"><div class="seg-nombre" style="color:var(--muted);">Cargando…</div></div>`;
         segGrid.appendChild(block);
         if (h.id) loadProgreso(h, i);
+        if (h.id) renderEstadisticas(h.id, localStorage.getItem('to_email'));
       });
     }
 
     // Reload progress when user returns from material.html
     window.addEventListener('focus', () => {
-      loadHijos().forEach((h, i) => { if (h.id) loadProgreso(h, i); });
+      loadHijos().forEach((h, i) => {
+        if (h.id) loadProgreso(h, i);
+        if (h.id) renderEstadisticas(h.id, localStorage.getItem('to_email'));
+      });
     }, { once: false });
 
     // Dashed add card
