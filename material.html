@@ -648,8 +648,6 @@
     const empty    = document.getElementById('mat-empty');
     const emptyMsg = document.getElementById('mat-empty-msg');
     const aiMods   = document.getElementById('ai-modules');
-
-    const esPadre = new URLSearchParams(window.location.search).get('modo') === 'padre';
     if (esPadre && aiMods) aiMods.hidden = true;
 
     const tipoClass = t => {
