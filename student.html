@@ -189,6 +189,26 @@
     .seg-kpi-sub {
       font-size: 0.75rem; color: var(--muted);
     }
+    /* ── Stats widget compact (same as dashboard) ── */
+    .saw-header { display:flex; align-items:center; justify-content:space-between; padding:0.45rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .saw-tabs { display:flex; gap:0.15rem; }
+    .saw-tab { padding:0.25rem 0.65rem; border-radius:6px; font-size:0.72rem; font-weight:600; color:var(--muted); cursor:pointer; }
+    .saw-tab.active { background:rgba(255,255,255,0.1); color:var(--cream); }
+    .saw-filters { display:flex; gap:0.2rem; }
+    .saw-filter { padding:0.2rem 0.55rem; border-radius:6px; font-size:0.7rem; font-weight:700; color:var(--muted); cursor:pointer; }
+    .saw-filter.active { background:var(--copper); color:#fff; }
+    .saw-kpis { display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid rgba(255,255,255,0.07); }
+    .saw-kpi { padding:0.55rem 0.7rem; border-right:1px solid rgba(255,255,255,0.07); }
+    .saw-kpi:last-child { border-right:none; }
+    .saw-kpi-label { font-size:0.6rem; color:var(--muted); margin-bottom:0.12rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .saw-kpi-val { font-size:1.2rem; font-weight:700; color:var(--cream); font-family:'Fraunces',serif; line-height:1.1; }
+    .saw-heat { padding:0.5rem 0.75rem 0.4rem; }
+    .saw-heat-grid { display:grid; grid-template-columns:repeat(25,1fr); gap:3px; }
+    .saw-heat-day { aspect-ratio:1; border-radius:2px; background:rgba(255,255,255,0.07); }
+    .saw-heat-day.active { background:var(--copper); }
+    .saw-footer { padding:0.3rem 0.75rem 0.55rem; font-size:0.65rem; color:var(--muted); font-style:italic; }
+    #st-stat-entregas-wrap, #st-stat-calif-wrap { display:none !important; }
+    @media (max-width:600px) { .saw-kpis { grid-template-columns:repeat(2,1fr); } }
     @media (max-width: 640px) {
       .seg-kpi-row { grid-template-columns: repeat(2, 1fr) !important; }
       .seg-kpi { padding: 0.85rem 1rem !important; min-width: 0 !important; }
@@ -490,18 +510,34 @@
       <div id="st-progreso-container"><div class="st-loading">Cargando progreso…</div></div>
 
       <!-- ESTADÍSTICAS -->
-      <div id="st-stats-wrap" style="display:none; margin-top:2rem;">
-        <div class="st-sec-label" style="margin-bottom:1rem;">Mis Estadísticas</div>
-        <div class="seg-kpi-row" id="st-stats-kpis" style="grid-template-columns: repeat(2, 1fr);">
-          <div class="seg-kpi"><div class="seg-kpi-label">Día más productivo</div><div class="seg-kpi-value" id="st-stat-dia">—</div><div class="seg-kpi-sub">día con más actividad</div></div>
-          <div class="seg-kpi"><div class="seg-kpi-label">Hora pico</div><div class="seg-kpi-value" id="st-stat-hora">—</div><div class="seg-kpi-sub">mayor concentración</div></div>
-          <div class="seg-kpi"><div class="seg-kpi-label">Material este mes</div><div class="seg-kpi-value" id="st-stat-material">—</div><div class="seg-kpi-sub">contenidos vistos</div></div>
-          <div class="seg-kpi"><div class="seg-kpi-label">Racha de semanas</div><div class="seg-kpi-value" id="st-stat-racha">—</div><div class="seg-kpi-sub">semanas consecutivas</div></div>
-          <div class="seg-kpi"><div class="seg-kpi-label">Badges este mes</div><div class="seg-kpi-value" id="st-stat-badges">—</div><div class="seg-kpi-sub">insignias obtenidas</div></div>
-          <div class="seg-kpi" id="st-stat-calif-wrap" style="display:none"><div class="seg-kpi-label">Promedio</div><div class="seg-kpi-value" id="st-stat-calif">—</div><div class="seg-kpi-sub">calificación promedio</div></div>
-          <div class="seg-kpi" id="st-stat-entregas-wrap" style="display:none"><div class="seg-kpi-label">Entregas a tiempo</div><div class="seg-kpi-value" id="st-stat-entregas">—</div><div class="seg-kpi-sub">proyectos puntuales</div></div>
-          <div class="seg-kpi"><div class="seg-kpi-label">Período activo</div><div class="seg-kpi-value" id="st-stat-periodo">—</div><div class="seg-kpi-sub">mes o semestre actual</div></div>
+      <div id="st-stats-wrap" style="display:none; margin-top:2rem; background:#111214; border:1px solid rgba(255,255,255,0.08); border-radius:12px; overflow:hidden; max-width:520px;">
+        <div class="saw-header">
+          <div class="saw-tabs">
+            <div class="saw-tab active">Mis stats</div>
+          </div>
+          <div class="saw-filters">
+            <div class="saw-filter active" onclick="setSawFilterAlumno(this)">Mes</div>
+            <div class="saw-filter" onclick="setSawFilterAlumno(this)">Semestre</div>
+          </div>
         </div>
+        <div class="saw-kpis">
+          <div class="saw-kpi"><div class="saw-kpi-label">Día activo</div><div class="saw-kpi-val" id="st-stat-dia">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Hora pico</div><div class="saw-kpi-val" id="st-stat-hora">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Material</div><div class="saw-kpi-val" id="st-stat-material">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Días activos</div><div class="saw-kpi-val" id="st-stat-dias-activos">—</div></div>
+        </div>
+        <div class="saw-kpis" style="border-top:1px solid rgba(255,255,255,0.07);">
+          <div class="saw-kpi"><div class="saw-kpi-label">Racha</div><div class="saw-kpi-val" id="st-stat-racha">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Badges</div><div class="saw-kpi-val" id="st-stat-badges">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Período</div><div class="saw-kpi-val" id="st-stat-periodo">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Actividades</div><div class="saw-kpi-val" id="st-stat-act-comp">—</div></div>
+        </div>
+        <div class="saw-heat">
+          <div id="st-stat-heatmap" class="saw-heat-grid"></div>
+        </div>
+        <div class="saw-footer" id="st-stat-msg"></div>
+        <div id="st-stat-entregas-wrap"><span id="st-stat-entregas"></span></div>
+        <div id="st-stat-calif-wrap"><span id="st-stat-calif"></span></div>
       </div>
     </div>
   </div>
@@ -678,9 +714,42 @@
   }
 
   // ── Estadísticas ──────────────────────────────────────────
+  function setSawFilterAlumno(el) {
+    el.closest('.saw-filters').querySelectorAll('.saw-filter').forEach(b => b.classList.remove('active'))
+    el.classList.add('active')
+  }
+
+  async function renderHeatmapAlumno(hijoId, mes, email, actComp) {
+    const grid = document.getElementById('st-stat-heatmap')
+    const cells = 175
+    let diasSet = new Set(), totalDias = 0
+    try {
+      const res = await fetch(`${API}/heatmap-hijo`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ hijo_id: hijoId, mes, email })
+      })
+      if (res.ok) {
+        const d = await res.json()
+        diasSet = new Set(d.dias || [])
+        totalDias = d.total_dias || 0
+      }
+    } catch {}
+    grid.innerHTML = ''
+    for (let i = 1; i <= cells; i++) {
+      const day = ((i - 1) % 25) + 1
+      const el = document.createElement('div')
+      el.className = 'saw-heat-day' + (diasSet.has(day) && day <= totalDias ? ' active' : '')
+      grid.appendChild(el)
+    }
+    document.getElementById('st-stat-dias-activos').textContent = diasSet.size || '—'
+    const msg = document.getElementById('st-stat-msg')
+    if (msg) msg.textContent = diasSet.size > 0 ? `${diasSet.size} días con actividad este mes` : 'Sin actividad registrada aún'
+  }
+
   async function renderEstadisticasAlumno(s) {
     const id = parseInt(s.hijo_id)
     if (!id || !s.email_padre) return
+    const mes = parseInt(s.mes) || 1
     try {
       const res = await fetch(`${API}/estadisticas-hijo`, {
         method: 'POST', headers: HEADERS,
@@ -696,16 +765,9 @@
       document.getElementById('st-stat-racha').textContent = d.racha_semanas ? `${d.racha_semanas}sem` : '—'
       document.getElementById('st-stat-badges').textContent = d.badges_mes ?? '—'
       document.getElementById('st-stat-periodo').textContent = d.periodo_activo ?? '—'
+      document.getElementById('st-stat-act-comp').textContent = d.actividades_completadas ?? '—'
 
-      if (d.calificacion_promedio !== null) {
-        document.getElementById('st-stat-calif-wrap').style.display = 'block'
-        document.getElementById('st-stat-calif').textContent = d.calificacion_promedio ?? '—'
-      }
-      if (d.entregas_a_tiempo !== null) {
-        document.getElementById('st-stat-entregas-wrap').style.display = 'block'
-        const e = d.entregas_a_tiempo
-        document.getElementById('st-stat-entregas').textContent = `${e.entregados}/${e.total}`
-      }
+      renderHeatmapAlumno(id, mes, s.email_padre, d.actividades_completadas ?? 0)
     } catch (e) {
       console.error('Error estadisticas alumno:', e)
     }
