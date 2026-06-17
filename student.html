@@ -806,11 +806,13 @@
       const mesActual = window.ST_MES_ACTIVO || 1
       const semanas = [1, 2, 3, 4]
 
-      // Calcular semana actual basada en días desde registro del alumno
+      // Semana actual basada en días desde registro
       const createdAt = new Date(window.ST_CREATED_AT || sessionStorage.getItem('st_created_at') || new Date())
       const hoy = new Date()
       const diasDesdeRegistro = Math.floor((hoy - createdAt) / (1000 * 60 * 60 * 24))
       const semanaActual = diasDesdeRegistro < 7 ? 1 : diasDesdeRegistro < 14 ? 2 : diasDesdeRegistro < 21 ? 3 : 4
+      // Proyecto disponible para entregar es de la semana anterior (desfase 1 semana)
+      const semanaEntrega = semanaActual - 1
 
       let html = ''
       for (const semana of semanas) {
@@ -819,8 +821,7 @@
         const labelEstado = estado === 'pendiente' ? 'Pendiente' : estado === 'entregado' ? 'Entregado — En revisión' : 'Calificado'
         const esSemanaActual = semana === semanaActual
         const esSemanaFutura = semana > semanaActual
-        // Proyecto disponible es de la semana anterior (desfase 1 semana)
-        const proyectoDisponible = semana < semanaActual
+        const esSemanaEntrega = semana === semanaEntrega
 
         html += `<div class="proy-card">
           <div class="proy-header">
@@ -828,22 +829,22 @@
             <span class="proy-badge ${esSemanaActual ? 'entregado' : esSemanaFutura ? 'pendiente' : estado}">${esSemanaActual ? 'En curso' : esSemanaFutura ? 'Próximamente' : labelEstado}</span>
           </div>`
 
-        if (!esSemanaActual && !esSemanaFutura && estado === 'calificado') {
-          html += `<div class="proy-nota">${p.calificacion}/100</div>
-            <div class="proy-feedback">${escHtml(p.feedback)}</div>`
-        }
-
         if (esSemanaActual) {
-          html += `<div class="proy-feedback" style="color:var(--muted);">Estás desarrollando este proyecto. Podrás entregarlo al inicio de la próxima semana.</div>`
+          html += `<div class="proy-feedback" style="color:var(--muted);">Estás desarrollando este proyecto. Deberás entregarlo al final de la Semana ${semanaActual + 1}.</div>`
         } else if (esSemanaFutura) {
           html += `<div class="proy-feedback" style="color:var(--muted);">Este proyecto estará disponible cuando llegue la semana correspondiente.</div>`
-        } else if (proyectoDisponible && (estado === 'pendiente' || estado === 'entregado')) {
+        } else if (esSemanaEntrega && (estado === 'pendiente' || estado === 'entregado')) {
           html += `<div class="proy-upload">
             <input type="file" id="file-s${semana}" style="display:none" onchange="previewFile(${semana})">
             <button class="proy-file-btn" onclick="document.getElementById('file-s${semana}').click()">📎 Seleccionar archivo</button>
             <span class="proy-filename" id="fname-s${semana}">${p ? escHtml(p.archivo_nombre) : 'Ningún archivo seleccionado'}</span>
             <button class="proy-submit-btn" id="sbtn-s${semana}" onclick="subirProyecto(${semana})">Entregar</button>
           </div>`
+        } else if (!esSemanaActual && !esSemanaFutura && !esSemanaEntrega && estado === 'calificado') {
+          html += `<div class="proy-nota">${p.calificacion}/100</div>
+            <div class="proy-feedback">${escHtml(p.feedback)}</div>`
+        } else if (!esSemanaActual && !esSemanaFutura && !esSemanaEntrega) {
+          html += `<div class="proy-feedback" style="color:var(--muted);">${labelEstado}</div>`
         }
 
         html += `</div>`
