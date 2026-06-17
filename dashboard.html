@@ -167,40 +167,56 @@
     .seg-kpi-sub {
       font-size: 0.75rem; color: var(--muted);
     }
-    /* ── Alumno stats widget (compact, hero-inline) ── */
+    /* ── Alumno stats widget — Claude-usage style ── */
     #stats-alumno-wrap {
-      flex: 1; min-width: 280px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border2);
-      border-radius: 14px;
-      padding: 1rem 1.25rem 0.9rem;
+      flex: 1; min-width: 300px; max-width: 520px;
+      background: #111214;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; overflow: hidden;
     }
-    .stats-kpi-compact {
+    .saw-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.45rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .saw-tabs { display: flex; gap: 0.15rem; }
+    .saw-tab {
+      padding: 0.25rem 0.65rem; border-radius: 6px;
+      font-size: 0.72rem; font-weight: 600; color: var(--muted); cursor: pointer;
+    }
+    .saw-tab.active { background: rgba(255,255,255,0.1); color: var(--cream); }
+    .saw-filters { display: flex; gap: 0.2rem; }
+    .saw-filter {
+      padding: 0.2rem 0.55rem; border-radius: 6px;
+      font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer;
+    }
+    .saw-filter.active { background: var(--copper); color: #fff; }
+    .saw-kpis {
       display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 0.25rem 1rem; margin-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    .skc-label {
-      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--muted); display: block;
+    .saw-kpi {
+      padding: 0.55rem 0.7rem;
+      border-right: 1px solid rgba(255,255,255,0.07);
     }
-    .skc-value {
-      font-family: 'Fraunces', serif; font-size: 1.35rem;
-      font-weight: 700; color: var(--cream); line-height: 1.1; display: block;
+    .saw-kpi:last-child { border-right: none; }
+    .saw-kpi-label { font-size: 0.6rem; color: var(--muted); margin-bottom: 0.12rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .saw-kpi-val { font-size: 1.2rem; font-weight: 700; color: var(--cream); font-family: 'Fraunces', serif; line-height: 1.1; }
+    .saw-heat { padding: 0.6rem 0.75rem 0.35rem; }
+    .saw-heat-grid {
+      display: grid; grid-template-columns: repeat(14, 1fr); gap: 3px;
     }
-    .stat-heatmap {
-      display: grid; grid-template-columns: repeat(7, 8px);
-      gap: 2px; margin-top: 0.6rem;
+    .saw-heat-day {
+      aspect-ratio: 1; border-radius: 2px; background: rgba(255,255,255,0.07);
     }
-    .stat-heat-day {
-      width: 8px; height: 8px; border-radius: 2px; background: rgba(255,255,255,0.07);
+    .saw-heat-day.active { background: var(--copper); }
+    .saw-footer {
+      padding: 0.3rem 0.75rem 0.55rem;
+      font-size: 0.65rem; color: var(--muted); font-style: italic;
     }
-    .stat-heat-day.active { background: var(--copper); }
-    .stat-footer-msg {
-      font-size: 0.68rem; color: var(--muted); margin-top: 0.5rem; font-style: italic;
-    }
-    @media (max-width: 800px) {
-      #stats-alumno-wrap { flex-basis: 100%; }
-      .stats-kpi-compact { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 860px) {
+      #stats-alumno-wrap { max-width: 100%; flex-basis: 100%; }
+      .saw-kpis { grid-template-columns: repeat(2, 1fr); }
     }
     .seg-grid {
       display: grid;
@@ -912,23 +928,40 @@
       <p class="dash-email" id="dash-email"></p>
     </div>
 
-    <!-- Stats widget inline -->
+    <!-- Stats widget inline — Claude-usage style -->
     <div id="stats-alumno-wrap" style="display:none;">
-      <div class="stats-kpi-compact">
-        <div><span class="skc-label">Día productivo</span><span class="skc-value" id="stat-dia">—</span></div>
-        <div><span class="skc-label">Hora pico</span><span class="skc-value" id="stat-hora">—</span></div>
-        <div><span class="skc-label">Material visto</span><span class="skc-value" id="stat-material">—</span></div>
-        <div><span class="skc-label">Racha</span><span class="skc-value" id="stat-racha">—</span></div>
+      <div class="saw-header">
+        <div class="saw-tabs">
+          <div class="saw-tab active">Resumen</div>
+        </div>
+        <div class="saw-filters">
+          <div class="saw-filter active">Todo</div>
+          <div class="saw-filter">30d</div>
+          <div class="saw-filter">7d</div>
+        </div>
       </div>
-      <div class="stats-kpi-compact">
-        <div><span class="skc-label">Badges</span><span class="skc-value" id="stat-badges">—</span></div>
-        <div><span class="skc-label">Período</span><span class="skc-value" id="stat-periodo">—</span></div>
-        <div><span class="skc-label">Actividades</span><span class="skc-value" id="stat-act-comp">—</span></div>
-        <div id="stat-calif-wrap" style="display:none"><span class="skc-label">Promedio</span><span class="skc-value" id="stat-calif">—</span></div>
+      <!-- Fila 1 -->
+      <div class="saw-kpis">
+        <div class="saw-kpi"><div class="saw-kpi-label">Día productivo</div><div class="saw-kpi-val" id="stat-dia">—</div></div>
+        <div class="saw-kpi"><div class="saw-kpi-label">Hora pico</div><div class="saw-kpi-val" id="stat-hora">—</div></div>
+        <div class="saw-kpi"><div class="saw-kpi-label">Material visto</div><div class="saw-kpi-val" id="stat-material">—</div></div>
+        <div class="saw-kpi"><div class="saw-kpi-label">Días activos</div><div class="saw-kpi-val" id="stat-dias-activos">—</div></div>
       </div>
-      <div id="stat-heatmap" class="stat-heatmap"></div>
-      <div id="stat-msg" class="stat-footer-msg"></div>
-      <!-- compat -->
+      <!-- Fila 2 -->
+      <div class="saw-kpis">
+        <div class="saw-kpi"><div class="saw-kpi-label">Racha actual</div><div class="saw-kpi-val" id="stat-racha">—</div></div>
+        <div class="saw-kpi"><div class="saw-kpi-label">Badges</div><div class="saw-kpi-val" id="stat-badges">—</div></div>
+        <div class="saw-kpi"><div class="saw-kpi-label">Período</div><div class="saw-kpi-val" id="stat-periodo">—</div></div>
+        <div class="saw-kpi"><div class="saw-kpi-label">Actividades</div><div class="saw-kpi-val" id="stat-act-comp">—</div></div>
+      </div>
+      <!-- Heatmap -->
+      <div class="saw-heat">
+        <div id="stat-heatmap" class="saw-heat-grid"></div>
+      </div>
+      <!-- Footer -->
+      <div id="stat-msg" class="saw-footer"></div>
+      <!-- hidden compat -->
+      <span id="stat-calif-wrap" style="display:none"><span id="stat-calif"></span></span>
       <span id="stat-entregas-wrap" style="display:none"><span id="stat-entregas"></span></span>
       <span id="stat-avatar" style="display:none"></span>
       <span id="stat-hijo-nombre" style="display:none"></span>
@@ -1480,10 +1513,12 @@
       grid.innerHTML = ''
       for (let day = 1; day <= daysInMonth; day++) {
         const sq = document.createElement('div')
-        sq.className = `stat-heat-day${diasSet.has(day) ? ' active' : ''}`
+        sq.className = `saw-heat-day${diasSet.has(day) ? ' active' : ''}`
         sq.title = `Día ${day}`
         grid.appendChild(sq)
       }
+      const elDias = document.getElementById('stat-dias-activos')
+      if (elDias) elDias.textContent = diasSet.size || '—'
       const msg = document.getElementById('stat-msg')
       if (msg) {
         const n = parseInt(actComp) || 0
