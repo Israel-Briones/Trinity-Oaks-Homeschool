@@ -392,6 +392,27 @@
       margin-left: 0.5rem;
       vertical-align: middle;
     }
+    .act-chip {
+      padding: 0.3rem 0.8rem; border-radius: 999px;
+      border: 1px solid var(--border2); background: var(--bg2);
+      color: var(--muted); font-size: 0.75rem; cursor: pointer;
+      transition: all .2s; user-select: none; white-space: nowrap;
+    }
+    .act-chip.selected {
+      border-color: var(--copper); background: rgba(184,115,51,0.15);
+      color: var(--copper); font-weight: 600;
+    }
+    .act-semana-slot {
+      margin-bottom: 1rem;
+    }
+    .act-semana-input-card {
+      border: 1px dashed var(--copper); border-radius: 12px;
+      padding: 1.25rem 1.5rem; background: var(--bg2);
+    }
+    .act-semana-input-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--copper); margin-bottom: 0.6rem;
+    }
 
     /* ── Module 3: Examen ── */
     .exam-question {
@@ -537,12 +558,13 @@
             <div id="act-progress-fill" style="height:100%;border-radius:999px;background:linear-gradient(90deg,#b87333,#d9954a);width:0%;transition:width .6s cubic-bezier(.4,0,.2,1);"></div>
           </div>
         </div>
-        <textarea class="ai-textarea" id="act-desc" placeholder="Describe brevemente a tu hijo (intereses, ritmo de aprendizaje…)"></textarea>
-        <button class="ai-btn" id="act-btn" onclick="generarActividades()">
-          <span class="btn-spinner"></span>
-          <span id="lbl-generar-btn">Generar actividades</span>
-        </button>
-        <div class="ai-result" id="act-result"></div>
+        <!-- Temas chips -->
+        <div id="act-temas-wrap" style="display:none;margin-bottom:1.25rem;">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Temas del mes</div>
+          <div id="act-temas-chips" style="display:flex;flex-wrap:wrap;gap:0.4rem;"></div>
+        </div>
+        <!-- Semanas -->
+        <div id="act-semanas"></div>
       </div>
     </div>
 
@@ -627,9 +649,8 @@
       if (lbl) lbl.textContent = 'Generador de Proyectos';
     }
     if (nivelParam === 'preparatoria' || nivelParam === 'secundaria') {
-      document.getElementById('act-desc').placeholder = 'Escribe una frase que te ayude a desarrollar tu proyecto';
-      const lblBtn = document.getElementById('lbl-generar-btn');
-      if (lblBtn) lblBtn.textContent = nivelParam === 'preparatoria' ? 'Generar proyecto' : 'Generar actividad';
+      const lbl2 = document.getElementById('lbl-generador');
+      if (lbl2 && nivelParam === 'preparatoria') lbl2.textContent = 'Generador de Proyectos';
     }
 
     console.log('params:', { hijo_id: window._hijoId, nombre, nivel, grado, semestre, mes: mesNum });
@@ -649,6 +670,9 @@
       if (fill)  fill.style.width  = `${Math.min(count / 4, 1) * 100}%`;
       if (label) label.textContent = `${count} / 4`;
     })();
+
+    // Load per-week activities
+    loadActividadesSemana();
 
     /* ── Load content ── */
     const API   = 'https://trinity-oaks-api-production.up.railway.app';
@@ -830,113 +854,155 @@
   /* ════════════════════════════════════════
      Module 2 — Actividades
   ════════════════════════════════════════ */
-  async function generarActividades() {
-    const desc = document.getElementById('act-desc').value.trim();
-    if (!desc) { document.getElementById('act-desc').focus(); return; }
-    setLoading('act-btn', true);
-    const result = document.getElementById('act-result');
-    result.innerHTML = '';
-
+  async function loadActividadesSemana() {
+    const container = document.getElementById('act-semanas');
+    if (!container) return;
+    container.innerHTML = '<div class="st-loading" style="padding:1rem;color:var(--muted);font-size:.88rem;">Cargando…</div>';
     try {
-      const ctrl = new AbortController();
-      const tid  = setTimeout(() => ctrl.abort(), 60000);
-      console.log('DEBUG ai-actividades:', { hijo_id: window._hijoId, email: window._email, mes: window._mes, nivel: window._nivel });
-      const res  = await fetch(`${window._API}/ai-actividades`, {
-        method: 'POST', headers: window._HDR, signal: ctrl.signal,
-        body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(window._mes, 10) || 1, descripcion_hijo: desc })
+      const res = await fetch(`${window._API}/mis-actividades`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({ hijo_id: window._hijoId, mes: parseInt(window._mes) || 1, email: window._email })
       });
-      clearTimeout(tid);
-      const data = await res.json();
-      const raw  = data.actividades ?? data.activities ?? data;
-      const list = Array.isArray(raw) ? raw
-                 : Array.isArray(raw?.actividades) ? raw.actividades
-                 : [];
+      if (!res.ok) { container.innerHTML = ''; return; }
+      renderSemanas(await res.json());
+    } catch { container.innerHTML = ''; }
+  }
 
-      if (!list.length) {
-        result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">No se pudieron generar actividades. Intenta de nuevo.</p>`;
-        return;
-      }
+  function renderSemanas({ actividades, temas, desbloqueado_en }) {
+    // Temas chips
+    const temasWrap  = document.getElementById('act-temas-wrap');
+    const temasChips = document.getElementById('act-temas-chips');
+    if (temas && temas.length && temasWrap && temasChips) {
+      temasChips.innerHTML = '';
+      temas.forEach(t => {
+        const chip = document.createElement('span');
+        chip.className = 'act-chip';
+        chip.textContent = t;
+        chip.onclick = () => chip.classList.toggle('selected');
+        temasChips.appendChild(chip);
+      });
+      temasWrap.style.display = 'block';
+    }
 
-      const desbloqueado_en = data.desbloqueado_en ? new Date(data.desbloqueado_en) : null;
-      const nivel = window._nivel || '';
-      const semanaActual = (nivel === 'preparatoria' || nivel === 'secundaria')
-        ? 4
-        : desbloqueado_en
-          ? Math.min(Math.floor((Date.now() - desbloqueado_en) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
-          : 4;
+    // Semana actual
+    const nivel = window._nivel || '';
+    const desbl = desbloqueado_en ? new Date(desbloqueado_en) : null;
+    const semanaActual = (nivel === 'preparatoria' || nivel === 'secundaria')
+      ? 4
+      : desbl
+        ? Math.min(Math.floor((Date.now() - desbl) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
+        : 4;
 
-      const lsKey = `completadas_${window._hijoId}_${window._mes}`;
-      const completadasSet = new Set(JSON.parse(localStorage.getItem(lsKey) || '[]'));
+    // Progress bar
+    const lsKey = `completadas_${window._hijoId}_${window._mes}`;
+    const completadasSet = new Set(JSON.parse(localStorage.getItem(lsKey) || '[]'));
+    const fillEl  = document.getElementById('act-progress-fill');
+    const labelEl = document.getElementById('act-progress-label');
+    if (fillEl)  fillEl.style.width  = `${Math.min(completadasSet.size / 4, 1) * 100}%`;
+    if (labelEl) labelEl.textContent = `${completadasSet.size} / 4`;
 
-      // Update progress bar
-      const totalComp = completadasSet.size;
-      const fillEl    = document.getElementById('act-progress-fill');
-      const labelEl   = document.getElementById('act-progress-label');
-      if (fillEl)  fillEl.style.width  = `${Math.min(totalComp / 4, 1) * 100}%`;
-      if (labelEl) labelEl.textContent = `${totalComp} / 4`;
+    const container = document.getElementById('act-semanas');
+    container.innerHTML = '';
 
-      list.forEach((act, idx) => {
-        const semana   = idx + 1;
-        const unlocked = semana <= semanaActual;
-        if (!unlocked) return; // hide locked weeks entirely
+    for (let s = 1; s <= 4; s++) {
+      const act = actividades ? actividades[s] : null;
+      const unlocked = s <= semanaActual;
+      const slot = document.createElement('div');
+      slot.className = 'act-semana-slot';
 
-        const card  = document.createElement('div');
-        const ckKey = `${semana}_${idx}`;
+      if (!unlocked) {
+        slot.innerHTML = `<div class="act-card" style="opacity:0.4;pointer-events:none;">
+          <span class="act-semana-badge" style="color:var(--muted);">Semana ${s} — Disponible próximamente</span>
+        </div>`;
+      } else if (act) {
+        const items = Array.isArray(act) ? act : [act];
+        const item  = items[0] || {};
+        const ckKey = `${s}_0`;
         const done  = completadasSet.has(ckKey);
+        const card  = document.createElement('div');
         card.className = `act-card${done ? ' completada' : ''}`;
-
         card.innerHTML = `
-          <span class="act-semana-badge">Semana ${semana}${done ? '<span class="act-completada-badge">Completada ✓</span>' : ''}</span>
-          <div class="act-card-title">${esc(act.titulo || act.title || 'Actividad')}</div>
-          ${act.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(act.objetivo)}</div>`    : ''}
-          ${act.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(act.materiales)}</div>` : ''}
-          ${act.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(act.pasos)}</div>`           : ''}
-          ${act.duracion   ? `<span class="act-duracion">⏱ ${esc(act.duracion)}</span>`                                   : ''}
+          <span class="act-semana-badge">Semana ${s}${done ? '<span class="act-completada-badge">Completada ✓</span>' : ''}</span>
+          <div class="act-card-title">${esc(item.titulo || item.title || 'Proyecto')}</div>
+          ${item.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(item.objetivo)}</div>` : ''}
+          ${item.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(item.materiales)}</div>` : ''}
+          ${item.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(item.pasos)}</div>` : ''}
+          ${item.duracion   ? `<span class="act-duracion">⏱ ${esc(item.duracion)}</span>` : ''}
           <label class="act-check-row">
-            <input type="checkbox" data-semana="${semana}" data-idx="${idx}" ${done ? 'checked' : ''}>
+            <input type="checkbox" ${done ? 'checked' : ''}>
             <span class="act-check-label">✓ Marcar como completada</span>
-          </label>
-        `;
-
+          </label>`;
         card.querySelector('input[type="checkbox"]').addEventListener('change', async function() {
           const checked = this.checked;
           if (checked) completadasSet.add(ckKey); else completadasSet.delete(ckKey);
           localStorage.setItem(lsKey, JSON.stringify([...completadasSet]));
-
-          // Update progress bar live
-          const newCount = completadasSet.size;
-          if (fillEl)  fillEl.style.width  = `${Math.min(newCount / 4, 1) * 100}%`;
-          if (labelEl) labelEl.textContent = `${newCount} / 4`;
-
+          if (fillEl)  fillEl.style.width  = `${Math.min(completadasSet.size / 4, 1) * 100}%`;
+          if (labelEl) labelEl.textContent = `${completadasSet.size} / 4`;
           card.className = `act-card${checked ? ' completada' : ''}`;
-          const badge    = card.querySelector('.act-semana-badge');
-          const existing = badge.querySelector('.act-completada-badge');
-          if (checked && !existing) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Completada ✓</span>');
-          if (!checked && existing) existing.remove();
-
+          const badge = card.querySelector('.act-semana-badge');
+          const ex = badge.querySelector('.act-completada-badge');
+          if (checked && !ex) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Completada ✓</span>');
+          if (!checked && ex) ex.remove();
           try {
             await fetch(`${window._API}/marcar-actividad`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
-              body: JSON.stringify({
-                email: localStorage.getItem('to_email'),
-                hijo_id: window._hijoId,
-                mes: window._mes,
-                semana,
-                actividad_index: idx,
-                completada: checked
-              })
+              method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
+              body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: window._mes, semana: s, actividad_index: 0, completada: checked })
             });
             if (checked) checkBadges();
           } catch {}
         });
+        slot.appendChild(card);
+      } else {
+        // Unlocked, not yet generated — show input
+        slot.innerHTML = `
+          <div class="act-semana-input-card">
+            <div class="act-semana-input-label">Semana ${s} — Genera tu proyecto</div>
+            <textarea class="ai-textarea" id="act-desc-s${s}" placeholder="¿En qué te quieres enfocar esta semana?" style="margin-bottom:0.75rem;min-height:80px;"></textarea>
+            <button class="ai-btn" id="act-btn-s${s}" onclick="generarSemana(${s})" style="margin-bottom:0.5rem;">
+              <span class="btn-spinner"></span>
+              <span>Generar proyecto</span>
+            </button>
+            <div id="act-err-s${s}" style="display:none;color:var(--muted);font-size:.85rem;margin-top:0.4rem;"></div>
+          </div>`;
+      }
+      container.appendChild(slot);
+    }
+  }
 
-        result.appendChild(card);
+  async function generarSemana(semana) {
+    const descEl = document.getElementById(`act-desc-s${semana}`);
+    const errEl  = document.getElementById(`act-err-s${semana}`);
+
+    const selectedChips = [...document.querySelectorAll('#act-temas-chips .act-chip.selected')].map(c => c.textContent);
+    const typed = descEl ? descEl.value.trim() : '';
+    const desc  = [...selectedChips, typed].filter(Boolean).join(', ');
+    if (!desc) { if (descEl) descEl.focus(); return; }
+
+    setLoading(`act-btn-s${semana}`, true);
+    if (errEl) errEl.style.display = 'none';
+
+    try {
+      const res = await fetch(`${window._API}/ai-actividades`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({
+          email: window._email, hijo_id: window._hijoId,
+          mes: parseInt(window._mes) || 1, semana, descripcion_hijo: desc
+        })
       });
+      if (!res.ok) {
+        if (errEl) { errEl.textContent = 'Error al generar. Intenta de nuevo.'; errEl.style.display = 'block'; }
+        return;
+      }
+      // Reload all semanas
+      const r2 = await fetch(`${window._API}/mis-actividades`, {
+        method: 'POST', headers: window._HDR,
+        body: JSON.stringify({ hijo_id: window._hijoId, mes: parseInt(window._mes) || 1, email: window._email })
+      });
+      if (r2.ok) renderSemanas(await r2.json());
     } catch {
-      result.innerHTML = `<p style="color:var(--muted);font-size:.88rem;">Error al generar actividades. Intenta de nuevo.</p>`;
+      if (errEl) { errEl.textContent = 'Error al generar. Intenta de nuevo.'; errEl.style.display = 'block'; }
     } finally {
-      setLoading('act-btn', false);
+      setLoading(`act-btn-s${semana}`, false);
     }
   }
 
