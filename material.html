@@ -613,7 +613,7 @@
     window._hijoId = parseInt(params.get('hijo_id'), 10) || 0;
     window._email  = esPadre
       ? localStorage.getItem('to_email') || ''
-      : sessionStorage.getItem('st_email_padre') || localStorage.getItem('to_email') || '';
+      : params.get('email') || sessionStorage.getItem('st_email_padre') || localStorage.getItem('to_email') || '';
     const nombre        = params.get('nombre')        || 'Hijo';
     const nivel         = params.get('nivel')         || '';
     const grado         = params.get('grado')         || '';
