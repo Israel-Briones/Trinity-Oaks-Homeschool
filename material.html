@@ -638,6 +638,7 @@
       : params.get('email') || sessionStorage.getItem('st_email_padre') || localStorage.getItem('to_email') || '';
     const nombre        = params.get('nombre')        || 'Hijo';
     const nivel         = params.get('nivel')         || '';
+    window._nivel = nivel;
     const grado         = params.get('grado')         || '';
     const semestre      = params.get('semestre')      || '';
     const nivel_display = params.get('nivel_display') || nivel;
@@ -671,8 +672,6 @@
       if (label) label.textContent = `${count} / 4`;
     })();
 
-    // Load per-week activities
-    loadActividadesSemana();
 
     /* ── Load content ── */
     const API   = 'https://trinity-oaks-api-production.up.railway.app';
@@ -781,6 +780,7 @@
     /* ── Helpers ── */
     window._API = API;
     window._HDR = HDR;
+    loadActividadesSemana();
   })();
 
   /* ── Collapsible toggle ── */
