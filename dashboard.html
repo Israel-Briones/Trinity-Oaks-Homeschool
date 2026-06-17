@@ -217,6 +217,7 @@
       padding: 0.3rem 0.75rem 0.55rem;
       font-size: 0.65rem; color: var(--muted); font-style: italic;
     }
+    #stat-entregas-wrap, #stat-calif-wrap { display: none !important; }
     @media (max-width: 860px) {
       #stats-alumno-wrap { max-width: 100%; flex-basis: 100%; }
       .saw-kpis { grid-template-columns: repeat(2, 1fr); }
@@ -938,9 +939,9 @@
           <div class="saw-tab active">Resumen</div>
         </div>
         <div class="saw-filters">
-          <div class="saw-filter active">Todo</div>
-          <div class="saw-filter">30d</div>
-          <div class="saw-filter">7d</div>
+          <div class="saw-filter active" onclick="setSawFilter(this)">Todo</div>
+          <div class="saw-filter" onclick="setSawFilter(this)">30d</div>
+          <div class="saw-filter" onclick="setSawFilter(this)">7d</div>
         </div>
       </div>
       <!-- Fila 1 -->
@@ -1503,39 +1504,48 @@
   async function renderHeatmap(hijoId, mes, email, actComp) {
     const grid = document.getElementById('stat-heatmap')
     if (!grid) return
+
+    let dias = [], total_dias = 30
     try {
       const res = await fetch(`${API_BASE}/heatmap-hijo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
         body: JSON.stringify({ hijo_id: hijoId, mes, email })
       })
-      if (!res.ok) return
-      const { dias, total_dias } = await res.json()
-      const diasSet = new Set(dias)
-      const daysInMonth = total_dias || 30
-      grid.innerHTML = ''
-      for (let day = 1; day <= daysInMonth; day++) {
-        const sq = document.createElement('div')
-        sq.className = `saw-heat-day${diasSet.has(day) ? ' active' : ''}`
-        sq.title = `Día ${day}`
-        grid.appendChild(sq)
-      }
-      const elDias = document.getElementById('stat-dias-activos')
-      if (elDias) elDias.textContent = diasSet.size || '—'
-      const msg = document.getElementById('stat-msg')
-      if (msg) {
-        const n = parseInt(actComp) || 0
-        const phrases = [
-          '¡Recuerda que la constancia construye el conocimiento!',
-          '¡Cada día que estudias sumas un peldaño más!',
-          '¡Sigue así, el progreso se nota!',
-          '¡La disciplina hoy es el éxito de mañana!'
-        ]
-        msg.textContent = n > 0
-          ? `Has completado ${n} actividad${n !== 1 ? 'es' : ''} este mes — ${phrases[n % phrases.length]}`
-          : 'Aún no hay actividades registradas este mes — ¡empieza hoy!'
+      if (res.ok) {
+        const data = await res.json()
+        dias = data.dias || []
+        total_dias = data.total_dias || 30
       }
     } catch {}
+
+    const diasSet = new Set(dias)
+    grid.innerHTML = ''
+    for (let day = 1; day <= total_dias; day++) {
+      const sq = document.createElement('div')
+      sq.className = `saw-heat-day${diasSet.has(day) ? ' active' : ''}`
+      sq.title = `Día ${day}`
+      grid.appendChild(sq)
+    }
+
+    const elDias = document.getElementById('stat-dias-activos')
+    if (elDias) elDias.textContent = diasSet.size
+
+    const msg = document.getElementById('stat-msg')
+    if (msg) {
+      const n = parseInt(actComp) || 0
+      const refs = ['un perezoso de tres dedos', 'un gato en domingo', 'Animal Farm', 'The Little Prince', 'un caracol con WiFi']
+      const ref = refs[n % refs.length]
+      msg.textContent = n > 0
+        ? `Ha estudiado ${diasSet.size} día${diasSet.size !== 1 ? 's' : ''} este mes — ¡${n} actividad${n !== 1 ? 'es' : ''} completada${n !== 1 ? 's' : ''}!`
+        : 'Aún sin actividades este mes — ¡el primer paso es el más importante!'
+    }
+  }
+
+  function setSawFilter(el) {
+    document.querySelectorAll('.saw-filter').forEach(f => f.classList.remove('active'))
+    el.classList.add('active')
+    // Future: re-fetch with date range filter
   }
 
   const BADGE_LABELS = {
