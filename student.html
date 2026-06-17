@@ -598,7 +598,7 @@
     // Material link
     document.getElementById('st-mat-nivel').textContent = nivelLabel
     document.getElementById('st-mat-mes').textContent   = `Mes ${s.mes}`
-    const matUrl = `material.html?email=${encodeURIComponent(s.email_padre)}&hijo_id=${encodeURIComponent(s.hijo_id)}&nivel=${encodeURIComponent(s.nivel)}&mes=${encodeURIComponent(s.mes)}&grado=${encodeURIComponent(s.grado)}&semestre=${encodeURIComponent(s.semestre)}`
+    const matUrl = `material.html?email=${encodeURIComponent(s.email_padre)}&hijo_id=${encodeURIComponent(s.hijo_id)}&nivel=${encodeURIComponent(s.nivel)}&mes=${encodeURIComponent(s.mes)}&grado=${encodeURIComponent(s.grado)}&semestre=${encodeURIComponent(s.semestre)}&nombre=${encodeURIComponent(s.nombre)}`
     document.getElementById('st-mat-link').href = matUrl
 
     // Globals for proyectos
