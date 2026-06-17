@@ -1366,14 +1366,16 @@
 
   // Estadísticas del alumno
   async function renderEstadisticas(hijoId, email) {
+    const id = parseInt(hijoId)
+    if (!id || !email) return
     try {
       const res = await fetch(`${API_BASE}/estadisticas-hijo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
-        body: JSON.stringify({ hijo_id: hijoId, email })
+        body: JSON.stringify({ hijo_id: id, email })
       })
-      const d = await res.json()
       if (!res.ok) return
+      const d = await res.json()
 
       document.getElementById('stats-alumno-wrap').style.display = 'block'
       document.getElementById('stat-dia').textContent = d.dia_productivo || '—'
