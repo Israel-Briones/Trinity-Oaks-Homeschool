@@ -552,16 +552,11 @@
         <div style="margin-bottom:1rem;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
             <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--copper);">Actividades del mes</span>
-            <span id="act-progress-label" style="font-size:0.72rem;font-weight:600;color:var(--copper);">0 / 4</span>
+            <span id="act-progress-label" style="font-size:0.72rem;font-weight:600;color:var(--copper);">0 / 2</span>
           </div>
           <div style="height:8px;border-radius:999px;background:var(--border);overflow:hidden;">
             <div id="act-progress-fill" style="height:100%;border-radius:999px;background:linear-gradient(90deg,#b87333,#d9954a);width:0%;transition:width .6s cubic-bezier(.4,0,.2,1);"></div>
           </div>
-        </div>
-        <!-- Temas chips -->
-        <div id="act-temas-wrap" style="display:none;margin-bottom:1.25rem;">
-          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Temas del mes</div>
-          <div id="act-temas-chips" style="display:flex;flex-wrap:wrap;gap:0.4rem;"></div>
         </div>
         <!-- Semanas -->
         <div id="act-semanas"></div>
@@ -868,117 +863,144 @@
     } catch { container.innerHTML = ''; }
   }
 
-  function renderSemanas({ actividades, temas, desbloqueado_en }) {
-    // Temas chips
-    const temasWrap  = document.getElementById('act-temas-wrap');
-    const temasChips = document.getElementById('act-temas-chips');
-    if (temas && temas.length && temasWrap && temasChips) {
-      temasChips.innerHTML = '';
-      temas.forEach(t => {
-        const chip = document.createElement('span');
-        chip.className = 'act-chip';
-        chip.textContent = t;
-        chip.onclick = () => chip.classList.toggle('selected');
-        temasChips.appendChild(chip);
-      });
-      temasWrap.style.display = 'block';
-    }
-
-    // Semana actual
+  function renderSemanas({ actividades, temas_s1 = [], temas_s2 = [], desbloqueado_en }) {
     const nivel = window._nivel || '';
     const desbl = desbloqueado_en ? new Date(desbloqueado_en) : null;
-    const semanaActual = (nivel === 'preparatoria' || nivel === 'secundaria')
-      ? 4
-      : desbl
-        ? Math.min(Math.floor((Date.now() - desbl) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
-        : 4;
+    const daysSince = desbl ? Math.floor((Date.now() - desbl) / (24 * 60 * 60 * 1000)) : 999;
+    const esAvanzado = nivel === 'preparatoria' || nivel === 'secundaria';
+    // semana actual 1-4 (week 1 = days 0-6, week 2 = days 7-13, etc.)
+    const semanaActual = esAvanzado ? 4 : Math.min(Math.floor(daysSince / 7) + 1, 4);
 
-    // Progress bar
+    // Unlock exam section at mid-week 4 (day 24)
+    if (daysSince >= 24 || esAvanzado) {
+      const examSec = document.getElementById('sec-exam');
+      if (examSec) {
+        examSec.classList.remove('locked');
+        const overlay = examSec.querySelector('.lock-overlay');
+        if (overlay) overlay.remove();
+      }
+    }
+
+    // Progress bar (2 proyectos)
     const lsKey = `completadas_${window._hijoId}_${window._mes}`;
     const completadasSet = new Set(JSON.parse(localStorage.getItem(lsKey) || '[]'));
+    const TOTAL = 2;
     const fillEl  = document.getElementById('act-progress-fill');
     const labelEl = document.getElementById('act-progress-label');
-    if (fillEl)  fillEl.style.width  = `${Math.min(completadasSet.size / 4, 1) * 100}%`;
-    if (labelEl) labelEl.textContent = `${completadasSet.size} / 4`;
+    if (fillEl)  fillEl.style.width  = `${Math.min(completadasSet.size / TOTAL, 1) * 100}%`;
+    if (labelEl) labelEl.textContent = `${Math.min(completadasSet.size, TOTAL)} / ${TOTAL}`;
 
     const container = document.getElementById('act-semanas');
     container.innerHTML = '';
 
-    for (let s = 1; s <= 4; s++) {
-      const act = actividades ? actividades[s] : null;
-      const unlocked = s <= semanaActual;
-      const slot = document.createElement('div');
-      slot.className = 'act-semana-slot';
+    // Slot definitions
+    const slots = [
+      { s: 1, tipo: 'learn' },
+      { s: 2, tipo: 'proyecto', proyNum: 1, temas: temas_s1, unlockDay: 7,  label: 'Semana 2 — Proyecto 1' },
+      { s: 3, tipo: 'proyecto', proyNum: 2, temas: temas_s2, unlockDay: 14, label: 'Semana 3 — Proyecto 2' },
+      { s: 4, tipo: 'exam',     unlockDay: 24 },
+    ];
 
-      if (!unlocked) {
-        slot.innerHTML = `<div class="act-card" style="opacity:0.4;pointer-events:none;">
-          <span class="act-semana-badge" style="color:var(--muted);">Semana ${s} — Disponible próximamente</span>
+    slots.forEach(slot => {
+      const div = document.createElement('div');
+      div.className = 'act-semana-slot';
+
+      if (slot.tipo === 'learn') {
+        div.innerHTML = `<div class="act-card" style="opacity:0.55;border-style:solid;pointer-events:none;">
+          <span class="act-semana-badge" style="color:var(--muted);">Semana 1 — Estudia el material</span>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:.5rem;">El primer proyecto se habilita al inicio de la Semana 2.</div>
         </div>`;
-      } else if (act) {
-        const items = Array.isArray(act) ? act : [act];
-        const item  = items[0] || {};
-        const ckKey = `${s}_0`;
-        const done  = completadasSet.has(ckKey);
-        const card  = document.createElement('div');
-        card.className = `act-card${done ? ' completada' : ''}`;
-        card.innerHTML = `
-          <span class="act-semana-badge">Semana ${s}${done ? '<span class="act-completada-badge">Completada ✓</span>' : ''}</span>
-          <div class="act-card-title">${esc(item.titulo || item.title || 'Proyecto')}</div>
-          ${item.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(item.objetivo)}</div>` : ''}
-          ${item.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(item.materiales)}</div>` : ''}
-          ${item.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(item.pasos)}</div>` : ''}
-          ${item.duracion   ? `<span class="act-duracion">⏱ ${esc(item.duracion)}</span>` : ''}
-          <label class="act-check-row">
-            <input type="checkbox" ${done ? 'checked' : ''}>
-            <span class="act-check-label">✓ Marcar como completada</span>
-          </label>`;
-        card.querySelector('input[type="checkbox"]').addEventListener('change', async function() {
-          const checked = this.checked;
-          if (checked) completadasSet.add(ckKey); else completadasSet.delete(ckKey);
-          localStorage.setItem(lsKey, JSON.stringify([...completadasSet]));
-          if (fillEl)  fillEl.style.width  = `${Math.min(completadasSet.size / 4, 1) * 100}%`;
-          if (labelEl) labelEl.textContent = `${completadasSet.size} / 4`;
-          card.className = `act-card${checked ? ' completada' : ''}`;
-          const badge = card.querySelector('.act-semana-badge');
-          const ex = badge.querySelector('.act-completada-badge');
-          if (checked && !ex) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Completada ✓</span>');
-          if (!checked && ex) ex.remove();
-          try {
-            await fetch(`${window._API}/marcar-actividad`, {
-              method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
-              body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: window._mes, semana: s, actividad_index: 0, completada: checked })
-            });
-            if (checked) checkBadges();
-          } catch {}
-        });
-        slot.appendChild(card);
-      } else {
-        // Unlocked, not yet generated — show input
-        slot.innerHTML = `
-          <div class="act-semana-input-card">
-            <div class="act-semana-input-label">Semana ${s} — Genera tu proyecto</div>
-            <textarea class="ai-textarea" id="act-desc-s${s}" placeholder="¿En qué te quieres enfocar esta semana?" style="margin-bottom:0.75rem;min-height:80px;"></textarea>
-            <button class="ai-btn" id="act-btn-s${s}" onclick="generarSemana(${s})" style="margin-bottom:0.5rem;">
-              <span class="btn-spinner"></span>
-              <span>Generar proyecto</span>
-            </button>
-            <div id="act-err-s${s}" style="display:none;color:var(--muted);font-size:.85rem;margin-top:0.4rem;"></div>
+
+      } else if (slot.tipo === 'proyecto') {
+        const unlocked = semanaActual >= slot.s;
+        const act = actividades && actividades[slot.proyNum];
+
+        if (!unlocked) {
+          const daysLeft = slot.unlockDay - daysSince;
+          div.innerHTML = `<div class="act-card" style="opacity:0.4;pointer-events:none;border-style:solid;">
+            <span class="act-semana-badge" style="color:var(--muted);">${slot.label} — Disponible en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}</span>
           </div>`;
+        } else if (act) {
+          const items = Array.isArray(act) ? act : [act];
+          const item  = items[0] || {};
+          const ckKey = `p${slot.proyNum}`;
+          const done  = completadasSet.has(ckKey);
+          const card  = document.createElement('div');
+          card.className = `act-card${done ? ' completada' : ''}`;
+          card.innerHTML = `
+            <span class="act-semana-badge">${slot.label}${done ? '<span class="act-completada-badge">Entregado ✓</span>' : ''}</span>
+            <div class="act-card-title">${esc(item.titulo || item.title || 'Proyecto')}</div>
+            ${item.objetivo   ? `<div class="act-label">Objetivo</div><div class="act-value">${esc(item.objetivo)}</div>` : ''}
+            ${item.materiales ? `<div class="act-label">Materiales</div><div class="act-value">${esc(item.materiales)}</div>` : ''}
+            ${item.pasos      ? `<div class="act-label">Pasos</div><div class="act-value">${esc(item.pasos)}</div>` : ''}
+            ${item.duracion   ? `<span class="act-duracion">⏱ ${esc(item.duracion)}</span>` : ''}
+            <label class="act-check-row">
+              <input type="checkbox" ${done ? 'checked' : ''}>
+              <span class="act-check-label">✓ Marcar como entregado</span>
+            </label>`;
+          card.querySelector('input[type="checkbox"]').addEventListener('change', async function() {
+            const checked = this.checked;
+            if (checked) completadasSet.add(ckKey); else completadasSet.delete(ckKey);
+            localStorage.setItem(lsKey, JSON.stringify([...completadasSet]));
+            if (fillEl)  fillEl.style.width  = `${Math.min(completadasSet.size / TOTAL, 1) * 100}%`;
+            if (labelEl) labelEl.textContent = `${Math.min(completadasSet.size, TOTAL)} / ${TOTAL}`;
+            card.className = `act-card${checked ? ' completada' : ''}`;
+            const badge = card.querySelector('.act-semana-badge');
+            const ex = badge.querySelector('.act-completada-badge');
+            if (checked && !ex) badge.insertAdjacentHTML('beforeend', '<span class="act-completada-badge">Entregado ✓</span>');
+            if (!checked && ex) ex.remove();
+            try {
+              await fetch(`${window._API}/marcar-actividad`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': window._KEY },
+                body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: window._mes, semana: slot.s, actividad_index: 0, completada: checked })
+              });
+              if (checked) checkBadges();
+            } catch {}
+          });
+          div.appendChild(card);
+        } else {
+          // Unlocked, not yet generated — show chips + input
+          const chipsHtml = slot.temas && slot.temas.length
+            ? `<div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Temas de la semana</div>
+               <div id="act-chips-s${slot.proyNum}" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.9rem;">
+                 ${slot.temas.map(t => `<span class="act-chip" onclick="this.classList.toggle('selected')">${t}</span>`).join('')}
+               </div>`
+            : '';
+          div.innerHTML = `
+            <div class="act-semana-input-card">
+              <div class="act-semana-input-label">${slot.label} — Genera tu proyecto</div>
+              ${chipsHtml}
+              <textarea class="ai-textarea" id="act-desc-s${slot.proyNum}" placeholder="¿En qué te quieres enfocar esta semana?" style="margin-bottom:0.75rem;min-height:80px;"></textarea>
+              <button class="ai-btn" id="act-btn-s${slot.proyNum}" onclick="generarSemana(${slot.proyNum})" style="margin-bottom:0.5rem;">
+                <span class="btn-spinner"></span>
+                <span>Generar proyecto</span>
+              </button>
+              <div id="act-err-s${slot.proyNum}" style="display:none;color:var(--muted);font-size:.85rem;margin-top:0.4rem;"></div>
+            </div>`;
+        }
+
+      } else if (slot.tipo === 'exam') {
+        const examUnlocked = daysSince >= slot.unlockDay || esAvanzado;
+        div.innerHTML = `<div class="act-card" style="${examUnlocked ? '' : 'opacity:0.4;'}border-style:solid;${examUnlocked ? '' : 'pointer-events:none;'}">
+          <span class="act-semana-badge" style="color:${examUnlocked ? 'var(--copper)' : 'var(--muted)'};">Semana 4 — Evaluación final</span>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:.5rem;">${examUnlocked ? 'El examen ya está disponible — ve a la sección Examen del Mes.' : 'El examen se habilita a mitad de esta semana.'}</div>
+        </div>`;
       }
-      container.appendChild(slot);
-    }
+
+      container.appendChild(div);
+    });
   }
 
-  async function generarSemana(semana) {
-    const descEl = document.getElementById(`act-desc-s${semana}`);
-    const errEl  = document.getElementById(`act-err-s${semana}`);
+  async function generarSemana(proyNum) {
+    const descEl = document.getElementById(`act-desc-s${proyNum}`);
+    const errEl  = document.getElementById(`act-err-s${proyNum}`);
 
-    const selectedChips = [...document.querySelectorAll('#act-temas-chips .act-chip.selected')].map(c => c.textContent);
+    const selectedChips = [...document.querySelectorAll(`#act-chips-s${proyNum} .act-chip.selected`)].map(c => c.textContent);
     const typed = descEl ? descEl.value.trim() : '';
     const desc  = [...selectedChips, typed].filter(Boolean).join(', ');
     if (!desc) { if (descEl) descEl.focus(); return; }
 
-    setLoading(`act-btn-s${semana}`, true);
+    setLoading(`act-btn-s${proyNum}`, true);
     if (errEl) errEl.style.display = 'none';
 
     try {
@@ -986,14 +1008,13 @@
         method: 'POST', headers: window._HDR,
         body: JSON.stringify({
           email: window._email, hijo_id: window._hijoId,
-          mes: parseInt(window._mes) || 1, semana, descripcion_hijo: desc
+          mes: parseInt(window._mes) || 1, semana: proyNum, descripcion_hijo: desc
         })
       });
       if (!res.ok) {
         if (errEl) { errEl.textContent = 'Error al generar. Intenta de nuevo.'; errEl.style.display = 'block'; }
         return;
       }
-      // Reload all semanas
       const r2 = await fetch(`${window._API}/mis-actividades`, {
         method: 'POST', headers: window._HDR,
         body: JSON.stringify({ hijo_id: window._hijoId, mes: parseInt(window._mes) || 1, email: window._email })
@@ -1002,7 +1023,7 @@
     } catch {
       if (errEl) { errEl.textContent = 'Error al generar. Intenta de nuevo.'; errEl.style.display = 'block'; }
     } finally {
-      setLoading(`act-btn-s${semana}`, false);
+      setLoading(`act-btn-s${proyNum}`, false);
     }
   }
 
