@@ -857,9 +857,12 @@
       }
 
       const desbloqueado_en = data.desbloqueado_en ? new Date(data.desbloqueado_en) : null;
-      const semanaActual = desbloqueado_en
-        ? Math.min(Math.floor((Date.now() - desbloqueado_en) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
-        : 4;
+      const nivel = window._nivel || '';
+      const semanaActual = (nivel === 'preparatoria' || nivel === 'secundaria')
+        ? 4
+        : desbloqueado_en
+          ? Math.min(Math.floor((Date.now() - desbloqueado_en) / (7 * 24 * 60 * 60 * 1000)) + 1, 4)
+          : 4;
 
       const lsKey = `completadas_${window._hijoId}_${window._mes}`;
       const completadasSet = new Set(JSON.parse(localStorage.getItem(lsKey) || '[]'));
