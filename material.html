@@ -674,7 +674,9 @@
     }
 
     function applyModuleLocks(desbloqueado_en) {
-      const LOCKED_SECTIONS = ['sec-act', 'sec-exam', 'sec-rep'];
+      const nivelActual = new URLSearchParams(window.location.search).get('nivel') || '';
+      const esPrepa = nivelActual === 'preparatoria';
+      const LOCKED_SECTIONS = esPrepa ? ['sec-exam', 'sec-rep'] : ['sec-act', 'sec-exam', 'sec-rep'];
       const unlocked = desbloqueado_en
         ? Math.floor((Date.now() - new Date(desbloqueado_en)) / (1000*60*60*24)) >= 25
         : false;
