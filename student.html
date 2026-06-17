@@ -887,8 +887,8 @@
       const hoy = new Date()
       const diasDesdeRegistro = Math.floor((hoy - createdAt) / (1000 * 60 * 60 * 24))
       const semanaActual = diasDesdeRegistro < 7 ? 1 : diasDesdeRegistro < 14 ? 2 : diasDesdeRegistro < 21 ? 3 : 4
-      // Proyecto disponible para entregar es de la semana anterior (desfase 1 semana)
-      const semanaEntrega = semanaActual - 1
+      // El proyecto se entrega al final de la misma semana en que se desarrolla
+      const semanaEntrega = semanaActual
 
       let html = ''
       for (const semana of semanas) {
@@ -906,7 +906,7 @@
           </div>`
 
         if (esSemanaActual) {
-          html += `<div class="proy-feedback" style="color:var(--muted);">Estás desarrollando este proyecto. Deberás entregarlo al final de la Semana ${semanaActual + 1}.</div>`
+          html += `<div class="proy-feedback" style="color:var(--muted);">Estás desarrollando este proyecto. Deberás entregarlo al final de esta semana.</div>`
         } else if (esSemanaFutura) {
           html += `<div class="proy-feedback" style="color:var(--muted);">Este proyecto estará disponible cuando llegue la semana correspondiente.</div>`
         } else if (esSemanaEntrega && (estado === 'pendiente' || estado === 'entregado')) {
