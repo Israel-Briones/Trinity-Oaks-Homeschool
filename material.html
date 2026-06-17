@@ -709,7 +709,7 @@
     .then(r => r.json())
     .then(data => {
       loading.hidden = true;
-      aiMods.hidden  = false;
+      if (!esPadre) aiMods.hidden = false;
 
       if (data.desbloqueado_en) window._desbloqueado_en = data.desbloqueado_en;
       applyModuleLocks(data.desbloqueado_en || null);
@@ -736,7 +736,7 @@
     })
     .catch(() => {
       loading.hidden = true;
-      aiMods.hidden  = false;
+      if (!esPadre) aiMods.hidden = false;
       applyModuleLocks(null);
       emptyMsg.textContent =
         `El contenido del${mesNum ? ' Mes ' + mesNum : ''} está siendo preparado. Te notificaremos cuando esté disponible.`;
