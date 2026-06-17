@@ -840,6 +840,7 @@
     try {
       const ctrl = new AbortController();
       const tid  = setTimeout(() => ctrl.abort(), 60000);
+      console.log('DEBUG ai-actividades:', { hijo_id: window._hijoId, email: window._email, mes: window._mes, nivel: window._nivel });
       const res  = await fetch(`${window._API}/ai-actividades`, {
         method: 'POST', headers: window._HDR, signal: ctrl.signal,
         body: JSON.stringify({ email: window._email, hijo_id: window._hijoId, mes: parseInt(window._mes, 10) || 1, descripcion_hijo: desc })
