@@ -522,7 +522,7 @@
       <div class="ai-section-header">
         <img src="assets/icons/estrella.png" class="ai-section-icon">
         <button class="ai-toggle" onclick="toggleSection('sec-act')">
-          Generador de Actividades
+          <span id="lbl-generador">Generador de Actividades</span>
           <span class="ai-toggle-arrow">▼</span>
         </button>
       </div>
@@ -620,6 +620,12 @@
     const semestre      = params.get('semestre')      || '';
     const nivel_display = params.get('nivel_display') || nivel;
     const mesNum        = parseInt(params.get('mes'), 10) || 1;
+
+    const nivelParam = params.get('nivel') || '';
+    if (nivelParam === 'preparatoria') {
+      const lbl = document.getElementById('lbl-generador');
+      if (lbl) lbl.textContent = 'Generador de Proyectos';
+    }
 
     console.log('params:', { hijo_id: window._hijoId, nombre, nivel, grado, semestre, mes: mesNum });
 
