@@ -540,7 +540,7 @@
         <textarea class="ai-textarea" id="act-desc" placeholder="Describe brevemente a tu hijo (intereses, ritmo de aprendizaje…)"></textarea>
         <button class="ai-btn" id="act-btn" onclick="generarActividades()">
           <span class="btn-spinner"></span>
-          Generar actividades
+          <span id="lbl-generar-btn">Generar actividades</span>
         </button>
         <div class="ai-result" id="act-result"></div>
       </div>
@@ -625,6 +625,11 @@
     if (nivelParam === 'preparatoria') {
       const lbl = document.getElementById('lbl-generador');
       if (lbl) lbl.textContent = 'Generador de Proyectos';
+    }
+    if (nivelParam === 'preparatoria' || nivelParam === 'secundaria') {
+      document.getElementById('act-desc').placeholder = 'Cuéntanos sobre ti: tus intereses, lo que más te gusta aprender...';
+      const lblBtn = document.getElementById('lbl-generar-btn');
+      if (lblBtn) lblBtn.textContent = nivelParam === 'preparatoria' ? 'Generar proyecto' : 'Generar actividad';
     }
 
     console.log('params:', { hijo_id: window._hijoId, nombre, nivel, grado, semestre, mes: mesNum });
