@@ -780,6 +780,15 @@
     const input = document.getElementById('chat-input');
     const msg   = input.value.trim();
     if (!msg) return;
+
+    const userMsgs = window._chatHistory.filter(m => m.role === 'user').length;
+    if (userMsgs >= 10) {
+      chatAddBubble('assistant', 'Has alcanzado el límite de 10 preguntas por sesión. Recarga la página para iniciar una nueva conversación.');
+      document.getElementById('chat-send-btn').disabled = true;
+      input.disabled = true;
+      return;
+    }
+
     input.value = '';
 
     chatAddBubble('user', msg);
