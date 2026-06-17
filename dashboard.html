@@ -163,6 +163,36 @@
     .seg-kpi-sub {
       font-size: 0.75rem; color: var(--muted);
     }
+    /* ── Alumno stats widget ── */
+    .stats-alumno-row {
+      display: flex; gap: 2rem; align-items: flex-start;
+    }
+    .stats-hijo-col {
+      min-width: 140px; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding-top: 0.25rem;
+    }
+    .stats-widget-col { flex: 1; min-width: 0; }
+    .stats-kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem;
+    }
+    .stats-kpi-grid .seg-kpi {
+      padding: 0.85rem 1rem;
+    }
+    .stats-kpi-grid .seg-kpi-value { font-size: 1.7rem; }
+    .stat-heatmap {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-width: 280px;
+    }
+    .stat-heat-day {
+      aspect-ratio: 1; border-radius: 3px; background: var(--border2);
+    }
+    .stat-heat-day.active { background: var(--copper); opacity: 0.85; }
+    @media (max-width: 700px) {
+      .stats-alumno-row { flex-direction: column; }
+      .stats-hijo-col { flex-direction: row; gap: 1rem; align-items: center; min-width: 0; }
+      .stats-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-heatmap { max-width: 100%; }
+    }
     .seg-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
@@ -890,6 +920,42 @@
   </div>
 </div>
 
+<!-- ALUMNO STATS WIDGET -->
+<div id="stats-alumno-wrap" style="display:none; background:var(--bg2); border-top:1px solid var(--border2); border-bottom:1px solid var(--border2);">
+  <div class="dash-inner" style="padding-top:1.75rem; padding-bottom:1.75rem;">
+    <div class="stats-alumno-row">
+      <!-- Hijo info -->
+      <div class="stats-hijo-col">
+        <div id="stat-avatar" class="hijo-avatar" style="width:60px;height:60px;font-size:1.5rem;line-height:60px;margin-bottom:0.75rem;">?</div>
+        <div id="stat-hijo-nombre" style="font-size:1rem;font-weight:700;color:var(--text);">—</div>
+        <div id="stat-hijo-nivel" style="font-size:0.78rem;color:var(--muted);margin-top:0.2rem;">—</div>
+        <div id="stat-hijo-mes" style="font-size:0.75rem;font-weight:600;color:var(--copper);margin-top:0.4rem;">—</div>
+      </div>
+      <!-- Widget -->
+      <div class="stats-widget-col">
+        <div class="stats-kpi-grid">
+          <div class="seg-kpi"><div class="seg-kpi-label">Día productivo</div><div class="seg-kpi-value" id="stat-dia">—</div><div class="seg-kpi-sub">mayor actividad</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Hora pico</div><div class="seg-kpi-value" id="stat-hora">—</div><div class="seg-kpi-sub">mayor concentración</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Material visto</div><div class="seg-kpi-value" id="stat-material">—</div><div class="seg-kpi-sub">contenidos este mes</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Racha</div><div class="seg-kpi-value" id="stat-racha">—</div><div class="seg-kpi-sub">semanas consecutivas</div></div>
+        </div>
+        <div class="stats-kpi-grid" style="margin-top:0.6rem;">
+          <div class="seg-kpi"><div class="seg-kpi-label">Badges</div><div class="seg-kpi-value" id="stat-badges">—</div><div class="seg-kpi-sub">este mes</div></div>
+          <div class="seg-kpi" id="stat-calif-wrap" style="display:none"><div class="seg-kpi-label">Promedio</div><div class="seg-kpi-value" id="stat-calif">—</div><div class="seg-kpi-sub">calificación prepa</div></div>
+          <div class="seg-kpi" id="stat-entregas-wrap" style="display:none"><div class="seg-kpi-label">Entregas</div><div class="seg-kpi-value" id="stat-entregas">—</div><div class="seg-kpi-sub">a tiempo</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Período</div><div class="seg-kpi-value" id="stat-periodo">—</div><div class="seg-kpi-sub">mes activo</div></div>
+          <div class="seg-kpi"><div class="seg-kpi-label">Actividades</div><div class="seg-kpi-value" id="stat-act-comp">—</div><div class="seg-kpi-sub">completadas este mes</div></div>
+        </div>
+        <div style="margin-top:1.1rem;">
+          <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Actividad del mes</div>
+          <div id="stat-heatmap" class="stat-heatmap"></div>
+          <div id="stat-msg" style="font-size:0.82rem;color:var(--muted);margin-top:0.65rem;font-style:italic;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SEGUIMIENTO -->
 <div class="dash-wrap-alt">
   <div class="dash-inner">
@@ -907,20 +973,6 @@
     </div>
     <div class="seg-grid" id="seg-grid"></div>
 
-    <!-- ESTADÍSTICAS DEL ALUMNO -->
-    <div id="stats-alumno-wrap" style="display:none; margin-top:2rem;">
-      <div class="dash-sec-label" style="margin-bottom:1rem;">Estadísticas del alumno</div>
-      <div class="seg-kpi-row" id="stats-kpis" style="grid-template-columns: repeat(4, 1fr);">
-        <div class="seg-kpi"><div class="seg-kpi-label">Día más productivo</div><div class="seg-kpi-value" id="stat-dia">—</div><div class="seg-kpi-sub">día con más actividad</div></div>
-        <div class="seg-kpi"><div class="seg-kpi-label">Hora pico</div><div class="seg-kpi-value" id="stat-hora">—</div><div class="seg-kpi-sub">mayor concentración</div></div>
-        <div class="seg-kpi"><div class="seg-kpi-label">Material este mes</div><div class="seg-kpi-value" id="stat-material">—</div><div class="seg-kpi-sub">contenidos vistos</div></div>
-        <div class="seg-kpi"><div class="seg-kpi-label">Racha de semanas</div><div class="seg-kpi-value" id="stat-racha">—</div><div class="seg-kpi-sub">semanas consecutivas</div></div>
-        <div class="seg-kpi"><div class="seg-kpi-label">Badges este mes</div><div class="seg-kpi-value" id="stat-badges">—</div><div class="seg-kpi-sub">insignias obtenidas</div></div>
-        <div class="seg-kpi" id="stat-calif-wrap" style="display:none"><div class="seg-kpi-label">Promedio Prepa</div><div class="seg-kpi-value" id="stat-calif">—</div><div class="seg-kpi-sub">calificación promedio</div></div>
-        <div class="seg-kpi" id="stat-entregas-wrap" style="display:none"><div class="seg-kpi-label">Entregas a tiempo</div><div class="seg-kpi-value" id="stat-entregas">—</div><div class="seg-kpi-sub">proyectos puntuales</div></div>
-        <div class="seg-kpi"><div class="seg-kpi-label">Período activo</div><div class="seg-kpi-value" id="stat-periodo">—</div><div class="seg-kpi-sub">mes o semestre actual</div></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -1365,7 +1417,7 @@
   }
 
   // Estadísticas del alumno
-  async function renderEstadisticas(hijoId, email) {
+  async function renderEstadisticas(hijoId, email, hijoDatos) {
     const id = parseInt(hijoId)
     if (!id || !email) return
     try {
@@ -1378,25 +1430,75 @@
       const d = await res.json()
 
       document.getElementById('stats-alumno-wrap').style.display = 'block'
+
+      // Hijo info panel
+      if (hijoDatos) {
+        document.getElementById('stat-avatar').textContent = hijoDatos.nombre.charAt(0).toUpperCase()
+        document.getElementById('stat-hijo-nombre').textContent = hijoDatos.nombre
+        document.getElementById('stat-hijo-nivel').textContent = hijoDatos.nivel_display || hijoDatos.nivel || '—'
+        document.getElementById('stat-hijo-mes').textContent = `Mes ${hijoDatos.mes_num || hijoDatos.mes || '—'}`
+      }
+
       document.getElementById('stat-dia').textContent = d.dia_productivo || '—'
       document.getElementById('stat-hora').textContent = d.hora_pico || '—'
       document.getElementById('stat-material').textContent = d.material_mes ?? '—'
       document.getElementById('stat-racha').textContent = d.racha_semanas ? `${d.racha_semanas}sem` : '—'
       document.getElementById('stat-badges').textContent = d.badges_mes ?? '—'
       document.getElementById('stat-periodo').textContent = d.periodo_activo ?? '—'
+      const actComp = d.actividades_mes ?? d.actividades_completadas ?? 0
+      document.getElementById('stat-act-comp').textContent = actComp !== undefined ? actComp : '—'
 
-      if (d.calificacion_promedio !== null) {
+      if (d.calificacion_promedio !== null && d.calificacion_promedio !== undefined) {
         document.getElementById('stat-calif-wrap').style.display = 'block'
         document.getElementById('stat-calif').textContent = d.calificacion_promedio ?? '—'
       }
-      if (d.entregas_a_tiempo !== null) {
+      if (d.entregas_a_tiempo !== null && d.entregas_a_tiempo !== undefined) {
         document.getElementById('stat-entregas-wrap').style.display = 'block'
         const e = d.entregas_a_tiempo
         document.getElementById('stat-entregas').textContent = `${e.entregados}/${e.total}`
       }
+
+      const mes = hijoDatos?.mes_num || hijoDatos?.mes || d.mes_activo || 1
+      renderHeatmap(id, mes, email, actComp)
     } catch (e) {
       console.error('Error estadisticas:', e)
     }
+  }
+
+  async function renderHeatmap(hijoId, mes, email, actComp) {
+    const grid = document.getElementById('stat-heatmap')
+    if (!grid) return
+    try {
+      const res = await fetch(`${API_BASE}/heatmap-hijo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        body: JSON.stringify({ hijo_id: hijoId, mes, email })
+      })
+      if (!res.ok) return
+      const { dias, total_dias } = await res.json()
+      const diasSet = new Set(dias)
+      const daysInMonth = total_dias || 30
+      grid.innerHTML = ''
+      for (let day = 1; day <= daysInMonth; day++) {
+        const sq = document.createElement('div')
+        sq.className = `stat-heat-day${diasSet.has(day) ? ' active' : ''}`
+        sq.title = `Día ${day}`
+        grid.appendChild(sq)
+      }
+      const msg = document.getElementById('stat-msg')
+      if (msg) {
+        const n = parseInt(actComp) || 0
+        const phrases = [
+          '¡Recuerda que la constancia construye el conocimiento!',
+          '¡Cada día que estudias sumas un peldaño más!',
+          '¡Sigue así, el progreso se nota!',
+          '¡La disciplina hoy es el éxito de mañana!'
+        ]
+        msg.textContent = n > 0
+          ? `Has completado ${n} actividad${n !== 1 ? 'es' : ''} este mes — ${phrases[n % phrases.length]}`
+          : 'Aún no hay actividades registradas este mes — ¡empieza hoy!'
+      }
+    } catch {}
   }
 
   const BADGE_LABELS = {
@@ -1545,7 +1647,7 @@
         block.innerHTML = `<div class="seg-row"><div class="seg-nombre" style="color:var(--muted);">Cargando…</div></div>`;
         segGrid.appendChild(block);
         if (h.id) loadProgreso(h, i);
-        if (h.id) renderEstadisticas(h.id, localStorage.getItem('to_email'));
+        if (h.id) renderEstadisticas(h.id, localStorage.getItem('to_email'), h);
       });
     }
 
@@ -1553,7 +1655,7 @@
     window.addEventListener('focus', () => {
       loadHijos().forEach((h, i) => {
         if (h.id) loadProgreso(h, i);
-        if (h.id) renderEstadisticas(h.id, localStorage.getItem('to_email'));
+        if (h.id) renderEstadisticas(h.id, localStorage.getItem('to_email'), h);
       });
     }, { once: false });
 
