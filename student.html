@@ -140,7 +140,8 @@
       background: linear-gradient(to bottom, transparent, var(--copper), transparent);
       opacity: 0.4;
     }
-    .st-hero-inner { max-width: 900px; margin: 0 auto; padding-left: 2rem; }
+    .st-hero-inner { max-width: 900px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+    .st-hero-text { flex-shrink: 0; }
     .st-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 0.75rem; font-weight: 600;
@@ -479,9 +480,41 @@
   <!-- Hero -->
   <div class="st-hero">
     <div class="st-hero-inner">
-      <div class="st-eyebrow">Mi Dashboard</div>
-      <h1 class="st-hero-title">Hola, <em id="st-hero-nombre"></em></h1>
-      <div class="st-hero-sub" id="st-hero-sub"></div>
+      <div class="st-hero-text">
+        <div class="st-eyebrow">Mi Dashboard</div>
+        <h1 class="st-hero-title">Hola, <em id="st-hero-nombre"></em></h1>
+        <div class="st-hero-sub" id="st-hero-sub"></div>
+      </div>
+      <!-- Stats widget -->
+      <div id="st-stats-wrap" style="display:none; flex:1; min-width:300px; max-width:520px; background:#111214; border:1px solid rgba(255,255,255,0.08); border-radius:12px; overflow:hidden;">
+        <div class="saw-header">
+          <div class="saw-tabs">
+            <div class="saw-tab active">Mis stats</div>
+          </div>
+          <div class="saw-filters">
+            <div class="saw-filter active" onclick="setSawFilterAlumno(this)">Mes</div>
+            <div class="saw-filter" onclick="setSawFilterAlumno(this)">Semestre</div>
+          </div>
+        </div>
+        <div class="saw-kpis">
+          <div class="saw-kpi"><div class="saw-kpi-label">Día activo</div><div class="saw-kpi-val" id="st-stat-dia">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Hora pico</div><div class="saw-kpi-val" id="st-stat-hora">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Material</div><div class="saw-kpi-val" id="st-stat-material">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Días activos</div><div class="saw-kpi-val" id="st-stat-dias-activos">—</div></div>
+        </div>
+        <div class="saw-kpis" style="border-top:1px solid rgba(255,255,255,0.07);">
+          <div class="saw-kpi"><div class="saw-kpi-label">Racha</div><div class="saw-kpi-val" id="st-stat-racha">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Badges</div><div class="saw-kpi-val" id="st-stat-badges">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Período</div><div class="saw-kpi-val" id="st-stat-periodo">—</div></div>
+          <div class="saw-kpi"><div class="saw-kpi-label">Actividades</div><div class="saw-kpi-val" id="st-stat-act-comp">—</div></div>
+        </div>
+        <div class="saw-heat">
+          <div id="st-stat-heatmap" class="saw-heat-grid"></div>
+        </div>
+        <div class="saw-footer" id="st-stat-msg"></div>
+        <div id="st-stat-entregas-wrap" style="display:none"><span id="st-stat-entregas"></span></div>
+        <div id="st-stat-calif-wrap" style="display:none"><span id="st-stat-calif"></span></div>
+      </div>
     </div>
   </div>
 
@@ -509,36 +542,6 @@
       <div class="st-sec-title">Mi Progreso</div>
       <div id="st-progreso-container"><div class="st-loading">Cargando progreso…</div></div>
 
-      <!-- ESTADÍSTICAS -->
-      <div id="st-stats-wrap" style="display:none; margin-top:2rem; background:#111214; border:1px solid rgba(255,255,255,0.08); border-radius:12px; overflow:hidden; max-width:520px;">
-        <div class="saw-header">
-          <div class="saw-tabs">
-            <div class="saw-tab active">Mis stats</div>
-          </div>
-          <div class="saw-filters">
-            <div class="saw-filter active" onclick="setSawFilterAlumno(this)">Mes</div>
-            <div class="saw-filter" onclick="setSawFilterAlumno(this)">Semestre</div>
-          </div>
-        </div>
-        <div class="saw-kpis">
-          <div class="saw-kpi"><div class="saw-kpi-label">Día activo</div><div class="saw-kpi-val" id="st-stat-dia">—</div></div>
-          <div class="saw-kpi"><div class="saw-kpi-label">Hora pico</div><div class="saw-kpi-val" id="st-stat-hora">—</div></div>
-          <div class="saw-kpi"><div class="saw-kpi-label">Material</div><div class="saw-kpi-val" id="st-stat-material">—</div></div>
-          <div class="saw-kpi"><div class="saw-kpi-label">Días activos</div><div class="saw-kpi-val" id="st-stat-dias-activos">—</div></div>
-        </div>
-        <div class="saw-kpis" style="border-top:1px solid rgba(255,255,255,0.07);">
-          <div class="saw-kpi"><div class="saw-kpi-label">Racha</div><div class="saw-kpi-val" id="st-stat-racha">—</div></div>
-          <div class="saw-kpi"><div class="saw-kpi-label">Badges</div><div class="saw-kpi-val" id="st-stat-badges">—</div></div>
-          <div class="saw-kpi"><div class="saw-kpi-label">Período</div><div class="saw-kpi-val" id="st-stat-periodo">—</div></div>
-          <div class="saw-kpi"><div class="saw-kpi-label">Actividades</div><div class="saw-kpi-val" id="st-stat-act-comp">—</div></div>
-        </div>
-        <div class="saw-heat">
-          <div id="st-stat-heatmap" class="saw-heat-grid"></div>
-        </div>
-        <div class="saw-footer" id="st-stat-msg"></div>
-        <div id="st-stat-entregas-wrap"><span id="st-stat-entregas"></span></div>
-        <div id="st-stat-calif-wrap"><span id="st-stat-calif"></span></div>
-      </div>
     </div>
   </div>
 
