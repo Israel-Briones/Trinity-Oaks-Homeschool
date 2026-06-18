@@ -698,8 +698,9 @@
 
     function applyModuleLocks(desbloqueado_en) {
       const nivelActual = new URLSearchParams(window.location.search).get('nivel') || '';
-      const esPrepa = nivelActual === 'preparatoria';
-      const LOCKED_SECTIONS = esPrepa ? ['sec-exam', 'sec-rep'] : ['sec-act', 'sec-exam', 'sec-rep'];
+      const esPrepa  = nivelActual === 'preparatoria';
+      const esKinder = nivelActual === 'kinder';
+      const LOCKED_SECTIONS = (esPrepa || esKinder) ? ['sec-exam', 'sec-rep'] : ['sec-act', 'sec-exam', 'sec-rep'];
       const unlocked = desbloqueado_en
         ? Math.floor((Date.now() - new Date(desbloqueado_en)) / (1000*60*60*24)) >= 25
         : false;
@@ -867,7 +868,7 @@
     const nivel = window._nivel || '';
     const desbl = desbloqueado_en ? new Date(desbloqueado_en) : null;
     const daysSince = desbl ? Math.floor((Date.now() - desbl) / (24 * 60 * 60 * 1000)) : 999;
-    const esAvanzado = nivel === 'preparatoria' || nivel === 'secundaria';
+    const esAvanzado = nivel === 'preparatoria' || nivel === 'secundaria' || nivel === 'kinder';
     const temas = [...temas_s1, ...temas_s2];
 
     const TOTAL = 4;
