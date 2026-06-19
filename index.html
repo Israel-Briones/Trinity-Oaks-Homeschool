@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'META_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=META_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Homeschool en Español K–Prepa con IA | Trinity Oak Homeschool</title>
@@ -134,25 +156,25 @@
         <img src="kinder.png" alt="Kínder" class="grado-img" width="320" height="240" loading="lazy">
         <div class="grado-nivel">Kínder</div>
         <div class="grado-edad">3 – 5 años</div>
-        <button class="grado-btn" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Comenzar Kínder →</button>
+        <button class="grado-btn" onclick="trackEvent('SelectLevel',{level:'kinder'}); window.location.href='/dashboard.html?nivel=kinder'">Comenzar Kínder →</button>
       </div>
       <div class="grado-card">
         <img src="Primaria.png" alt="Primaria" class="grado-img" width="320" height="240" loading="lazy">
         <div class="grado-nivel">Primaria</div>
         <div class="grado-edad">6 – 11 años</div>
-        <button class="grado-btn" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Comenzar Primaria →</button>
+        <button class="grado-btn" onclick="trackEvent('SelectLevel',{level:'primaria'}); window.location.href='/dashboard.html?nivel=primaria'">Comenzar Primaria →</button>
       </div>
       <div class="grado-card">
         <img src="Secundaria.png" alt="Secundaria" class="grado-img" width="320" height="240" loading="lazy">
         <div class="grado-nivel">Secundaria</div>
         <div class="grado-edad">12 – 14 años</div>
-        <button class="grado-btn" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Comenzar Secundaria →</button>
+        <button class="grado-btn" onclick="trackEvent('SelectLevel',{level:'secundaria'}); window.location.href='/dashboard.html?nivel=secundaria'">Comenzar Secundaria →</button>
       </div>
       <div class="grado-card">
         <img src="preparatoria_transparente.png" alt="Preparatoria" class="grado-img" width="320" height="240" loading="lazy">
         <div class="grado-nivel">Preparatoria</div>
         <div class="grado-edad">15 – 17 años</div>
-        <button class="grado-btn" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Comenzar Prepa →</button>
+        <button class="grado-btn" onclick="trackEvent('SelectLevel',{level:'prepa'}); window.location.href='/dashboard.html?nivel=prepa'">Comenzar Prepa →</button>
       </div>
     </div>
   </div>
@@ -399,7 +421,7 @@
           <li>Diario de naturaleza digital</li>
           <li>Soporte por comunidad</li>
         </ul>
-        <button class="plan-btn ghost" data-plan="individual" onclick="startCheckout('individual', this)">Comenzar mensual →</button>
+        <button class="plan-btn ghost" data-plan="individual" onclick="trackEvent('InitiateCheckout', {plan:'individual', value:890, currency:'MXN'}); startCheckout('individual', this)">Comenzar mensual →</button>
       </div>
 
       <div class="plan-card featured">
@@ -416,7 +438,7 @@
           <li>Soporte prioritario</li>
           <li>Comunidad privada de familias</li>
         </ul>
-        <button class="plan-btn primary" data-plan="familiar" onclick="startCheckout('familiar', this)">Comenzar mensual →</button>
+        <button class="plan-btn primary" data-plan="familiar" onclick="trackEvent('InitiateCheckout', {plan:'familiar', value:1490, currency:'MXN'}); startCheckout('familiar', this)">Comenzar mensual →</button>
       </div>
 
       <div class="plan-card">
@@ -431,7 +453,7 @@
           <li>Asesoría mensual personalizada</li>
           <li>Soporte VIP</li>
         </ul>
-        <button class="plan-btn ghost" data-plan="plus" onclick="startCheckout('plus', this)">Comenzar mensual →</button>
+        <button class="plan-btn ghost" data-plan="plus" onclick="trackEvent('InitiateCheckout', {plan:'familiar_plus', value:2500, currency:'MXN'}); startCheckout('plus', this)">Comenzar mensual →</button>
       </div>
 
     </div>

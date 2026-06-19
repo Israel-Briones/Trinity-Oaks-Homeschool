@@ -403,3 +403,8 @@ async function startCheckout(plan, btn) {
     }
   }
 })();
+
+function trackEvent(eventName, params = {}) {
+  if (typeof gtag !== 'undefined') gtag('event', eventName, params);
+  if (typeof fbq !== 'undefined') fbq('track', eventName, params);
+}
